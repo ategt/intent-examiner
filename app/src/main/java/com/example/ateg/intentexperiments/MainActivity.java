@@ -97,15 +97,20 @@ public class MainActivity extends AppCompatActivity {
 
                 File storageDir = files[files.length-1];
 
-                new FileSelector(this, FileOperation.SAVE, new OnHandleFileListener() {
-                    @Override
-                    public void handleFile(String filePath) {
-                        TextView textViewAs = (TextView) findViewById(R.id.central_textView);
-                        File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
+                new FileSelector(this,
+                        FileOperation.SAVE,
+                            new OnHandleFileListener() {
+                                @Override
+                                public void handleFile(String filePath) {
+                                    TextView textViewAs = (TextView) findViewById(R.id.central_textView);
+                                    File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
 
-                        fileSaveCompleteSnackBar(textViewAs, logFileAs);
-                    }
-                }, mFileFilter, new File(storageDir, defaultLogFileName));
+                                    fileSaveCompleteSnackBar(textViewAs, logFileAs);
+                                }
+                            },
+                        mFileFilter,
+                        new File(storageDir, defaultLogFileName))
+                .show();
 
                 return true;
         }
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fileSaveCompleteSnackBar(TextView textViewAs, final File logFileAs) {
-        Snackbar.make(textViewAs, "File Saved", Snackbar.LENGTH_LONG)
+        Snackbar.make(textViewAs, "File Saved", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Open", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
