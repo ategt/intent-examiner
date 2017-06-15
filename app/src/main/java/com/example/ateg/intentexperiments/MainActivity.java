@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Set;
 
@@ -27,22 +28,33 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                StringBuilder sb = new StringBuilder();
+
                 Intent intent = getIntent();
                 String action = intent.getAction();
                 Bundle bundle = intent.getExtras();
                 int flags = intent.getFlags();
 
-                if (bundle != null) {
-                    int size = bundle.size();
-                    Set<String> keysSet = bundle.keySet();
+                sb.append("Action: ");
+                sb.append(action);
+                sb.append(System.lineSeparator());
 
-                    TextView textView1 = (TextView) view.findViewById(R.id.central_textView);
-                    //TextView textView2 = (TextView) view.getParent()..findViewById(R.id.central_textView);
+                sb.append("Flags: ");
+                sb.append(flags);
+                sb.append(System.lineSeparator());
+
+                if (bundle != null) {
+
+                    sb.append("Intent Bundle Size: ");
+                    sb.append(bundle.size());
+                    sb.append(System.lineSeparator());
+                    sb.append(System.lineSeparator());
+
+                    Set<String> keysSet = bundle.keySet();
                     TextView textView3 = (TextView) view.getRootView().findViewById(R.id.central_textView);
 
                     View rootView = view.getRootView();
 
-                    StringBuilder sb = new StringBuilder();
 
                     for (String key : keysSet) {
                         sb.append(key);
@@ -56,14 +68,18 @@ public class MainActivity extends AppCompatActivity {
                         sb.append("\t");
                         sb.append(classString);
                         sb.append(System.lineSeparator());
-                        Log.i("asf", object.toString());
                     }
 
                     textView3.setText(sb.toString());
                 }
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Scan Completed", Snackbar.LENGTH_LONG)
+                        .setAction("Action", new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(MainActivity.this, "Snackbar Clicked On.", Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
             }
         });
     }
