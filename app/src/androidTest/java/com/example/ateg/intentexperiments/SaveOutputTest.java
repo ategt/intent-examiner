@@ -31,6 +31,7 @@ import java.util.UUID;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -50,6 +51,11 @@ public class SaveOutputTest {
     @Test
     public void examineSaveEmptyIntentTest() {
         Intents.init();
+
+        Intent intent = new Intent();
+        Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+
+        intending(IntentMatchers.hasAction(Intent.ACTION_VIEW)).respondWith(activityResult);
 
         LoggingUtilities loggingUtilities = new LoggingUtilities(
                 InstrumentationRegistry.getTargetContext(),
@@ -90,6 +96,9 @@ public class SaveOutputTest {
     @Test
     public void examineSaveTextTest() {
         Intents.init();
+
+        Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
+        intending(IntentMatchers.hasAction(Intent.ACTION_VIEW)).respondWith(activityResult);
 
         LoggingUtilities loggingUtilities = new LoggingUtilities(
                 InstrumentationRegistry.getTargetContext(),
@@ -138,7 +147,7 @@ public class SaveOutputTest {
         Intents.intended(IntentMatchers.hasAction("android.intent.action.VIEW"));
 
         Intents.intended(intentMatcher, expectTwoMatchingIntents);
-        
+
         Intents.release();
     }
 
