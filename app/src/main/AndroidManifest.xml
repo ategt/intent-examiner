@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_search_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -43,26 +43,6 @@
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="*/*" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
-                <category android:name="android.intent.category.APP_GALLERY" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
-                <category android:name="android.intent.category.OPENABLE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
