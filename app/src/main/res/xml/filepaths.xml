@@ -1,5 +1,15 @@
-<paths>
-    <!--<files-path path="." />-->
-    <!--<files-path path="images/" name="myimages" />-->
-    <cache-path path="." name="*" />
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+<!--<files-path path="." name="ext" />-->
+    <files-path path="images/" name="myimages" />
+    <files-path path="Documents/" name="sharedtext" />
+    <files-path path="." name="sharedtextb" />
+    <external-files-path path="Documents/" name="sharedtext" />
+    <external-files path="Documents/" name="sharedtext" />
+    <cache-path path="" name="bill" />
+    <cache-path path="." name="bill2" />
+    <external-path name="external_files" path="."/>
+    <external-path name="external_files2" path="/storage/07E5-1310/Android/data/com.example.ateg.intentexperiments/files/Documents/IntentExamination.txt"/>
+    <external-path name="external_files3" path="Android/storage/07E5-1310/Android/data/com.example.ateg.intentexperiments/files/Documents/IntentExamination.txt"/>
+    <!--/storage/07E5-1310/Android/data/com.example.ateg.intentexperiments/files/Documents/IntentExamination.txt-->
 </paths>

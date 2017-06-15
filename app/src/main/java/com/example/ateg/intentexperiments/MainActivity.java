@@ -1,13 +1,17 @@
 package com.example.ateg.intentexperiments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
                 if (bundle != null) {
                     sb = IntentExaminationUtilities.stringifyBundle(sb, bundle);
                     textView.setText(sb.toString());
+                    textView.setGravity(Gravity.CENTER_VERTICAL);
                 } else {
                     textView.setText(R.string.intent_empty);
+                    textView.setGravity(Gravity.CENTER);
                 }
 
                 Snackbar.make(view, "Scan Completed", Snackbar.LENGTH_LONG)
@@ -86,13 +92,24 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
 
-                                try {
-                                    Uri fileUri = FileProvider.getUriForFile
-                                }
+                                File tempFile = new File(getFilesDir(), "temp.txt");
+
+                                new LoggingUtilities(getApplicationContext(), tempFile)
+                                        .updateTextFile(LoggingUtilities.readFile(getApplicationContext(), logFile));
+
+                                //File[] files = getExternalFilesDirs();
 
 
-                                Environment.
-                                Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.fromFile(logFile));
+                                Uri fileUri = FileProvider.getUriForFile(
+                                        getApplicationContext(),
+                                        "com.example.ateg.intentexperiments.FileProvider",
+                                        tempFile);
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW, fileUri);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.setDataAndType(fileUri,
+                                                getContentResolver().getType(fileUri));
+
                                 startActivity(intent);
                             }
                         }).show();
