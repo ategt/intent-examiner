@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 StringBuilder sb = new StringBuilder();
+                TextView textView = (TextView) view.getRootView().findViewById(R.id.central_textView);
 
                 Intent intent = getIntent();
                 String action = intent.getAction();
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
                     sb.append(System.lineSeparator());
 
                     Set<String> keysSet = bundle.keySet();
-                    TextView textView3 = (TextView) view.getRootView().findViewById(R.id.central_textView);
 
                     View rootView = view.getRootView();
 
@@ -68,9 +68,14 @@ public class MainActivity extends AppCompatActivity {
                         sb.append("\t");
                         sb.append(classString);
                         sb.append(System.lineSeparator());
+
+                        sb.append("\t\t");
+                        sb.append(object.toString());
                     }
 
-                    textView3.setText(sb.toString());
+                    textView.setText(sb.toString());
+                } else {
+                    textView.setText(R.string.intent_empty);
                 }
 
                 Snackbar.make(view, "Scan Completed", Snackbar.LENGTH_LONG)
