@@ -1,4 +1,4 @@
-package com.example.ateg.photogallery.FileSelector;
+package com.example.ateg.intentexperiments.FileSelector;
 
 /**
  * This class contais information about the file name and type

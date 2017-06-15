@@ -19,10 +19,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.intentexperiments.FileSelector.FileOperation;
+import com.example.ateg.intentexperiments.FileSelector.FileSelector;
+import com.example.ateg.intentexperiments.FileSelector.OnHandleFileListener;
+
 import java.io.File;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+
+    /** Sample filters array */
+    final String[] mFileFilter = { ".txt", "*.*" };
+    final String defaultLogFileName = "IntentExamination.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +86,26 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.save_to_file:
                 TextView textView = (TextView) findViewById(R.id.central_textView);
-                final File logFile = saveTextViewContentToFile(textView);
+                File logFile = saveTextViewContentToFile(textView,
+                        LoggingUtilities.establishLogFile(this, defaultLogFileName, Environment.DIRECTORY_DOCUMENTS));
 
-                Snackbar.make(textView, "File Saved", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Open", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                File tempFile = copyToTempFile(logFile);
-                                Intent intent = intentToOpenFile(tempFile);
-                                //startActivityForResult(intent, RESULT_OK);
-                                startActivity(intent);
-                            }
-                        }).show();
+                fileSaveCompleteSnackBar(textView, logFile);
+
+                return true;
+            case R.id.save_to_file_as:
+                File[] files = ContextCompat.getExternalFilesDirs(this, Environment.DIRECTORY_DOCUMENTS);
+
+                File storageDir = files[files.length-1];
+
+                new FileSelector(this, FileOperation.SAVE, new OnHandleFileListener() {
+                    @Override
+                    public void handleFile(String filePath) {
+                        TextView textViewAs = (TextView) findViewById(R.id.central_textView);
+                        File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
+
+                        fileSaveCompleteSnackBar(textViewAs, logFileAs);
+                    }
+                }, mFileFilter, new File(storageDir, defaultLogFileName));
 
                 return true;
         }
@@ -97,9 +113,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private File saveTextViewContentToFile(TextView textView) {
+    private void fileSaveCompleteSnackBar(TextView textViewAs, final File logFileAs) {
+        Snackbar.make(textViewAs, "File Saved", Snackbar.LENGTH_LONG)
+                .setAction("Open", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        File tempFile = copyToTempFile(logFileAs);
+                        Intent intent = intentToOpenFile(tempFile);
+                        startActivity(intent);
+                    }
+                }).show();
+    }
+
+    private File saveTextViewContentToFile(TextView textView, File destinationFile) {
         String examinationReport = textView.getText().toString();
-        LoggingUtilities loggingUtilities = new LoggingUtilities(this, "IntentExamination.txt", Environment.DIRECTORY_DOCUMENTS);
+        LoggingUtilities loggingUtilities = new LoggingUtilities(this, destinationFile);
         loggingUtilities.updateTextFile(examinationReport);
         return loggingUtilities.getLogFile();
     }

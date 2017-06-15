@@ -1,4 +1,4 @@
-package com.example.ateg.photogallery.FileSelector;
+package com.example.ateg.intentexperiments.FileSelector;
 
 public interface OnHandleFileListener {
 	/**

@@ -7,8 +7,14 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-    <item android:id="@+id/save_to_file"
+    <item
+        android:id="@+id/save_to_file"
+        android:icon="@android:drawable/ic_menu_save"
         android:title="@string/save_to_file"
-        app:showAsAction="collapseActionView|ifRoom"
-        android:icon="@android:drawable/ic_menu_save" />
+        app:showAsAction="collapseActionView|ifRoom" />
+    <item
+        android:id="@+id/save_to_file_as"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:title="@string/save_to_file_as"
+        app:showAsAction="collapseActionView|ifRoom" />
 </menu>

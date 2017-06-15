@@ -1,4 +1,4 @@
-package com.example.ateg.photogallery.FileSelector;
+package com.example.ateg.intentexperiments.FileSelector;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-import com.example.ateg.photogallery.R;
+import com.example.ateg.intentexperiments.FileSelector.FileOperation;
+import com.example.ateg.intentexperiments.FileSelector.FileSelector;
+import com.example.ateg.intentexperiments.R;
+
 
 import java.io.File;
 

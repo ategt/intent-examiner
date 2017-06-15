@@ -1,11 +1,12 @@
-package com.example.ateg.photogallery.FileSelector;
+package com.example.ateg.intentexperiments.FileSelector;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.example.ateg.photogallery.R;
+
+import com.example.ateg.intentexperiments.R;
 
 import java.util.ArrayList;
 import java.util.List;

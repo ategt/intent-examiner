@@ -1,4 +1,4 @@
-package com.example.ateg.photogallery.FileSelector;
+package com.example.ateg.intentexperiments.FileSelector;
 
 import android.content.Context;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.example.ateg.photogallery.FileSelector;
+package com.example.ateg.intentexperiments.FileSelector;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,7 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ateg.photogallery.R;
+import com.example.ateg.intentexperiments.R;
 
 import java.io.File;
 import java.util.ArrayList;

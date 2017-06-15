@@ -4,6 +4,7 @@
     <string name="intent_empty">Intent Empty</string>
     <string name="opening_greeting">Press the Button to Examine Intent</string>
     <string name="save_to_file">Save to File</string>
+    <string name="save_to_file_as">Save to File As...</string>
 
     <string name="enterFileName">Enter file name:</string>
     <string name="saveButtonText">Save</string>
