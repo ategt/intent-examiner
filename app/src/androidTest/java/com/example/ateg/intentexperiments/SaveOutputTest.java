@@ -10,6 +10,8 @@ import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.EspressoKey;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.OngoingStubbing;
+import android.support.test.espresso.intent.VerificationMode;
+import android.support.test.espresso.intent.VerificationModes;
 import android.support.test.espresso.intent.matcher.IntentMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -101,10 +103,13 @@ public class SaveOutputTest {
         //new EspressoKey.Builder().build().
         //UiDevice.pressBack();
 
+        Intents.release();
     }
 
     @Test
     public void examineSaveTextTest() {
+        Intents.init();
+
         LoggingUtilities loggingUtilities = new LoggingUtilities(
                 InstrumentationRegistry.getTargetContext(),
                 "IntentExamination.txt",
@@ -151,7 +156,16 @@ public class SaveOutputTest {
         //InstrumentationRegistry.
         //InstrumentationRegistry.getTargetContext().
         //Espresso.pressBack();
+        VerificationMode verificationMode = Intents.times(2);
+        Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
 
+        //OngoingStubbing ongoingStubbing = Intents.intending(intentMatcher);
+        Intents.intended(IntentMatchers.hasAction("android.intent.action.VIEW"));
+
+        //intentMatcher.
+        Intents.intended(intentMatcher, verificationMode);
+
+        Intents.release();
     }
 
     @Test
