@@ -74,13 +74,6 @@ public class IntentAnalyzerTest {
 
         MainActivity mainActivity = mainActivityActivityTestRule.launchActivity(intent);
 
-        //Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
-        //activityResult
-
-        //user
-        //intending()
-        //activityResult.
-        //Espresso
         Espresso.onView(withId(R.id.action_button)).perform(click());
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(not(withText(R.string.intent_empty))));
@@ -88,6 +81,22 @@ public class IntentAnalyzerTest {
         StringBuilder sb = new StringBuilder();
         Bundle bundle = intent.getExtras();
         Set<String> keysSet = bundle.keySet();
+
+        String action = intent.getAction();
+        int flags = intent.getFlags();
+
+        sb.append("Action: ");
+        sb.append(action);
+        sb.append(System.lineSeparator());
+
+        sb.append("Flags: ");
+        sb.append(flags);
+        sb.append(System.lineSeparator());
+
+        sb.append("Intent Bundle Size: ");
+        sb.append(bundle.size());
+        sb.append(System.lineSeparator());
+        sb.append(System.lineSeparator());
 
         for (String key : keysSet) {
             sb.append(key);
@@ -106,12 +115,12 @@ public class IntentAnalyzerTest {
             sb.append(object.toString());
         }
 
-        //textView.setText(sb.toString());
         TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
         String textViewText = textView.getText().toString();
 
-        Assert.assertEquals(textViewText, sb.toString());
+        Assert.assertTrue(textViewText.contains(randomString));
 
+        Assert.assertEquals(textViewText, sb.toString());
     }
 
 //    public void comments() {
