@@ -20,6 +20,8 @@ import android.widget.TextView;
 import junit.framework.Assert;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,10 +50,18 @@ public class SaveOutputTest {
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule
             = new ActivityTestRule<MainActivity>(MainActivity.class);
 
+    @Before
+    public void before(){
+        Intents.init();
+    }
+
+    @After
+    public void after(){
+        Intents.release();
+    }
+
     @Test
     public void examineSaveEmptyIntentTest() {
-        Intents.init();
-
         Intent intent = new Intent();
         Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 
@@ -89,14 +99,10 @@ public class SaveOutputTest {
 
         Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
         Intents.intended(intentMatcher);
-
-        Intents.release();
     }
 
     @Test
     public void examineSaveTextTest() {
-        Intents.init();
-
         Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
         intending(IntentMatchers.hasAction(Intent.ACTION_VIEW)).respondWith(activityResult);
 
@@ -147,8 +153,6 @@ public class SaveOutputTest {
         Intents.intended(IntentMatchers.hasAction("android.intent.action.VIEW"));
 
         Intents.intended(intentMatcher, expectTwoMatchingIntents);
-
-        Intents.release();
     }
 
     @Test
