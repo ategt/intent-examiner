@@ -1,8 +1,13 @@
 package com.example.ateg.intentexperiments;
 
 import android.app.Activity;
+import android.app.Instrumentation;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.ViewActions;
@@ -20,12 +25,15 @@ import org.junit.runner.RunWith;
 
 import android.support.test.espresso.Espresso;
 import android.widget.Button;
+import android.widget.TextView;
 
 import junit.framework.Assert;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -51,21 +59,73 @@ public class IntentAnalyzerTest {
 
     @Test
     public void examineEmptyIntentTest() {
-
         Espresso.onView(withId(R.id.action_button)).perform(click());
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
     }
 
-    //@Test
+    @Test
     public void examineTextTest() {
+        String randomString = UUID.randomUUID().toString();
 
-        //Espresso.onView()
+        Intent intent = new Intent();
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_STRING", randomString);
+
+        MainActivity mainActivity = mainActivityActivityTestRule.launchActivity(intent);
+
+        //Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+        //activityResult
+
+        //user
+        //intending()
+        //activityResult.
+        //Espresso
+        Espresso.onView(withId(R.id.action_button)).perform(click());
+
+        Espresso.onView(withId(R.id.central_textView)).check(matches(not(withText(R.string.intent_empty))));
+
+        StringBuilder sb = new StringBuilder();
+        Bundle bundle = intent.getExtras();
+        Set<String> keysSet = bundle.keySet();
+
+        for (String key : keysSet) {
+            sb.append(key);
+            sb.append(System.lineSeparator());
+            Object object = bundle.get(key);
+
+            sb.append("\t");
+            String canClassName = object.getClass().getCanonicalName();
+            String classString = object.getClass().toString();
+            sb.append(canClassName);
+            sb.append("\t");
+            sb.append(classString);
+            sb.append(System.lineSeparator());
+
+            sb.append("\t\t");
+            sb.append(object.toString());
+        }
+
+        //textView.setText(sb.toString());
+        TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
+        String textViewText = textView.getText().toString();
+
+        Assert.assertEquals(textViewText, sb.toString());
+
     }
 
 //    public void comments() {
+
+
+//    Context context = InstrumentationRegistry.getTargetContext();
+//    ActivityTestRule<MainActivity> mainActivityActivityTestRule
+//            = new ActivityTestRule<MainActivity>(MainActivity.class);
 //
+//    //PendingIntent.getActivity();
+//        ContextCompat.startActivity(context, new Intent(context, MainActivity.class), null);
+//
+//
+////
 //        String typedFileName = (new Random().nextInt()) + ".txt";
 //
 //        Espresso.onView(

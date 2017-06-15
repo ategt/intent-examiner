@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
                     View rootView = view.getRootView();
 
-
                     for (String key : keysSet) {
                         sb.append(key);
                         sb.append(System.lineSeparator());
