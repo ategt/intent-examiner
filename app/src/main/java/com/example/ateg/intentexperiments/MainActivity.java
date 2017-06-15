@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Snackbar.make(view, "Scan Completed", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener(){
+                        .setAction("Action", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(MainActivity.this, "Snackbar Clicked On.", Toast.LENGTH_SHORT).show();
@@ -71,46 +72,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        switch (id){
+        switch (item.getItemId()) {
             case R.id.action_settings:
-            return true;
+                return true;
             case R.id.save_to_file:
                 TextView textView = (TextView) findViewById(R.id.central_textView);
-                String examinationReport = textView.getText().toString();
-                LoggingUtilities loggingUtilities = new LoggingUtilities(this, "IntentExamination.txt", Environment.DIRECTORY_DOCUMENTS);
-                        loggingUtilities.updateTextFile(examinationReport);
-                final File logFile = loggingUtilities.getLogFile();
+                final File logFile = saveTextViewContentToFile(textView);
 
                 Snackbar.make(textView, "File Saved", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Open", new View.OnClickListener(){
+                        .setAction("Open", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-                                //File tempFile = new File(getFilesDir(), "temp.txt");
-                                File tempFile = new File(getCacheDir(), "temp.txt");
-
-                                new LoggingUtilities(getApplicationContext(), tempFile)
-                                        .updateTextFile(LoggingUtilities.readFile(getApplicationContext(), logFile));
-
-                                tempFile.deleteOnExit();
-
-                                Uri fileUri = FileProvider.getUriForFile(
-                                        getApplicationContext(),
-                                        "com.example.ateg.intentexperiments.FileProvider",
-                                        tempFile);
-                                        //logFile);
-
-                                Intent intent = new Intent(Intent.ACTION_VIEW, fileUri);
-                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.setDataAndType(fileUri,
-                                                getContentResolver().getType(fileUri));
-
+                                File tempFile = copyToTempFile(logFile);
+                                Intent intent = intentToOpenFile(tempFile);
                                 startActivity(intent);
                             }
                         }).show();
@@ -119,5 +94,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private File saveTextViewContentToFile(TextView textView) {
+        String examinationReport = textView.getText().toString();
+        LoggingUtilities loggingUtilities = new LoggingUtilities(this, "IntentExamination.txt", Environment.DIRECTORY_DOCUMENTS);
+        loggingUtilities.updateTextFile(examinationReport);
+        return loggingUtilities.getLogFile();
+    }
+
+    @NonNull
+    private Intent intentToOpenFile(File tempFile) {
+        Uri fileUri = FileProvider.getUriForFile(
+                getApplicationContext(),
+                "com.example.ateg.intentexperiments.FileProvider",
+                tempFile);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, fileUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(fileUri,
+                getContentResolver().getType(fileUri));
+        return intent;
+    }
+
+    @NonNull
+    private File copyToTempFile(File logFile) {
+        File tempFile = new File(getCacheDir(), "temp.txt");
+
+        new LoggingUtilities(getApplicationContext(), tempFile)
+                .updateTextFile(LoggingUtilities.readFile(getApplicationContext(), logFile));
+
+        tempFile.deleteOnExit();
+        return tempFile;
     }
 }

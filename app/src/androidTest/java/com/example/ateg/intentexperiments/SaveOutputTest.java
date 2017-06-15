@@ -58,6 +58,19 @@ public class SaveOutputTest {
 
         Assert.assertTrue(logFile.exists());
         Assert.assertTrue(startingLogFileSize < logFile.length());
+
+        Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
+                .check(matches(isDisplayed()));
+
+        String logFileContents = LoggingUtilities.readFile(InstrumentationRegistry.getTargetContext(),
+                logFile);
+
+        String emptyIntentDisplay = InstrumentationRegistry.getTargetContext().getResources().getString(R.string.intent_empty);
+        Assert.assertTrue(logFileContents.contains(emptyIntentDisplay));
+
+        Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
+                .perform(click());
+
     }
 
     @Test
@@ -103,6 +116,11 @@ public class SaveOutputTest {
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
                 .perform(click());
 
+        //Espresso.onView(withText("Open with")).check(matches(isDisplayed()));
+
+        //InstrumentationRegistry.
+        //InstrumentationRegistry.getTargetContext().
+        //Espresso.pressBack();
 
     }
 

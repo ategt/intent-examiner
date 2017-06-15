@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-<!--<files-path path="." name="ext" />-->
-    <files-path path="images/" name="myimages" />
-    <files-path path="Documents/" name="sharedtext" />
-    <files-path path="." name="sharedtextb" />
-    <cache-path path="." name="sharedtextz" />
-    <external-path name="external_document" path="Documents/"/>
-    <external-files-path path="Documents/" name="sharedtexta" />
-    <external-files path="Documents/" name="sharedtextb" />
-    <external-path path="Documents/" name="sharedtextc" />
-    <cache-path path="" name="bill" />
-    <cache-path path="." name="bill2" />
-    <external-path name="external_files" path="."/>
-    <external-path name="external_files2" path="/storage/07E5-1310/Android/data/com.example.ateg.intentexperiments/files/Documents/IntentExamination.txt"/>
-    <external-path name="external_files3" path="Android/storage/07E5-1310/Android/data/com.example.ateg.intentexperiments/files/Documents/IntentExamination.txt"/>
-    <!--/storage/07E5-1310/Android/data/com.example.ateg.intentexperiments/files/Documents/IntentExamination.txt-->
+    <cache-path path="." name="sharedtext" />
 </paths>
