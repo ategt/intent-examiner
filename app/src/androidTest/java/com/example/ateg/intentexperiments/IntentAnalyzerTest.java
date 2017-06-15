@@ -123,6 +123,42 @@ public class IntentAnalyzerTest {
         Assert.assertEquals(textViewText, sb.toString());
     }
 
+    @Test
+    public void examineTextIntegerBooleanTest() {
+        String randomString = UUID.randomUUID().toString();
+        Random random = new Random();
+        int randomInt = random.nextInt();
+        Integer randomInteger = new Integer(random.nextInt());
+        boolean randomBool = random.nextBoolean();
+        Boolean randomBoolean = new Boolean(random.nextBoolean());
+
+        Intent intent = new Intent();
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_STRING", randomString);
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_INTEGER", randomInt);
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_INTEGER_OBJECT", randomInteger);
+
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_BOOLEAN", randomBool);
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_BOOLEAN_OBJECT", randomBoolean);
+
+        MainActivity mainActivity = mainActivityActivityTestRule.launchActivity(intent);
+
+        Espresso.onView(withId(R.id.action_button)).perform(click());
+
+        Espresso.onView(withId(R.id.central_textView)).check(matches(not(withText(R.string.intent_empty))));
+
+
+        TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
+        String textViewText = textView.getText().toString();
+
+        Assert.assertTrue(textViewText.contains(randomString));
+        Assert.assertTrue(textViewText.contains(randomBool ? "true" : "false"));
+        Assert.assertTrue(textViewText.contains(randomBoolean ? "true" : "false"));
+        Assert.assertTrue(textViewText.contains(String.valueOf(randomInt)));
+        Assert.assertTrue(textViewText.contains(String.valueOf(randomInteger)));
+
+        Assert.assertTrue(textViewText.contains(randomString));
+    }
+
 //    public void comments() {
 
 
