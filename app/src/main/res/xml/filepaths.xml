@@ -4,8 +4,11 @@
     <files-path path="images/" name="myimages" />
     <files-path path="Documents/" name="sharedtext" />
     <files-path path="." name="sharedtextb" />
-    <external-files-path path="Documents/" name="sharedtext" />
-    <external-files path="Documents/" name="sharedtext" />
+    <cache-path path="." name="sharedtextz" />
+    <external-path name="external_document" path="Documents/"/>
+    <external-files-path path="Documents/" name="sharedtexta" />
+    <external-files path="Documents/" name="sharedtextb" />
+    <external-path path="Documents/" name="sharedtextc" />
     <cache-path path="" name="bill" />
     <cache-path path="." name="bill2" />
     <external-path name="external_files" path="."/>

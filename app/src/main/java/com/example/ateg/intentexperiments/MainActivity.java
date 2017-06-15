@@ -92,18 +92,19 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
 
-                                File tempFile = new File(getFilesDir(), "temp.txt");
+                                //File tempFile = new File(getFilesDir(), "temp.txt");
+                                File tempFile = new File(getCacheDir(), "temp.txt");
 
                                 new LoggingUtilities(getApplicationContext(), tempFile)
                                         .updateTextFile(LoggingUtilities.readFile(getApplicationContext(), logFile));
 
-                                //File[] files = getExternalFilesDirs();
-
+                                tempFile.deleteOnExit();
 
                                 Uri fileUri = FileProvider.getUriForFile(
                                         getApplicationContext(),
                                         "com.example.ateg.intentexperiments.FileProvider",
                                         tempFile);
+                                        //logFile);
 
                                 Intent intent = new Intent(Intent.ACTION_VIEW, fileUri);
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
