@@ -1,16 +1,23 @@
 package com.example.ateg.intentexperiments;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.action.EspressoKey;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.intent.OngoingStubbing;
+import android.support.test.espresso.intent.matcher.IntentMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
 
 import junit.framework.Assert;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +48,12 @@ public class SaveOutputTest {
     @Test
     public void examineSaveEmptyIntentTest() {
 
+        Intent intent = new Intent();
+        //intent.setData()
+        Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+
+        Intents.init();
+
         LoggingUtilities loggingUtilities = new LoggingUtilities(
                 InstrumentationRegistry.getTargetContext(),
                 "IntentExamination.txt",
@@ -70,6 +83,23 @@ public class SaveOutputTest {
 
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
                 .perform(click());
+
+        Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
+
+        //OngoingStubbing ongoingStubbing = Intents.intending(intentMatcher);
+        Intents.intended(intentMatcher);
+        //OngoingStubbing ongoingStubbing =
+                //ongoingStubbing.respondWith(activityResult);
+
+//        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+//        Instrumentation.ActivityMonitor activityMonitor = instrumentation.addMonitor(MainActivity.class.getName(), null, false);
+//        Activity activity = instrumentation.waitForMonitorWithTimeout(activityMonitor, 1000);
+//
+//        Espresso.pressBack();
+
+
+        //new EspressoKey.Builder().build().
+        //UiDevice.pressBack();
 
     }
 
