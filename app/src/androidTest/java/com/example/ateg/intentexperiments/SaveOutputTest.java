@@ -49,11 +49,6 @@ public class SaveOutputTest {
 
     @Test
     public void examineSaveEmptyIntentTest() {
-
-        Intent intent = new Intent();
-        //intent.setData()
-        Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
-
         Intents.init();
 
         LoggingUtilities loggingUtilities = new LoggingUtilities(
@@ -87,21 +82,7 @@ public class SaveOutputTest {
                 .perform(click());
 
         Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
-
-        //OngoingStubbing ongoingStubbing = Intents.intending(intentMatcher);
         Intents.intended(intentMatcher);
-        //OngoingStubbing ongoingStubbing =
-                //ongoingStubbing.respondWith(activityResult);
-
-//        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        Instrumentation.ActivityMonitor activityMonitor = instrumentation.addMonitor(MainActivity.class.getName(), null, false);
-//        Activity activity = instrumentation.waitForMonitorWithTimeout(activityMonitor, 1000);
-//
-//        Espresso.pressBack();
-
-
-        //new EspressoKey.Builder().build().
-        //UiDevice.pressBack();
 
         Intents.release();
     }
@@ -151,20 +132,13 @@ public class SaveOutputTest {
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
                 .perform(click());
 
-        //Espresso.onView(withText("Open with")).check(matches(isDisplayed()));
-
-        //InstrumentationRegistry.
-        //InstrumentationRegistry.getTargetContext().
-        //Espresso.pressBack();
-        VerificationMode verificationMode = Intents.times(2);
+        VerificationMode expectTwoMatchingIntents = Intents.times(2);
         Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
 
-        //OngoingStubbing ongoingStubbing = Intents.intending(intentMatcher);
         Intents.intended(IntentMatchers.hasAction("android.intent.action.VIEW"));
 
-        //intentMatcher.
-        Intents.intended(intentMatcher, verificationMode);
-
+        Intents.intended(intentMatcher, expectTwoMatchingIntents);
+        
         Intents.release();
     }
 
