@@ -22,8 +22,10 @@ import java.util.UUID;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 
 /**
@@ -37,7 +39,7 @@ public class SaveOutputTest {
             = new ActivityTestRule<MainActivity>(MainActivity.class);
 
     @Test
-    public void examineEmptyIntentTest() {
+    public void examineSaveEmptyIntentTest() {
 
         LoggingUtilities loggingUtilities = new LoggingUtilities(
                 InstrumentationRegistry.getTargetContext(),
@@ -59,7 +61,16 @@ public class SaveOutputTest {
     }
 
     @Test
-    public void examineTextTest() {
+    public void examineSaveTextTest() {
+        LoggingUtilities loggingUtilities = new LoggingUtilities(
+                InstrumentationRegistry.getTargetContext(),
+                "IntentExamination.txt",
+                Environment.DIRECTORY_DOCUMENTS);
+
+        File logFile = loggingUtilities.getLogFile();
+
+        long startingLogFileSize = logFile.exists() ? logFile.length() : -1;
+
         String randomString = UUID.randomUUID().toString();
 
         Intent intent = new Intent();
@@ -71,49 +82,28 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(not(withText(R.string.intent_empty))));
 
-        StringBuilder sb = new StringBuilder();
-        Bundle bundle = intent.getExtras();
-        Set<String> keysSet = bundle.keySet();
+        Espresso.onView(withId(R.id.save_to_file)).perform(click());
 
-        String action = intent.getAction();
-        int flags = intent.getFlags();
+        Assert.assertTrue(logFile.exists());
+        Assert.assertTrue(startingLogFileSize < logFile.length());
 
-        sb.append("Action: ");
-        sb.append(action);
-        sb.append(System.lineSeparator());
-
-        sb.append("Flags: ");
-        sb.append(flags);
-        sb.append(System.lineSeparator());
-
-        sb.append("Intent Bundle Size: ");
-        sb.append(bundle.size());
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        for (String key : keysSet) {
-            sb.append(key);
-            sb.append(System.lineSeparator());
-            Object object = bundle.get(key);
-
-            sb.append("\t");
-            String canClassName = object.getClass().getCanonicalName();
-            String classString = object.getClass().toString();
-            sb.append(canClassName);
-            sb.append("\t");
-            sb.append(classString);
-            sb.append(System.lineSeparator());
-
-            sb.append("\t\t");
-            sb.append(object.toString());
-        }
+        Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
+                .check(matches(isDisplayed()));
 
         TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
         String textViewText = textView.getText().toString();
 
         Assert.assertTrue(textViewText.contains(randomString));
 
-        Assert.assertEquals(textViewText, sb.toString());
+        String logFileContents = LoggingUtilities.readFile(InstrumentationRegistry.getTargetContext(),
+                logFile);
+
+        Assert.assertTrue(logFileContents.contains(randomString));
+
+        Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
+                .perform(click());
+
+
     }
 
     @Test

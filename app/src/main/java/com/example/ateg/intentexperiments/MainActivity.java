@@ -81,10 +81,17 @@ public class MainActivity extends AppCompatActivity {
                         loggingUtilities.updateTextFile(examinationReport);
                 final File logFile = loggingUtilities.getLogFile();
 
-                Snackbar.make(textView, "File Saved", Snackbar.LENGTH_LONG)
+                Snackbar.make(textView, "File Saved", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Open", new View.OnClickListener(){
                             @Override
                             public void onClick(View v) {
+
+                                try {
+                                    Uri fileUri = FileProvider.getUriForFile
+                                }
+
+
+                                Environment.
                                 Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.fromFile(logFile));
                                 startActivity(intent);
                             }
