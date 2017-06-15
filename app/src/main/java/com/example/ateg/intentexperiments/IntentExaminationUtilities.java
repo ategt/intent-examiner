@@ -48,6 +48,8 @@ public class IntentExaminationUtilities {
 
             sb.append("\t\t");
             sb.append(object.toString());
+            sb.append(System.lineSeparator());
+            sb.append(System.lineSeparator());
         }
 
         return sb;

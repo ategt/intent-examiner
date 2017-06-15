@@ -158,4 +158,22 @@ public class IntentAnalyzerTest {
 
         Assert.assertTrue(textViewText.contains(randomString));
     }
+
+    @Test
+    public void testNullItemInBundle() {
+        Intent intent = new Intent();
+        String nullString = null;
+        intent.putExtra("com.example.ateg.intentexperiments.NULL_STRING", nullString);
+
+        MainActivity mainActivity = mainActivityActivityTestRule.launchActivity(intent);
+
+        Espresso.onView(withId(R.id.action_button)).perform(click());
+
+        Espresso.onView(withId(R.id.central_textView)).check(matches(not(withText(R.string.intent_empty))));
+
+        TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
+        String textViewText = textView.getText().toString();
+
+        Assert.assertTrue(textViewText.contains("com.example.ateg.intentexperiments.NULL_STRING"));
+    }
 }
