@@ -2,4 +2,6 @@
     <string name="app_name">Intent Experiments</string>
     <string name="action_settings">Settings</string>
     <string name="intent_empty">Intent Empty</string>
+    <string name="opening_greeting">Press the Button to Examine Intent</string>
+    <string name="save_to_file">Save to File</string>
 </resources>

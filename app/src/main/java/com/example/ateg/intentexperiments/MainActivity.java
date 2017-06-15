@@ -2,6 +2,7 @@ package com.example.ateg.intentexperiments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -28,50 +29,16 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StringBuilder sb = new StringBuilder();
                 TextView textView = (TextView) view.getRootView().findViewById(R.id.central_textView);
+                StringBuilder sb = new StringBuilder();
 
                 Intent intent = getIntent();
-                String action = intent.getAction();
+                sb = IntentExaminationUtilities.stringifyIntent(intent, sb);
+
                 Bundle bundle = intent.getExtras();
-                int flags = intent.getFlags();
-
-                sb.append("Action: ");
-                sb.append(action);
-                sb.append(System.lineSeparator());
-
-                sb.append("Flags: ");
-                sb.append(flags);
-                sb.append(System.lineSeparator());
 
                 if (bundle != null) {
-
-                    sb.append("Intent Bundle Size: ");
-                    sb.append(bundle.size());
-                    sb.append(System.lineSeparator());
-                    sb.append(System.lineSeparator());
-
-                    Set<String> keysSet = bundle.keySet();
-
-                    View rootView = view.getRootView();
-
-                    for (String key : keysSet) {
-                        sb.append(key);
-                        sb.append(System.lineSeparator());
-                        Object object = bundle.get(key);
-
-                        sb.append("\t");
-                        String canClassName = object.getClass().getCanonicalName();
-                        String classString = object.getClass().toString();
-                        sb.append(canClassName);
-                        sb.append("\t");
-                        sb.append(classString);
-                        sb.append(System.lineSeparator());
-
-                        sb.append("\t\t");
-                        sb.append(object.toString());
-                    }
-
+                    sb = IntentExaminationUtilities.stringifyBundle(sb, bundle);
                     textView.setText(sb.toString());
                 } else {
                     textView.setText(R.string.intent_empty);
@@ -103,8 +70,24 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        switch (id){
+            case R.id.action_settings:
             return true;
+            case R.id.save_to_file:
+                TextView textView = (TextView) findViewById(R.id.central_textView);
+                String examinationReport = textView.getText().toString();
+                new LoggingUtilities(this, "IntentExamination.txt", Environment.DIRECTORY_DOCUMENTS).updateTextFile(examinationReport);
+
+                Snackbar.make(textView, "File Saved", Snackbar.LENGTH_LONG)
+                        .setAction("Open", new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                ex
+                                Toast.makeText(MainActivity.this, "Snackbar Clicked On.", Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
+
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
