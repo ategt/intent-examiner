@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -76,14 +77,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.save_to_file:
                 TextView textView = (TextView) findViewById(R.id.central_textView);
                 String examinationReport = textView.getText().toString();
-                new LoggingUtilities(this, "IntentExamination.txt", Environment.DIRECTORY_DOCUMENTS).updateTextFile(examinationReport);
+                LoggingUtilities loggingUtilities = new LoggingUtilities(this, "IntentExamination.txt", Environment.DIRECTORY_DOCUMENTS);
+                        loggingUtilities.updateTextFile(examinationReport);
+                final File logFile = loggingUtilities.getLogFile();
 
                 Snackbar.make(textView, "File Saved", Snackbar.LENGTH_LONG)
                         .setAction("Open", new View.OnClickListener(){
                             @Override
                             public void onClick(View v) {
-                                ex
-                                Toast.makeText(MainActivity.this, "Snackbar Clicked On.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.fromFile(logFile));
+                                startActivity(intent);
                             }
                         }).show();
 
