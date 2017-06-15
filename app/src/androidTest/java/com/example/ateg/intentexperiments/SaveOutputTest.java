@@ -190,9 +190,6 @@ public class SaveOutputTest {
 
         filesToBeDeleted.add(testLogFile);
 
-        long startingTempLogFileSize = templogFile.length();
-        long startingTempLogFileModifiedDate = templogFile.lastModified();
-
         long startingOriginalLogFileSize = originalLogFile.length();
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
 
@@ -262,57 +259,114 @@ public class SaveOutputTest {
     }
 
     @Test
-    public void examineSaveAsTextTest() {
-        Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
-        intending(IntentMatchers.hasAction(Intent.ACTION_VIEW)).respondWith(activityResult);
-
-        LoggingUtilities loggingUtilities = new LoggingUtilities(
-                InstrumentationRegistry.getTargetContext(),
-                "IntentExamination.txt",
-                Environment.DIRECTORY_DOCUMENTS);
-
-        File logFile = loggingUtilities.getLogFile();
-
-        long startingLogFileSize = logFile.exists() ? logFile.length() : -1;
-
+    public void examineSaveAsIntentWithContentTest() {
         String randomString = UUID.randomUUID().toString();
+        Random random = new Random();
+        int randomInt = random.nextInt();
+        Integer randomInteger = new Integer(random.nextInt());
+        boolean randomBool = random.nextBoolean();
+        Boolean randomBoolean = new Boolean(random.nextBoolean());
 
         Intent intent = new Intent();
         intent.putExtra("com.example.ateg.intentexperiments.RANDOM_STRING", randomString);
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_INTEGER", randomInt);
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_INTEGER_OBJECT", randomInteger);
+
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_BOOLEAN", randomBool);
+        intent.putExtra("com.example.ateg.intentexperiments.RANDOM_BOOLEAN_OBJECT", randomBoolean);
+
+
+        Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
+
+        intending(IntentMatchers.hasAction(Intent.ACTION_VIEW)).respondWith(activityResult);
+
+        String newFileName = "TestIntentExamination.txt";
+
+        LoggingUtilities loggingUtilities = new LoggingUtilities(
+                InstrumentationRegistry.getTargetContext(),
+                "StartingIntentExamination.txt",
+                Environment.DIRECTORY_DOCUMENTS);
+
+        File templogFile = loggingUtilities.getLogFile();
+        File testLogFile = new File(templogFile.getParentFile(), newFileName);
+        File originalLogFile = new File(templogFile.getParentFile(), "IntentExamination.txt");
+
+        filesToBeDeleted.add(testLogFile);
+
+        long startingOriginalLogFileSize = originalLogFile.length();
+        long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
+
+        Assert.assertFalse(testLogFile.exists());
+        Assert.assertFalse(templogFile.exists());
+
+        long startingLogFileSize = -1L;
 
         MainActivity mainActivity = mainActivityActivityTestRule.launchActivity(intent);
-
         Espresso.onView(withId(R.id.action_button)).perform(click());
 
-        Espresso.onView(withId(R.id.central_textView)).check(matches(not(withText(R.string.intent_empty))));
+        String emptyIntentString = InstrumentationRegistry.getTargetContext().getResources().getString(R.string.intent_empty);
 
-        Espresso.onView(withId(R.id.save_to_file)).perform(click());
+        TextView textView = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
+        String textViewText = textView.getText().toString();
 
-        Assert.assertTrue(logFile.exists());
-        Assert.assertTrue(startingLogFileSize < logFile.length());
+        Assert.assertFalse(textViewText.contains(emptyIntentString));
+
+        Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+
+        Espresso.onView(withId(R.id.fileName)).perform(clearText());
+        Espresso.onView(withId(R.id.fileName)).perform(ViewActions.typeText(newFileName));
+
+        Espresso.closeSoftKeyboard();
+
+        Espresso.onView(withId(R.id.fileSaveLoad)).check(matches(withText("Save")));
+
+        Espresso.onView(withId(R.id.fileSaveLoad)).perform(ViewActions.scrollTo());
+
+        Espresso.onView(withId(R.id.fileSaveLoad)).check(matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(withId(R.id.fileSaveLoad)).check(ViewAssertions.matches(ViewMatchers.isClickable()));
+
+        long beforeClick = System.currentTimeMillis();
+
+        long temp = Math.round(Math.pow(10.0, 4));
+        beforeClick /= temp;
+
+        beforeClick *= temp;
+
+        Espresso.onView(withId(R.id.fileSaveLoad)).perform(click());
+
+        Assert.assertTrue(testLogFile.exists());
+
+        Assert.assertEquals(startingOriginalLogFileModifiedDate, originalLogFile.lastModified());
+        Assert.assertEquals(startingOriginalLogFileSize, originalLogFile.length());
+
+        Assert.assertFalse(templogFile.exists());
+
+        Assert.assertTrue(testLogFile.length() > 0);
+
+        Assert.assertTrue(beforeClick <= testLogFile.lastModified());
+
+        Assert.assertTrue(System.currentTimeMillis() >= testLogFile.lastModified());
+
+        Assert.assertTrue(startingLogFileSize < testLogFile.length());
 
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
                 .check(matches(isDisplayed()));
 
-        TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
-        String textViewText = textView.getText().toString();
-
-        Assert.assertTrue(textViewText.contains(randomString));
-
         String logFileContents = LoggingUtilities.readFile(InstrumentationRegistry.getTargetContext(),
-                logFile);
+                testLogFile);
 
         Assert.assertTrue(logFileContents.contains(randomString));
+        Assert.assertTrue(logFileContents.contains(String.valueOf(randomInt)));
+        Assert.assertTrue(logFileContents.contains(randomInteger.toString()));
+        Assert.assertTrue(logFileContents.contains(String.valueOf(randomBool)));
+        Assert.assertTrue(logFileContents.contains(randomBoolean.toString()));
 
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
                 .perform(click());
 
-        VerificationMode expectTwoMatchingIntents = Intents.times(2);
         Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
+        Intents.intended(intentMatcher, Intents.times(2));
 
-        Intents.intended(IntentMatchers.hasAction("android.intent.action.VIEW"));
-
-        Intents.intended(intentMatcher, expectTwoMatchingIntents);
+        testLogFile.delete();
     }
-
 }
