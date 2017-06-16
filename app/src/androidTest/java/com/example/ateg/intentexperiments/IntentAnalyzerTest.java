@@ -104,15 +104,22 @@ public class IntentAnalyzerTest {
             Object object = bundle.get(key);
 
             sb.append("\t");
-            String canClassName = object.getClass().getCanonicalName();
-            String classString = object.getClass().toString();
-            sb.append(canClassName);
-            sb.append("\t");
-            sb.append(classString);
-            sb.append(System.lineSeparator());
+            if (object == null)
+                sb.append("-Null-");
+            else {
+                String canClassName = object.getClass().getCanonicalName();
+                String classString = object.getClass().toString();
+                sb.append(canClassName);
+                sb.append("\t");
+                sb.append(classString);
 
-            sb.append("\t\t");
-            sb.append(object.toString());
+                sb.append(System.lineSeparator());
+
+                sb.append("\t\t");
+                sb.append(object.toString());
+            }
+            sb.append(System.lineSeparator());
+            sb.append(System.lineSeparator());
         }
 
         TextView textView = (TextView) mainActivity.findViewById(R.id.central_textView);
