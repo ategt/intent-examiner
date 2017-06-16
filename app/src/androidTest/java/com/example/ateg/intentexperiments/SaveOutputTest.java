@@ -401,7 +401,11 @@ public class SaveOutputTest {
 
     @Test
     public void retainTextOnRotateTest() {
+
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        Espresso.onView(withId(R.id.central_textView)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.opening_greeting)));
 
         TextView textView = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
 
@@ -412,6 +416,9 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.action_button)).perform(click());
 
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
+
+
         String emptyIntent = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.intent_empty);
         displayedText = textView.getText().toString();
 
@@ -419,11 +426,14 @@ public class SaveOutputTest {
 
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
+
         displayedText = textView.getText().toString();
 
         Assert.assertEquals(emptyIntent, displayedText);
 
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
         displayedText = textView.getText().toString();
 
