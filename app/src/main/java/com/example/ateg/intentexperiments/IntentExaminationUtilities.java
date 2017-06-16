@@ -1,8 +1,10 @@
 package com.example.ateg.intentexperiments;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ public class IntentExaminationUtilities {
     public static StringBuilder stringifyIntent(Intent intent, StringBuilder sb) {
         String action = intent.getAction();
         int flags = intent.getFlags();
+        Set<String> categories = intent.getCategories();
 
         sb.append("Action: ");
         sb.append(action);
@@ -23,6 +26,55 @@ public class IntentExaminationUtilities {
         sb.append("Flags: ");
         sb.append(flags);
         sb.append(System.lineSeparator());
+
+        sb.append("Categories: ");
+        Iterator<String> categoriesIterator = categories.iterator();
+        while (categoriesIterator.hasNext()) {
+            sb.append(categoriesIterator.next());
+            if (categoriesIterator.hasNext())
+                sb.append(", ");
+        }
+        sb.append(System.lineSeparator());
+
+        String type = intent.getType();
+        if (type != null) {
+            sb.append("Type: ");
+            sb.append(type);
+            sb.append(System.lineSeparator());
+        }
+
+        String dataString = intent.getDataString();
+        if (dataString != null) {
+            sb.append("Data: ");
+            sb.append(dataString);
+            sb.append(System.lineSeparator());
+        }
+
+        ComponentName componentName = intent.getComponent();
+
+        if (componentName != null) {
+            String componentString = componentName.getPackageName();
+            if (componentString != null) {
+                sb.append("Component: ");
+                sb.append(componentString);
+                sb.append(System.lineSeparator());
+            }
+        }
+
+        String intentPackage = intent.getPackage();
+        if (intentPackage != null) {
+            sb.append("Package: ");
+            sb.append(intentPackage);
+            sb.append(System.lineSeparator());
+        }
+
+        String scheme = intent.getScheme();
+        if (scheme != null) {
+            sb.append("Scheme: ");
+            sb.append(scheme);
+            sb.append(System.lineSeparator());
+        }
+
         return sb;
     }
 
