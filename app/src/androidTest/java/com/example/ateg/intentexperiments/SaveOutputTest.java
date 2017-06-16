@@ -22,6 +22,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -393,48 +394,54 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
 
-        Espresso.closeSoftKeyboard();
+        //Espresso.closeSoftKeyboard();
         //Espresso.
+
+        Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("IntentExamination.txt")));
 
         //InstrumentationRegistry.
 
         //InstrumentationRegistry.getTargetContext().getAssets().
         //EditText editText = (EditText) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileName);
-        TextView buttoviewnTxt = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
-
-        EditText aeditText = (EditText) mainActivity.findViewById(R.id.fileName_editText);
-
-        if (aeditText == null) {
-
-            //ViewGroup viewGroup = buttoviewnTxt.getRootView();
-            //mainActivity.getLayoutInflater().inflate(R.layout.dialog,)
-            //mainActivity.
-
-        }
-
-        LinearLayout buttoviewdnTxt = (LinearLayout) mainActivityActivityTestRule.getActivity().findViewById(R.id.saveFileDialog);
-        Button buttonTxt = (Button) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileCancel);
-        //Button buttonTxt = (Button) mainActivity.findViewById(R.id.fileCancel);
-        EditText editText = (EditText) buttoviewnTxt.findViewById(R.id.fileName_editText);
-        String gest = buttonTxt.getText().toString();
-
-        //ViewFinderImpl_Factory.create(matches(withId(R.id.fileName)))
-
-        //EditText editText = (EditText) mainActivity.findViewById(R.id.fileName);
-
-        String editTextString = editText.getText().toString();
-
-        Assert.assertTrue(editTextString.length() > 10);
+//        TextView buttoviewnTxt = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
+//
+//        EditText aeditText = (EditText) mainActivity.findViewById(R.id.fileName_editText);
+//
+//        if (aeditText == null) {
+//
+//            //ViewGroup viewGroup = buttoviewnTxt.getRootView();
+//            //mainActivity.getLayoutInflater().inflate(R.layout.dialog,)
+//            //mainActivity.
+//            Log.i("asdf","aedit Null");
+//
+//        }
+//
+//        LinearLayout buttoviewdnTxt = (LinearLayout) mainActivityActivityTestRule.getActivity().findViewById(R.id.saveFileDialog);
+//        Button buttonTxt = (Button) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileCancel);
+//        //Button buttonTxt = (Button) mainActivity.findViewById(R.id.fileCancel);
+//        EditText editText = (EditText) buttoviewnTxt.findViewById(R.id.fileName_editText);
+//        String gest = buttonTxt.getText().toString();
+//
+//        //ViewFinderImpl_Factory.create(matches(withId(R.id.fileName)))
+//
+//        //EditText editText = (EditText) mainActivity.findViewById(R.id.fileName);
+//
+//        String editTextString = editText.getText().toString();
+//
+//        Assert.assertTrue(editTextString.length() > 10);
 
         Espresso.onView(withId(R.id.clearLine)).perform(click());
 
         //EditText emptyEditText = (EditText) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileName);
         //String emptyEditTextString = emptyEditText.getText().toString();
-        String emptyEditTextString = editText.getText().toString();
+        //String emptyEditTextString = editText.getText().toString();
 
-        Assert.assertTrue(emptyEditTextString.isEmpty());
+        //Assert.assertTrue(emptyEditTextString.isEmpty());
 
-        Espresso.closeSoftKeyboard();
+        //Espresso.closeSoftKeyboard();
+
+        Espresso.onView(withId(R.id.fileName_editText)).check(matches(not(withText("IntentExamination.txt"))));
+        Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("")));
 
         Espresso.onView(withId(R.id.fileCancel)).perform(click());
     }
