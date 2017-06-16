@@ -418,25 +418,12 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
-
-        String emptyIntent = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.intent_empty);
-        displayedText = textView.getText().toString();
-
-        Assert.assertEquals(emptyIntent, displayedText);
-
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
-        displayedText = textView.getText().toString();
-
-        Assert.assertEquals(emptyIntent, displayedText);
-
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
-        displayedText = textView.getText().toString();
-
-        Assert.assertEquals(emptyIntent, displayedText);
     }
 }
