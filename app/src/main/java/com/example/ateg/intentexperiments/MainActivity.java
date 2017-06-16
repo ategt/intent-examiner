@@ -75,9 +75,6 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Snackbar Clicked On.", Toast.LENGTH_SHORT).show();
                             }
                         }).show();
-
-                Toast.makeText(MainActivity.this, "Click Completed", Toast.LENGTH_SHORT).show();
-                Log.d("asf", "Click Completed");
             }
         });
     }
