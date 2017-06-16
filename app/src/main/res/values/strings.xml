@@ -21,4 +21,5 @@
     <string name="folderCreationOk">Folder created sucessfully</string>
     <string name="folderCreationError">Error while creating folder</string>
     <string name="information">Information</string>
+    <string name="clearLineButtonText">Clear</string>
 </resources>

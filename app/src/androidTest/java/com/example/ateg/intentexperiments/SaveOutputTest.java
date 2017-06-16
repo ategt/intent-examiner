@@ -2,22 +2,30 @@ package com.example.ateg.intentexperiments;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.ViewFinder;
 import android.support.test.espresso.action.EspressoKey;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.base.ViewFinderImpl_Factory;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.OngoingStubbing;
 import android.support.test.espresso.intent.VerificationMode;
 import android.support.test.espresso.intent.VerificationModes;
 import android.support.test.espresso.intent.matcher.IntentMatchers;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -50,6 +58,7 @@ import static org.hamcrest.Matchers.not;
  * Created by ATeg on 6/14/2017.
  */
 @RunWith(AndroidJUnit4.class)
+@LargeTest
 public class SaveOutputTest {
 
     private List<File> filesToBeDeleted;
@@ -204,8 +213,8 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
 
-        Espresso.onView(withId(R.id.fileName)).perform(clearText());
-        Espresso.onView(withId(R.id.fileName)).perform(ViewActions.typeText(newFileName));
+        Espresso.onView(withId(R.id.fileName_editText)).perform(clearText());
+        Espresso.onView(withId(R.id.fileName_editText)).perform(ViewActions.typeText(newFileName));
 
         Espresso.closeSoftKeyboard();
 
@@ -313,8 +322,8 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
 
-        Espresso.onView(withId(R.id.fileName)).perform(clearText());
-        Espresso.onView(withId(R.id.fileName)).perform(ViewActions.typeText(newFileName));
+        Espresso.onView(withId(R.id.fileName_editText)).perform(clearText());
+        Espresso.onView(withId(R.id.fileName_editText)).perform(ViewActions.typeText(newFileName));
 
         Espresso.closeSoftKeyboard();
 
@@ -368,5 +377,65 @@ public class SaveOutputTest {
         Intents.intended(intentMatcher, Intents.times(2));
 
         testLogFile.delete();
+    }
+
+    @Test
+    public void clearLineButtonTest() {
+        Context context = InstrumentationRegistry.getTargetContext();
+        MainActivity mainActivity = mainActivityActivityTestRule.launchActivity(new Intent(context, MainActivity.class));
+
+//        LoggingUtilities loggingUtilities = new LoggingUtilities(
+//                InstrumentationRegistry.getTargetContext(),
+//                "StartingIntentExamination.txt",
+//                Environment.DIRECTORY_DOCUMENTS);
+
+        Espresso.onView(withId(R.id.action_button)).perform(click());
+
+        Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+
+        Espresso.closeSoftKeyboard();
+        //Espresso.
+
+        //InstrumentationRegistry.
+
+        //InstrumentationRegistry.getTargetContext().getAssets().
+        //EditText editText = (EditText) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileName);
+        TextView buttoviewnTxt = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
+
+        EditText aeditText = (EditText) mainActivity.findViewById(R.id.fileName_editText);
+
+        if (aeditText == null) {
+
+            //ViewGroup viewGroup = buttoviewnTxt.getRootView();
+            //mainActivity.getLayoutInflater().inflate(R.layout.dialog,)
+            //mainActivity.
+
+        }
+
+        LinearLayout buttoviewdnTxt = (LinearLayout) mainActivityActivityTestRule.getActivity().findViewById(R.id.saveFileDialog);
+        Button buttonTxt = (Button) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileCancel);
+        //Button buttonTxt = (Button) mainActivity.findViewById(R.id.fileCancel);
+        EditText editText = (EditText) buttoviewnTxt.findViewById(R.id.fileName_editText);
+        String gest = buttonTxt.getText().toString();
+
+        //ViewFinderImpl_Factory.create(matches(withId(R.id.fileName)))
+
+        //EditText editText = (EditText) mainActivity.findViewById(R.id.fileName);
+
+        String editTextString = editText.getText().toString();
+
+        Assert.assertTrue(editTextString.length() > 10);
+
+        Espresso.onView(withId(R.id.clearLine)).perform(click());
+
+        //EditText emptyEditText = (EditText) mainActivityActivityTestRule.getActivity().findViewById(R.id.fileName);
+        //String emptyEditTextString = emptyEditText.getText().toString();
+        String emptyEditTextString = editText.getText().toString();
+
+        Assert.assertTrue(emptyEditTextString.isEmpty());
+
+        Espresso.closeSoftKeyboard();
+
+        Espresso.onView(withId(R.id.fileCancel)).perform(click());
     }
 }

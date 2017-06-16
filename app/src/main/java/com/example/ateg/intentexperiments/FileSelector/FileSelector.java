@@ -50,6 +50,7 @@ public class FileSelector {
      * Button to create a new folder
      */
     private Button mNewFolderButton;
+    private Button mClearLineButton;
 
     /**
      * Spinner by which to select the file type filtering
@@ -103,7 +104,7 @@ public class FileSelector {
         mDialog.setTitle(mCurrentLocation.getAbsolutePath());
 
         if (file != null && !file.isDirectory()){
-            EditText editText = (EditText) mDialog.findViewById(R.id.fileName);
+            EditText editText = (EditText) mDialog.findViewById(R.id.fileName_editText);
             editText.setText(file.getName());
         }
 
@@ -113,6 +114,7 @@ public class FileSelector {
         setSaveLoadButton(operation);
         setNewFolderButton(operation);
         setCancelButton();
+        setClearButton();
     }
 
     private static File determineStartingFolder(Context context) {
@@ -182,7 +184,7 @@ public class FileSelector {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 // Check if "../" item should be added.
-                ((EditText) mDialog.findViewById(R.id.fileName)).setText("");
+                ((EditText) mDialog.findViewById(R.id.fileName_editText)).setText("");
                 if (id == 0) {
                     final String parentLocation = mCurrentLocation.getParent();
                     if (parentLocation != null) { // text == "../"
@@ -260,7 +262,7 @@ public class FileSelector {
             String fileFilter = ((TextView) mFilterSpinner.getSelectedView()).getText().toString();
             makeList(mCurrentLocation, fileFilter);
         } else if (itemLocation.isFile()) {
-            final EditText fileName = (EditText) mDialog.findViewById(R.id.fileName);
+            final EditText fileName = (EditText) mDialog.findViewById(R.id.fileName_editText);
             fileName.setText(itemText);
         }
     }
@@ -349,8 +351,19 @@ public class FileSelector {
         });
     }
 
+    private void setClearButton() {
+        mClearLineButton = (Button) mDialog.findViewById(R.id.clearLine);
+        mClearLineButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                EditText editText = (EditText) mDialog.findViewById(R.id.fileName_editText);
+                editText.setText("");
+            }
+        });
+    }
+
     public String getSelectedFileName() {
-        final EditText fileName = (EditText) mDialog.findViewById(R.id.fileName);
+        final EditText fileName = (EditText) mDialog.findViewById(R.id.fileName_editText);
         return fileName.getText().toString();
     }
 
