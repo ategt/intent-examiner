@@ -403,6 +403,8 @@ public class SaveOutputTest {
     public void retainTextOnRotateTest() {
 
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(isDisplayed()));
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.opening_greeting)));
