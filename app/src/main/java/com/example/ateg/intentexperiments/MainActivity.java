@@ -28,6 +28,8 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TEXT_WINDOW_VALUE = "com.example.ateg.intentexperiments.TEXT_WINDOW_VALUE";
+
     /** Sample filters array */
     final String[] mFileFilter = { ".txt", "*.*" };
     final String defaultLogFileName = "IntentExamination.txt";
@@ -38,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (savedInstanceState != null){
+            CharSequence textWindowValue = savedInstanceState.getCharSequence(TEXT_WINDOW_VALUE);
+            TextView textViewAs = (TextView) findViewById(R.id.central_textView);
+            textViewAs.setText(textWindowValue);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.action_button);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +124,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        TextView textViewAs = (TextView) findViewById(R.id.central_textView);
+        outState.putCharSequence(TEXT_WINDOW_VALUE, textViewAs.getText());
     }
 
     private void fileSaveCompleteSnackBar(TextView textViewAs, final File logFileAs) {

@@ -3,6 +3,7 @@ package com.example.ateg.intentexperiments;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
@@ -380,5 +381,52 @@ public class SaveOutputTest {
         Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("")));
 
         Espresso.onView(withId(R.id.fileCancel)).perform(click());
+    }
+
+    @Test
+    public void clearLineButtonLandscapeTest() {
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        Espresso.onView(withId(R.id.action_button)).perform(click());
+        Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+
+        Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("IntentExamination.txt")));
+
+        Espresso.onView(withId(R.id.clearLine)).perform(click());
+
+        Espresso.onView(withId(R.id.fileName_editText)).check(matches(not(withText("IntentExamination.txt"))));
+        Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("")));
+
+        Espresso.onView(withId(R.id.fileCancel)).perform(click());
+    }
+
+    @Test
+    public void retainTextOnRotateTest() {
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        TextView textView = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
+
+        String displayedText = textView.getText().toString();
+        String noExaminationYet = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.opening_greeting);
+
+        Assert.assertEquals(noExaminationYet, displayedText);
+
+        Espresso.onView(withId(R.id.action_button)).perform(click());
+
+        String emptyIntent = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.intent_empty);
+        displayedText = textView.getText().toString();
+
+        Assert.assertEquals(emptyIntent, displayedText);
+
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        displayedText = textView.getText().toString();
+
+        Assert.assertEquals(emptyIntent, displayedText);
+
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        displayedText = textView.getText().toString();
+
+        Assert.assertEquals(emptyIntent, displayedText);
     }
 }
