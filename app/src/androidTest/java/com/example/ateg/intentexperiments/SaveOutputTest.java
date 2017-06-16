@@ -414,6 +414,8 @@ public class SaveOutputTest {
 
         Assert.assertEquals(noExaminationYet, displayedText);
 
+        Espresso.onView(withId(R.id.action_button)).check(matches(isDisplayed()));
+
         Espresso.onView(withId(R.id.action_button)).perform(click());
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));

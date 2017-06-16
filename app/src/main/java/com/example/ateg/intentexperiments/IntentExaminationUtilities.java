@@ -27,14 +27,16 @@ public class IntentExaminationUtilities {
         sb.append(flags);
         sb.append(System.lineSeparator());
 
-        sb.append("Categories: ");
-        Iterator<String> categoriesIterator = categories.iterator();
-        while (categoriesIterator.hasNext()) {
-            sb.append(categoriesIterator.next());
-            if (categoriesIterator.hasNext())
-                sb.append(", ");
+        if (categories != null) {
+            sb.append("Categories: ");
+            Iterator<String> categoriesIterator = categories.iterator();
+            while (categoriesIterator.hasNext()) {
+                sb.append(categoriesIterator.next());
+                if (categoriesIterator.hasNext())
+                    sb.append(", ");
+            }
+            sb.append(System.lineSeparator());
         }
-        sb.append(System.lineSeparator());
 
         String type = intent.getType();
         if (type != null) {
