@@ -43,6 +43,12 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     final String[] mFileFilter = {".txt", "*.*"};
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -56,7 +62,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_main, menu);
     }
 
     @Override
@@ -217,16 +223,18 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected int layout() {
-        return R.layout.activity_main;
+        return R.layout.main_layout;
     }
 
     @Override
     protected void setUi(View v) {
+setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
+        //getActivity().setM
 
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-
-        getActivity().setActionBar(toolbar);
-
+//        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+//
+//        getActivity().setActionBar(toolbar);
 
     }
 
