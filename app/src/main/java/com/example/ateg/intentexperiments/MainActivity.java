@@ -1,9 +1,12 @@
 package com.example.ateg.intentexperiments;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,12 +19,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ateg.intentexperiments.FileSelector.FileOperation;
 import com.example.ateg.intentexperiments.FileSelector.FileSelector;
 import com.example.ateg.intentexperiments.FileSelector.OnHandleFileListener;
+import com.example.ateg.intentexperiments.FileSelector.SaveLoadClickListener;
 
 import java.io.File;
 import java.util.Set;
@@ -30,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TEXT_WINDOW_VALUE = "com.example.ateg.intentexperiments.TEXT_WINDOW_VALUE";
 
-    /** Sample filters array */
-    final String[] mFileFilter = { ".txt", "*.*" };
+    /**
+     * Sample filters array
+     */
+    final String[] mFileFilter = {".txt", "*.*"};
     final String defaultLogFileName = "IntentExamination.txt";
 
     @Override
@@ -41,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             CharSequence textWindowValue = savedInstanceState.getCharSequence(TEXT_WINDOW_VALUE);
             TextView textViewAs = (TextView) findViewById(R.id.central_textView);
             textViewAs.setText(textWindowValue);
@@ -91,6 +101,65 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_settings:
+
+                final Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.settings_dialog);
+                dialog.setTitle(R.string.settings_dialog_title);
+                dialog.setCancelable(true);
+
+                Button acceptButton = (Button) dialog.findViewById(R.id.settings_accept_button);
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        
+                        SharedPreferences sharedPreferences
+                                = getSharedPreferences("IntentPreferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        CheckedTextView autoExamineCheckbox
+                                = view.findViewById(R.id.settings_auto_examine_checkBox);
+                        editor.putBoolean("asdfAutoExamine", autoExamineCheckbox.isChecked());
+
+                        CheckBox checkBox = view.findViewById(R.id.settings_auto_save_checkBox);
+                        boolean autoSave = checkBox.isChecked();
+                        editor.putBoolean("asdfautosave", autoSave);
+
+                        CheckBox showExamineButton
+                                = view.findViewById(R.id.settings_show_examine_button_checkBox);
+                        editor.putBoolean("asdf", showExamineButton.isChecked());
+
+                        EditText defaultFileName
+                                = view.findViewById(R.id.settings_default_file_name_editText);
+                        editor.putString("defaultFileName", defaultFileName.getText().toString());
+
+                        editor.commit();
+
+                        dialog.dismiss();
+                    }
+                });
+
+                Button resetButton = dialog.findViewById(R.id.settings_reset_button);
+                resetButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SharedPreferences sharedPreferences
+                                = getSharedPreferences("IntentPreferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.clear();
+                        editor.commit();
+                    }
+                });
+
+                Button cancelButton = dialog.findViewById(R.id.settings_cancel_button);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
                 return true;
             case R.id.save_to_file:
                 TextView textView = (TextView) findViewById(R.id.central_textView);
@@ -103,22 +172,22 @@ public class MainActivity extends AppCompatActivity {
             case R.id.save_to_file_as:
                 File[] files = ContextCompat.getExternalFilesDirs(this, Environment.DIRECTORY_DOCUMENTS);
 
-                File storageDir = files[files.length-1];
+                File storageDir = files[files.length - 1];
 
                 new FileSelector(this,
                         FileOperation.SAVE,
-                            new OnHandleFileListener() {
-                                @Override
-                                public void handleFile(String filePath) {
-                                    TextView textViewAs = (TextView) findViewById(R.id.central_textView);
-                                    File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
+                        new OnHandleFileListener() {
+                            @Override
+                            public void handleFile(String filePath) {
+                                TextView textViewAs = (TextView) findViewById(R.id.central_textView);
+                                File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
 
-                                    fileSaveCompleteSnackBar(textViewAs, logFileAs);
-                                }
-                            },
+                                fileSaveCompleteSnackBar(textViewAs, logFileAs);
+                            }
+                        },
                         mFileFilter,
                         new File(storageDir, defaultLogFileName))
-                .show();
+                        .show();
 
                 return true;
         }
