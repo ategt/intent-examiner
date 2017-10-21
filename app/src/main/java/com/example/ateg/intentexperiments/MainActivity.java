@@ -1,19 +1,23 @@
 package com.example.ateg.intentexperiments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -61,32 +65,26 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView textView = (TextView) view.getRootView().findViewById(R.id.central_textView);
-                StringBuilder sb = new StringBuilder();
-
-                Intent intent = getIntent();
-                sb = IntentExaminationUtilities.stringifyIntent(intent, sb);
-
-                Bundle bundle = intent.getExtras();
-
-                if (bundle != null) {
-                    sb = IntentExaminationUtilities.stringifyBundle(sb, bundle);
-                    textView.setText(sb.toString());
-                    textView.setGravity(Gravity.CENTER_VERTICAL);
-                } else {
-                    textView.setText(R.string.intent_empty);
-                    textView.setGravity(Gravity.CENTER);
-                }
-
-                Snackbar.make(view, "Scan Completed", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(MainActivity.this, "Snackbar Clicked On.", Toast.LENGTH_SHORT).show();
-                            }
-                        }).show();
+                new ExamineServices(MainActivity.this).examineIntent(view, getIntent());
             }
         });
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        Intent in = getIntent();
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+
+        Boolean autoExamine = getSharedPreferences(SettingsOnAcceptListener.PREFERENCES_KEY, Context.MODE_PRIVATE)
+                .getBoolean(SettingsOnAcceptListener.AUTO_EXAMINE_KEY, false);
+        if (autoExamine) {
+            new ExamineServices(MainActivity.this).examineIntent(getCurrentFocus().getRootView(), getIntent());
+        }
     }
 
     @Override
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
                 SharedPreferences sharedPreferences
                         = getSharedPreferences(SettingsOnAcceptListener.PREFERENCES_KEY, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 CheckedTextView autoExamineCheckbox
                         = dialog.findViewById(R.id.settings_auto_examine_checkBox);
