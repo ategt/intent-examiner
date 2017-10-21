@@ -39,7 +39,7 @@ public class LoggingUtilities {
     }
 
     private void initLogFile(@NonNull Context context, @NonNull String logFile, String directoryType) {
-        File createdLogFile = establishLogFile(context, logFile, directoryType);
+        File createdLogFile = establishLogFile(context, directoryType);
         this.setLogFile(createdLogFile);
     }
 
@@ -48,10 +48,10 @@ public class LoggingUtilities {
     }
 
     public File establishLogFile(String fileName) {
-        return establishLogFile(context, fileName, getDirectoryType());
+        return establishLogFile(context, getDirectoryType());
     }
 
-    public static File establishLogFile(Context context, String fileName, String directoryType) {
+    public static File establishLogFile(Context context, String directoryType) {
 
         File[] files = ContextCompat.getExternalFilesDirs(context, directoryType);
 
@@ -65,7 +65,18 @@ public class LoggingUtilities {
 
         generateFolderTree(context, storageDir);
 
+        String fileName = getDefaultFileName(context);
+
         return new File(storageDir, fileName);
+    }
+
+    @NonNull
+    public static String getDefaultFileName(Context context) {
+        return context.getSharedPreferences(
+                SettingsOnAcceptListener.PREFERENCES_KEY,
+                Context.MODE_PRIVATE)
+                .getString(SettingsOnAcceptListener.DEFAULT_FILE_NAME_KEY,
+                        context.getString(R.string.default_file_name));
     }
 
     public static void generateFolderTree(Context context, File storageDir) {

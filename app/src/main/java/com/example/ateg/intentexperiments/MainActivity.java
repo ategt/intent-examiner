@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
      * Sample filters array
      */
     final String[] mFileFilter = {".txt", "*.*"};
-    final String defaultLogFileName = "IntentExamination.txt";
+    //final String defaultLogFileName = "IntentExamination.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,36 +107,34 @@ public class MainActivity extends AppCompatActivity {
                 dialog.setTitle(R.string.settings_dialog_title);
                 dialog.setCancelable(true);
 
+
+                SharedPreferences sharedPreferences
+                        = getSharedPreferences(SettingsOnAcceptListener.PREFERENCES_KEY, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                CheckedTextView autoExamineCheckbox
+                        = dialog.findViewById(R.id.settings_auto_examine_checkBox);
+                Boolean autoExamine = sharedPreferences.getBoolean(SettingsOnAcceptListener.AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
+                autoExamineCheckbox.setChecked(autoExamine);
+
+                CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
+                boolean autoSave = checkBox.isChecked();
+                autoSave = sharedPreferences.getBoolean(SettingsOnAcceptListener.AUTO_SAVE_KEY, autoSave);
+                checkBox.setChecked(autoSave);
+
+                CheckBox showExamineButtonCheckBox
+                        = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
+                Boolean showExamineButton
+                        = sharedPreferences.getBoolean(SettingsOnAcceptListener.SHOW_EXAMINE_BUTTON_KEY, showExamineButtonCheckBox.isChecked());
+                showExamineButtonCheckBox.setChecked(showExamineButton);
+
+                EditText defaultFileNameEditText
+                        = dialog.findViewById(R.id.settings_default_file_name_editText);
+                String defaultFileName = sharedPreferences.getString(SettingsOnAcceptListener.DEFAULT_FILE_NAME_KEY, defaultFileNameEditText.getText().toString());
+                defaultFileNameEditText.setText(defaultFileName);
+
                 Button acceptButton = (Button) dialog.findViewById(R.id.settings_accept_button);
-                acceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        
-                        SharedPreferences sharedPreferences
-                                = getSharedPreferences("IntentPreferences", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                        CheckedTextView autoExamineCheckbox
-                                = view.findViewById(R.id.settings_auto_examine_checkBox);
-                        editor.putBoolean("asdfAutoExamine", autoExamineCheckbox.isChecked());
-
-                        CheckBox checkBox = view.findViewById(R.id.settings_auto_save_checkBox);
-                        boolean autoSave = checkBox.isChecked();
-                        editor.putBoolean("asdfautosave", autoSave);
-
-                        CheckBox showExamineButton
-                                = view.findViewById(R.id.settings_show_examine_button_checkBox);
-                        editor.putBoolean("asdf", showExamineButton.isChecked());
-
-                        EditText defaultFileName
-                                = view.findViewById(R.id.settings_default_file_name_editText);
-                        editor.putString("defaultFileName", defaultFileName.getText().toString());
-
-                        editor.commit();
-
-                        dialog.dismiss();
-                    }
-                });
+                acceptButton.setOnClickListener(new SettingsOnAcceptListener(this, dialog));
 
                 Button resetButton = dialog.findViewById(R.id.settings_reset_button);
                 resetButton.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.save_to_file:
                 TextView textView = (TextView) findViewById(R.id.central_textView);
                 File logFile = saveTextViewContentToFile(textView,
-                        LoggingUtilities.establishLogFile(this, defaultLogFileName, Environment.DIRECTORY_DOCUMENTS));
+                        LoggingUtilities.establishLogFile(this, Environment.DIRECTORY_DOCUMENTS));
 
                 fileSaveCompleteSnackBar(textView, logFile);
 
@@ -186,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         },
                         mFileFilter,
-                        new File(storageDir, defaultLogFileName))
+                        new File(storageDir, LoggingUtilities.getDefaultFileName(this)))
                         .show();
 
                 return true;

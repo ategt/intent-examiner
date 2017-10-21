@@ -25,7 +25,7 @@
     <string name="auto_examine">Auto Examine</string>
     <string name="auto_save">Auto Save</string>
     <string name="show_examine_button">Show Examine Button</string>
-    <string name="default_file_name">defaultFileName.txt</string>
+    <string name="default_file_name">IntentExamination.txt</string>
     <string name="change_default_directory">Change Default Directory</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
