@@ -3,23 +3,31 @@ package com.example.ateg.intentexperiments;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- *  Custom Fragment implementation to bind basic elements and force the use of
- *  the MVP pattern logically attaching a presenter to this Fragment.
+ * Custom Fragment implementation to bind basic elements and force the use of
+ * the MVP pattern logically attaching a presenter to this Fragment.
  */
 public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
 
+    private static final String TAG = "BaseFragment";
     protected T mPresenter;
     private View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(layout(), container, false);
+        int layoutId = layout();
+        Log.d(TAG, "Loading Fragment Layout. -" + layoutId + "- " +
+                getResources().getResourceEntryName(layoutId) + ":" +
+                getResources().getResourceName(layoutId) + " - " +
+                getResources().getResourceTypeName(layoutId));
+        v = inflater.inflate(layoutId, container, false);
+        Log.d(TAG, "Done loading " + layoutId);
         mPresenter = createPresenter();
         setUi(v);
         init();
@@ -28,7 +36,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
         return v;
     }
 
-    protected View getCreatedView(){
+    protected View getCreatedView() {
         return v;
     }
 

@@ -34,4 +34,13 @@
             android:scaleType="center"
             android:src="@drawable/ic_search_altl" />
     </RelativeLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/action_button_b"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:scaleType="center"-->
+        <!--android:src="@drawable/ic_search_altl" />-->
 </RelativeLayout>
