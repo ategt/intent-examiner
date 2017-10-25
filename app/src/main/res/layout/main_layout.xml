@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <!--<Toolbar-->
-        <!--android:id="@+id/toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--android:background="?attr/colorPrimary"-->
-        <!--android:popupTheme="@style/AppTheme.PopupOverlay" />-->
 
     <TextView
         android:id="@+id/central_textView"
@@ -20,7 +13,7 @@
         android:isScrollContainer="true"
         android:text="@string/opening_greeting" />
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom|end">
@@ -33,14 +26,6 @@
             android:layout_margin="@dimen/fab_margin"
             android:scaleType="center"
             android:src="@drawable/ic_search_altl" />
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
-    <!--<Button-->
-        <!--android:id="@+id/action_button_b"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:scaleType="center"-->
-        <!--android:src="@drawable/ic_search_altl" />-->
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

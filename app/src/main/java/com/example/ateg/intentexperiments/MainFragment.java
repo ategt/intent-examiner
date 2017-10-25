@@ -1,9 +1,11 @@
 package com.example.ateg.intentexperiments;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,6 +59,13 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
             TextView textViewAs = (TextView) getCreatedView().findViewById(R.id.central_textView);
             textViewAs.setText(textWindowValue);
         }
+
+        ActionBar actionBar = getActivity().getActionBar();
+
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(getResources().getDrawable(R.mipmap.ic_search_icon, getActivity().getTheme()));
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_USE_LOGO);
     }
 
     @Override

@@ -1,16 +1,11 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.DeviceDefault">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="android:Theme.DeviceDefault.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBarTheme</item>
-        <!--<item name="android:actionBarTheme">@style/Widget.AppCompat.ActionBar</item>-->
-        <!--<item name="android:actionBarItemBackground">@style/AppTheme.AppBarOverlay</item>-->
-
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -28,12 +23,18 @@
         <item name="android:itemBackground">@color/colorLight</item>
         <item name="android:actionBarItemBackground">@color/colorLight</item>
         <item name="android:titleTextStyle">@style/AppTheme.ActionBarTheme.TitleTextStyle</item>
+        <item name="android:icon">@mipmap/ic_search_icon</item>
+        <item name="android:closeIcon">@mipmap/ic_launcher</item>
+        <item name="android:actionOverflowButtonStyle">@style/AppTheme.OverflowButtonStyle</item>
+        <item name="android:showAsAction">ifRoom</item>
+        <!--<item name="android:t"-->
     </style>
 
-    <style name="AppTheme.ActionBarTheme.TitleTextStyle" parent="@android:style/Theme.DeviceDefault">
+    <style name="AppTheme.ActionBarTheme.TitleTextStyle" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColor">@color/colorLight</item>
     </style>
 
-    <style name="listMenuViewStyle" parent="android:Widget.ListView.Menu"></style>
-
+    <style name="AppTheme.OverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/colorLight</item>
+    </style>
 </resources>
