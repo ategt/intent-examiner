@@ -38,7 +38,7 @@ public class SettingsOnAcceptListener implements OnClickListener  {
                 = context.getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        CheckedTextView autoExamineCheckbox
+        CheckBox autoExamineCheckbox
                 = view.findViewById(R.id.settings_auto_examine_checkBox);
         editor.putBoolean(AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
 

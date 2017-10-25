@@ -10,30 +10,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <CheckBox
+            android:id="@+id/settings_auto_examine_checkBox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fab_margin"
+            android:text="@string/auto_examine" />
 
-            <CheckedTextView
-                android:id="@+id/settings_auto_examine_checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/fab_margin"
-                android:text="@string/auto_examine" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <CheckBox
+            android:id="@+id/settings_auto_save_checkBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <CheckBox
-                android:id="@+id/settings_auto_save_checkBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/fab_margin"
-                android:text="@string/auto_save" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fab_margin"
+            android:text="@string/auto_save" />
 
         <CheckBox
             android:id="@+id/settings_show_examine_button_checkBox"

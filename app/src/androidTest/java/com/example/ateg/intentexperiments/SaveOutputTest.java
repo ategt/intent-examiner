@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -371,7 +373,13 @@ public class SaveOutputTest {
     @Test
     public void clearLineButtonTest() {
         Espresso.onView(withId(R.id.action_button)).perform(click());
-        Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+
+        try {
+            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        } catch (android.support.test.espresso.NoMatchingViewException ex){
+            openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        }
 
         Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("IntentExamination.txt")));
 
