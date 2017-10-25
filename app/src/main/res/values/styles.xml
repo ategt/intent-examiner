@@ -26,15 +26,18 @@
         <item name="android:icon">@mipmap/ic_search_icon</item>
         <item name="android:closeIcon">@mipmap/ic_launcher</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.OverflowButtonStyle</item>
-        <item name="android:showAsAction">ifRoom</item>
-        <!--<item name="android:t"-->
     </style>
 
     <style name="AppTheme.ActionBarTheme.TitleTextStyle" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColor">@color/colorLight</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="AppTheme.OverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/colorLight</item>
+        <item name="android:color">@color/colorLight</item>
+        <item name="android:background">@color/colorLight</item>
+        <item name="android:colorForeground">@color/colorLight</item>
+        <item name="android:colorPrimary">@color/colorLight</item>
     </style>
 </resources>
