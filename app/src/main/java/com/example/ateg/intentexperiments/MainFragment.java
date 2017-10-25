@@ -60,12 +60,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
             textViewAs.setText(textWindowValue);
         }
 
-        ActionBar actionBar = getActivity().getActionBar();
-
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setLogo(getResources().getDrawable(R.mipmap.ic_search_icon, getActivity().getTheme()));
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_USE_LOGO);
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
     }
 
     @Override
@@ -83,10 +78,11 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.settings_dialog);
                 dialog.setTitle(R.string.settings_dialog_title);
-                dialog.setCancelable(true);
+                //dialog.setCancelable(true);
 
                 SharedPreferences sharedPreferences
-                        = getActivity().getSharedPreferences(SettingsOnAcceptListener.PREFERENCES_KEY, getActivity().MODE_PRIVATE);
+                        = getActivity()
+                        .getSharedPreferences(SettingsOnAcceptListener.PREFERENCES_KEY, getActivity().MODE_PRIVATE);
 
                 CheckedTextView autoExamineCheckbox
                         = dialog.findViewById(R.id.settings_auto_examine_checkBox);

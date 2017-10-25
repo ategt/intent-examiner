@@ -33,11 +33,14 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <style name="AppTheme.OverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+    <style name="AppTheme.OverflowButtonStyle" parent="Base.Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/colorLight</item>
         <item name="android:color">@color/colorLight</item>
         <item name="android:background">@color/colorLight</item>
         <item name="android:colorForeground">@color/colorLight</item>
         <item name="android:colorPrimary">@color/colorLight</item>
-    </style>
+        <item name="android:colorButtonNormal">@color/colorLight</item>
+        <item name="android:fillColor">@color/colorLight</item>
+        <item name="android:solidColor">@color/colorLight</item>
+  </style>
 </resources>

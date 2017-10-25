@@ -1,85 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:isScrollContainer="true">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <CheckedTextView
-            android:id="@+id/settings_auto_examine_checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/auto_examine"
-            android:padding="@dimen/fab_margin"/>
-
-    </LinearLayout>
+    android:isScrollContainer="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <CheckedTextView
+                android:id="@+id/settings_auto_examine_checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/fab_margin"
+                android:text="@string/auto_examine" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/settings_auto_save_checkBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/fab_margin"
+                android:text="@string/auto_save" />
+        </LinearLayout>
 
         <CheckBox
-            android:id="@+id/settings_auto_save_checkBox"
+            android:id="@+id/settings_show_examine_button_checkBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/fab_margin"
-            android:text="@string/auto_save"/>
-    </LinearLayout>
+            android:text="@string/show_examine_button" />
 
-    <CheckBox
-        android:id="@+id/settings_show_examine_button_checkBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/show_examine_button"
-        android:padding="@dimen/fab_margin"/>
-
-    <EditText
-        android:id="@+id/settings_default_file_name_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/fab_margin"
-        android:text="@string/default_file_name"/>
-
-    <Button
-        android:id="@+id/settings_default_file_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/fab_margin"
-        android:text="@string/change_default_directory"
-        android:layout_margin="@dimen/fab_margin"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/settings_default_file_name_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fab_margin"
+            android:text="@string/default_file_name" />
 
         <Button
-            android:id="@+id/settings_accept_button"
+            android:id="@+id/settings_default_file_button"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:layout_weight="1"
-            android:text="@string/accept"/>
+            android:padding="@dimen/fab_margin"
+            android:text="@string/change_default_directory" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/settings_accept_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_weight="1"
+                android:text="@string/accept" />
+
+            <Button
+                android:id="@+id/settings_cancel_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+        </LinearLayout>
 
         <Button
-            android:id="@+id/settings_cancel_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:id="@+id/settings_reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/fab_margin"
-            android:text="@string/cancel" />
-
+            android:text="@string/reset_settings" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/settings_reset_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset_settings"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_gravity="center_horizontal"/>
-</LinearLayout>
+</ScrollView>
