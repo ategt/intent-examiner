@@ -7,6 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBarTheme</item>
+        <!--<item name="android:actionBarTheme">@style/Widget.AppCompat.ActionBar</item>-->
+        <!--<item name="android:actionBarItemBackground">@style/AppTheme.AppBarOverlay</item>-->
+
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,5 +21,19 @@
     <style name="AppTheme.AppBarOverlay" parent="android:ThemeOverlay.Material.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="android:ThemeOverlay.Material.Light" />
+
+    <style name="AppTheme.ActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorLight</item>
+        <item name="android:itemBackground">@color/colorLight</item>
+        <item name="android:actionBarItemBackground">@color/colorLight</item>
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBarTheme.TitleTextStyle</item>
+    </style>
+
+    <style name="AppTheme.ActionBarTheme.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorLight</item>
+    </style>
+
+    <style name="listMenuViewStyle" parent="android:Widget.ListView.Menu"></style>
 
 </resources>
