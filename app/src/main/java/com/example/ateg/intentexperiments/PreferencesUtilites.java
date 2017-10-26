@@ -56,4 +56,12 @@ public class PreferencesUtilites  {
 
         dialog.dismiss();
     }
+
+    public static String getDefaultFileName(Context context) {
+        return context.getSharedPreferences(
+                PreferencesUtilites.PREFERENCES_KEY,
+                Context.MODE_PRIVATE)
+                .getString(PreferencesUtilites.DEFAULT_FILE_NAME_KEY,
+                        context.getString(R.string.default_file_name));
+    }
 }

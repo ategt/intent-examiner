@@ -1,5 +1,6 @@
 package com.example.ateg.intentexperiments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -65,18 +66,9 @@ public class LoggingUtilities {
 
         generateFolderTree(context, storageDir);
 
-        String fileName = getDefaultFileName(context);
+        String fileName = PreferencesUtilites.getDefaultFileName(context);
 
         return new File(storageDir, fileName);
-    }
-
-    @NonNull
-    public static String getDefaultFileName(Context context) {
-        return context.getSharedPreferences(
-                SettingsOnAcceptListener.PREFERENCES_KEY,
-                Context.MODE_PRIVATE)
-                .getString(SettingsOnAcceptListener.DEFAULT_FILE_NAME_KEY,
-                        context.getString(R.string.default_file_name));
     }
 
     public static void generateFolderTree(Context context, File storageDir) {
@@ -232,5 +224,9 @@ public class LoggingUtilities {
 
     public void setDirectoryType(String directoryType) {
         this.directoryType = directoryType;
+    }
+
+    public static String getDefaultFileName(Context context) {
+        return PreferencesUtilites.getDefaultFileName(context);
     }
 }

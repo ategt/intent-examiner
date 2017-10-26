@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        style="@style/Base_ToolbarStyle" />
+
     <TextView
         android:id="@+id/central_textView"
         android:layout_width="match_parent"

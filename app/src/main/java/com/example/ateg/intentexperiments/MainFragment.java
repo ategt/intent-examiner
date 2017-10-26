@@ -60,7 +60,12 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
             textViewAs.setText(textWindowValue);
         }
 
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        Toolbar toolbar = getCreatedView().findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.menu_main);
+        
+        //toolbar.getLogo();
+        //getActivity().setActionBar(toolbar);
+        //getActivity().getActionBar().setDisplayShowTitleEnabled(true);
     }
 
     @Override
@@ -238,7 +243,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected void setUi(View v) {
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         //setHasOptionsMenu(true);
         //getActivity().setM
 
