@@ -62,7 +62,13 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
         Toolbar toolbar = getCreatedView().findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_main);
-        
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                return onOptionsItemSelected(menuItem);
+            }
+        });
+
         //toolbar.getLogo();
         //getActivity().setActionBar(toolbar);
         //getActivity().getActionBar().setDisplayShowTitleEnabled(true);

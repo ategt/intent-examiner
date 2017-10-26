@@ -58,6 +58,8 @@
 
         <!--<item name="android:logo">@mipmap/ic_search_icon</item>-->
         <!--<item name="android:logo">@drawable/file</item>-->
+        <item name="android:navigationIcon">@mipmap/ic_search_icon</item>
+        <!--<item name="android:navigationMode"></item>-->
         <item name="android:title">@string/app_name</item>
         <item name="android:popupTheme">@style/AppTheme.PopupOverlay</item>
     </style>
@@ -67,7 +69,7 @@
         <item name="android:textColorPrimary">@color/colorLight</item>
         <!-- Used to color back button and three dots -->
         <item name="android:textColorSecondary">@color/yellow_500_primary</item>
-        <item name="android:logo">@drawable/file</item>
+        <!--<item name="android:logo">@drawable/file</item>-->
     </style>
 
     <style name="CustomTitleTextAppearance" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
