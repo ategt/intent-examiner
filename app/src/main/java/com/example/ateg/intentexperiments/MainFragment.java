@@ -92,30 +92,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 dialog.setTitle(R.string.settings_dialog_title);
                 //dialog.show();
 
-                SharedPreferences sharedPreferences
-                        = getActivity()
-                        .getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, getActivity().MODE_PRIVATE);
-
-                CheckBox autoExamineCheckbox
-                        = dialog.findViewById(R.id.settings_auto_examine_checkBox);
-                Boolean autoExamine = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
-                autoExamineCheckbox.setChecked(autoExamine);
-
-                CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
-                boolean autoSave = checkBox.isChecked();
-                autoSave = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_SAVE_KEY, autoSave);
-                checkBox.setChecked(autoSave);
-
-                CheckBox showExamineButtonCheckBox
-                        = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
-                Boolean showExamineButton
-                        = sharedPreferences.getBoolean(PreferencesUtilites.SHOW_EXAMINE_BUTTON_KEY, showExamineButtonCheckBox.isChecked());
-                showExamineButtonCheckBox.setChecked(showExamineButton);
-
-                EditText defaultFileNameEditText
-                        = dialog.findViewById(R.id.settings_default_file_name_editText);
-                String defaultFileName = sharedPreferences.getString(PreferencesUtilites.DEFAULT_FILE_NAME_KEY, defaultFileNameEditText.getText().toString());
-                defaultFileNameEditText.setText(defaultFileName);
+                new PreferencesUtilites(getActivity(), dialog).loadPreferences();
 
                 Button acceptButton = (Button) dialog.findViewById(R.id.settings_accept_button);
                 acceptButton.setOnClickListener(new View.OnClickListener() {
@@ -129,11 +106,10 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 resetButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SharedPreferences sharedPreferences
-                                = getActivity().getSharedPreferences("IntentPreferences", getActivity().MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.clear();
-                        editor.commit();
+                        mPresenter.resetPreferences(dialog);
+                        PreferencesUtilites preferencesUtilites = new PreferencesUtilites(getActivity(), dialog);
+                        preferencesUtilites.resetPreferences(view);
+                        preferencesUtilites.loadPreferences();
                     }
                 });
 

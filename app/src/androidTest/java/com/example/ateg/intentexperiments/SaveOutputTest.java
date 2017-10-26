@@ -40,7 +40,9 @@ import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -316,7 +318,7 @@ public class SaveOutputTest {
 
         try {
             Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
-        } catch (android.support.test.espresso.NoMatchingViewException ex){
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
             Espresso.openActionBarOverflowOrOptionsMenu(getTargetContext());
             Espresso.onView(withText(getTargetContext().getString(R.string.save_to_file_as)))
                     .perform(click());
@@ -455,10 +457,6 @@ public class SaveOutputTest {
         try {
             openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         } catch (android.support.test.espresso.NoMatchingViewException ex) {
-//            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
-//            Espresso.onView(withText(getInstrumentation().getTargetContext().getString(R.string.save_to_file_as)))
-//                    .perform(click());
-//            //Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
         }
 
         Espresso.onView(withText(getInstrumentation().getTargetContext().getString(R.string.action_settings)))
@@ -482,5 +480,133 @@ public class SaveOutputTest {
         } catch (android.support.test.espresso.NoMatchingViewException ex) {
 
         }
+    }
+
+    @Test
+    public void settingsAcceptButtonTest() {
+        openSettingsDialog();
+
+        Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
+                .check(ViewAssertions.matches(isNotChecked()))
+                .perform(click())
+                .check(matches(isChecked()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_accept_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.doesNotExist());
+
+        try {
+            Espresso.onView(withId(R.id.dialog_scrollView))
+                    .check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())));
+            Assert.fail("This should not exist");
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
+        }
+
+        openSettingsDialog();
+
+        Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
+                .check(ViewAssertions.matches(ViewMatchers.isChecked()))
+                .perform(click())
+                .check(matches(isNotChecked()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_accept_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.doesNotExist());
+
+        try {
+            Espresso.onView(withId(R.id.dialog_scrollView))
+                    .check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())));
+            Assert.fail("This should not exist");
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
+        }
+
+    }
+
+    @Test
+    public void settingsCancelButtonDoesNotSaveTest() {
+        openSettingsDialog();
+
+        Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
+                .check(ViewAssertions.matches(isNotChecked()))
+                .perform(click())
+                .check(matches(isChecked()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_cancel_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.doesNotExist());
+
+        openSettingsDialog();
+
+        Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
+                .check(matches(isNotChecked()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_cancel_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.doesNotExist());
+    }
+
+    @Test
+    public void settingsResetButtonTest() {
+        openSettingsDialog();
+
+        Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
+                .check(ViewAssertions.matches(isNotChecked()))
+                .perform(click())
+                .check(matches(isChecked()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_reset_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
+                .check(ViewAssertions.matches(isNotChecked()));
+
+        Espresso.onView(withId(R.id.settings_cancel_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.doesNotExist());
+    }
+
+    private void openSettingsDialog() {
+        try {
+            openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
+        }
+
+        Espresso.onView(withText(getInstrumentation().getTargetContext().getString(R.string.action_settings)))
+                .perform(click());
     }
 }
