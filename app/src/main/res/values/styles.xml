@@ -77,7 +77,7 @@
         <!--<item name="android:fontFamily">@string/ff_roboto_condensed</item>-->
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorLight</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!--<style name="CustomSubTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">-->

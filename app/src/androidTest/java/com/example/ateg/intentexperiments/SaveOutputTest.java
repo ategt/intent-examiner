@@ -34,6 +34,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -190,7 +191,7 @@ public class SaveOutputTest {
         File originalLogFile = new File(templogFile.getParentFile(), "IntentExamination.txt");
 
         filesToBeDeleted.add(testLogFile);
-        filesToBeDeleted.add(templogFile);
+        //filesToBeDeleted.add(templogFile);
 
         long startingOriginalLogFileSize = originalLogFile.length();
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
@@ -313,7 +314,13 @@ public class SaveOutputTest {
 
         Assert.assertFalse(textViewText.contains(emptyIntentString));
 
-        Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        try {
+            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        } catch (android.support.test.espresso.NoMatchingViewException ex){
+            Espresso.openActionBarOverflowOrOptionsMenu(getTargetContext());
+            Espresso.onView(withText(getTargetContext().getString(R.string.save_to_file_as)))
+                    .perform(click());
+        }
 
         Espresso.onView(withId(R.id.fileName_editText)).perform(clearText());
         Espresso.onView(withId(R.id.fileName_editText)).perform(ViewActions.typeText(newFileName));
