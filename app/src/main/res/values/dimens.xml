@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="logo_padding">12dp</dimen>
+    <dimen name="min_dialog_width">300dp</dimen>
 </resources>

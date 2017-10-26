@@ -6,9 +6,35 @@
 
     <Toolbar
         android:id="@+id/toolbar"
+        style="@style/Base_ToolbarStyle"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        style="@style/Base_ToolbarStyle" />
+        android:layout_height="?android:attr/actionBarSize">
+
+        <!--<FrameLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="start">-->
+
+            <ImageView
+                android:id="@+id/logo_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:padding="@dimen/logo_padding"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_search_icon"
+                android:visibility="visible"
+                android:contentDescription="@string/logo_description" />
+
+        <TextView
+            android:id="@+id/title_textView"
+            style="@style/CustomTitleTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"/>
+        <!--</FrameLayout>-->
+
+    </Toolbar>
 
     <TextView
         android:id="@+id/central_textView"

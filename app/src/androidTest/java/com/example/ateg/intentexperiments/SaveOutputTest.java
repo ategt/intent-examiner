@@ -43,6 +43,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 /**
@@ -189,6 +190,7 @@ public class SaveOutputTest {
         File originalLogFile = new File(templogFile.getParentFile(), "IntentExamination.txt");
 
         filesToBeDeleted.add(testLogFile);
+        filesToBeDeleted.add(templogFile);
 
         long startingOriginalLogFileSize = originalLogFile.length();
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
@@ -376,9 +378,11 @@ public class SaveOutputTest {
 
         try {
             Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
-        } catch (android.support.test.espresso.NoMatchingViewException ex){
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
             openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+            Espresso.onView(withText(getInstrumentation().getTargetContext().getString(R.string.save_to_file_as)))
+                    .perform(click());
+            //Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
         }
 
         Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("IntentExamination.txt")));
@@ -437,5 +441,39 @@ public class SaveOutputTest {
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
+    }
+
+    @Test
+    public void settingsCancelButtonTest() {
+        try {
+            openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
+//            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+//            Espresso.onView(withText(getInstrumentation().getTargetContext().getString(R.string.save_to_file_as)))
+//                    .perform(click());
+//            //Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        }
+
+        Espresso.onView(withText(getInstrumentation().getTargetContext().getString(R.string.action_settings)))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_cancel_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.doesNotExist());
+
+        try {
+            Espresso.onView(withId(R.id.dialog_scrollView))
+                    .check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())));
+            Assert.fail("This should not exist");
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
+
+        }
     }
 }

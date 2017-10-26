@@ -37,19 +37,19 @@ public class PreferencesUtilites  {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         CheckBox autoExamineCheckbox
-                = view.findViewById(R.id.settings_auto_examine_checkBox);
+                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
         editor.putBoolean(AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
 
-        CheckBox checkBox = view.findViewById(R.id.settings_auto_save_checkBox);
+        CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
         boolean autoSave = checkBox.isChecked();
         editor.putBoolean(AUTO_SAVE_KEY, autoSave);
 
         CheckBox showExamineButton
-                = view.findViewById(R.id.settings_show_examine_button_checkBox);
+                = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
         editor.putBoolean(SHOW_EXAMINE_BUTTON_KEY, showExamineButton.isChecked());
 
         EditText defaultFileName
-                = view.findViewById(R.id.settings_default_file_name_editText);
+                = dialog.findViewById(R.id.settings_default_file_name_editText);
         editor.putString(DEFAULT_FILE_NAME_KEY, defaultFileName.getText().toString());
 
         editor.commit();

@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
@@ -89,13 +90,13 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.settings_dialog);
                 dialog.setTitle(R.string.settings_dialog_title);
-                //dialog.setCancelable(true);
+                //dialog.show();
 
                 SharedPreferences sharedPreferences
                         = getActivity()
                         .getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, getActivity().MODE_PRIVATE);
 
-                CheckedTextView autoExamineCheckbox
+                CheckBox autoExamineCheckbox
                         = dialog.findViewById(R.id.settings_auto_examine_checkBox);
                 Boolean autoExamine = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
                 autoExamineCheckbox.setChecked(autoExamine);
@@ -120,7 +121,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new PreferencesUtilites(getActivity(), dialog);
+                        new PreferencesUtilites(getActivity(), dialog).savePreferences(view);
                     }
                 });
 
@@ -145,6 +146,10 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 });
 
                 dialog.show();
+
+//                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+//                layoutParams.copyFrom(dialog.getWindow().getAttributes());
+//                layoutParams.width
 
                 return true;
             case R.id.save_to_file:
@@ -268,7 +273,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         Boolean autoExamine = getActivity().getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, Context.MODE_PRIVATE)
                 .getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, false);
         if (autoExamine) {
-            new ExamineServices(getActivity()).examineIntent(getView(), getActivity().getIntent());
+            new ExamineServices(getActivity()).examineIntent(getCreatedView(), getActivity().getIntent());
         }
     }
 
