@@ -15,7 +15,7 @@ import android.widget.EditText;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class SettingsOnAcceptListener implements OnClickListener  {
+public class PreferencesUtilites  {
 
     public static final String PREFERENCES_KEY = "com.example.ateg.intentexperiments.SHARED_PREFERENCES";
     public static final String AUTO_EXAMINE_KEY = "com.example.ateg.intentexperiments.AUTO_EXAMINE_KEY";
@@ -23,17 +23,15 @@ public class SettingsOnAcceptListener implements OnClickListener  {
     public static final String SHOW_EXAMINE_BUTTON_KEY = "com.example.ateg.intentexperiments.SHOW_EXAMINE_BUTTON_KEY";
     public static final String DEFAULT_FILE_NAME_KEY = "com.example.ateg.intentexperiments.DEFAULT_FILE_NAME_KEY";
 
-
     private final Dialog dialog;
     private Context context;
 
-    public SettingsOnAcceptListener(Context context, Dialog dialog){
+    public PreferencesUtilites(Context context, Dialog dialog){
         this.dialog = dialog;
         this.context = context;
     }
 
-    @Override
-    public void onClick(View view) {
+    public void savePreferences(View view) {
         SharedPreferences sharedPreferences
                 = context.getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
