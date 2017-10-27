@@ -1,11 +1,8 @@
 package com.example.ateg.intentexperiments;
 
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
-import com.example.ateg.intentexperiments.FileSelector.Preferences;
 
 /**
  * Created by ATeg on 10/20/2017.

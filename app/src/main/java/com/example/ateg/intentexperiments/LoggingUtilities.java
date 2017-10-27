@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
  */
 
 public class LoggingUtilities {
+    private static final String TAG = "Logging Utilites";
     private Context context;
     private File logFile;
     private String directoryType = Environment.DIRECTORY_DOCUMENTS;
@@ -72,7 +73,7 @@ public class LoggingUtilities {
     }
 
     public static void generateFolderTree(Context context, File storageDir) {
-        if (!storageDir.exists()) {
+        if (!storageDir.exists() || !storageDir.isDirectory()) {
             if (!storageDir.mkdirs()) {
                 Toast.makeText(context, "Folder Generation Failed.", Toast.LENGTH_LONG).show();
             }
@@ -119,6 +120,26 @@ public class LoggingUtilities {
             storageDir = txtFile.getParentFile();
 
             generateFolderTree(context, storageDir);
+
+            boolean file = storageDir.isFile();
+            boolean hidden = storageDir.isHidden();
+            long length = storageDir.length();
+
+            boolean readable = storageDir.canRead();
+
+            boolean existsa = storageDir.exists();
+            boolean directorya = storageDir.isDirectory();
+
+            if (storageDir.delete()){
+                Log.d(TAG, "Hope this works. Deleting random files seems desperate.");
+            }
+
+            String fileContentes = LoggingUtilities.readFile(context, storageDir);
+
+            storageDir = new File(storageDir.getAbsolutePath() + "/");
+
+            boolean exists = storageDir.exists();
+            boolean directory = storageDir.isDirectory();
 
             File tempLog = File.createTempFile("log_", ".txt", storageDir);
 

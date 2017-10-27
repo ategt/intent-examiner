@@ -102,7 +102,9 @@ public class SaveOutputTest {
         Espresso.onView(withId(R.id.save_to_file)).perform(click());
 
         Assert.assertTrue(logFile.exists());
-        Assert.assertTrue(startingLogFileSize < logFile.length());
+        Assert.assertTrue("StartingLogFileSize: " + startingLogFileSize
+                        + ", LogFile Length: " + logFile.length(),
+                startingLogFileSize < logFile.length());
 
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
                 .check(matches(isDisplayed()));

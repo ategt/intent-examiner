@@ -4,16 +4,8 @@ package com.example.ateg.intentexperiments;
  * Created by ATeg on 10/20/2017.
  */
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.EditText;
-
-import com.example.ateg.intentexperiments.FileSelector.Preferences;
 
 import static android.content.Context.MODE_PRIVATE;
 

@@ -1,4 +1,4 @@
-package com.example.ateg.intentexperiments.FileSelector;
+package com.example.ateg.intentexperiments;
 
 /**
  * Created by ATeg on 10/26/2017.
@@ -9,7 +9,7 @@ public class Preferences {
     private boolean autoExamine;
     private boolean autoSave;
     private boolean showExamineButton;
-    private String defaultFileName;
+    private String defaultFileName = "IntentExamination.txt";
 
     public boolean isAutoExamine() {
         return autoExamine;
