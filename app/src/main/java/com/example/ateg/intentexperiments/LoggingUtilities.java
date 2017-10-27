@@ -121,26 +121,6 @@ public class LoggingUtilities {
 
             generateFolderTree(context, storageDir);
 
-            boolean file = storageDir.isFile();
-            boolean hidden = storageDir.isHidden();
-            long length = storageDir.length();
-
-            boolean readable = storageDir.canRead();
-
-            boolean existsa = storageDir.exists();
-            boolean directorya = storageDir.isDirectory();
-
-            if (storageDir.delete()){
-                Log.d(TAG, "Hope this works. Deleting random files seems desperate.");
-            }
-
-            String fileContentes = LoggingUtilities.readFile(context, storageDir);
-
-            storageDir = new File(storageDir.getAbsolutePath() + "/");
-
-            boolean exists = storageDir.exists();
-            boolean directory = storageDir.isDirectory();
-
             File tempLog = File.createTempFile("log_", ".txt", storageDir);
 
             fileOutputStream = new FileOutputStream(tempLog);
