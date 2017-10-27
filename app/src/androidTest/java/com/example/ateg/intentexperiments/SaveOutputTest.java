@@ -1,10 +1,14 @@
 package com.example.ateg.intentexperiments;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Environment;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -16,6 +20,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.Window;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -433,6 +438,18 @@ public class SaveOutputTest {
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.opening_greeting)));
 
         TextView textView = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
+
+        Activity activity = mainActivityActivityTestRule.getActivity();
+        CoordinatorLayout coordinatorLayout = activity.findViewById(R.id.root_view_coordinatorLayout);
+        TextView textView1 = activity.findViewById(R.id.central_textView);
+
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        //Fragment fragment = fragmentManager.getPrimaryNavigationFragment();
+        //List<Fragment> fragments = fragmentManager.getFragments();
+
+        Window window = activity.getWindow();
+        Context context = window.getContext();
+        TextView textView2 = window.findViewById(R.id.central_textView);
 
         String displayedText = textView.getText().toString();
         String noExaminationYet = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.opening_greeting);
