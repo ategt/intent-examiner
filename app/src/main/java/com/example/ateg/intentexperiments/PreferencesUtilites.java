@@ -13,6 +13,8 @@ import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 
+import com.example.ateg.intentexperiments.FileSelector.Preferences;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class PreferencesUtilites  {
@@ -23,38 +25,36 @@ public class PreferencesUtilites  {
     public static final String SHOW_EXAMINE_BUTTON_KEY = "com.example.ateg.intentexperiments.SHOW_EXAMINE_BUTTON_KEY";
     public static final String DEFAULT_FILE_NAME_KEY = "com.example.ateg.intentexperiments.DEFAULT_FILE_NAME_KEY";
 
-    private final Dialog dialog;
-    private Context context;
+    //private final Dialog dialog;
+    //private Context context;
+    private SharedPreferences sharedPreferences;
 
-    public PreferencesUtilites(Context context, Dialog dialog){
-        this.dialog = dialog;
-        this.context = context;
+    public PreferencesUtilites(SharedPreferences sharedPreferences){
+        this.sharedPreferences = sharedPreferences;
     }
 
-    public void savePreferences(View view) {
-        SharedPreferences sharedPreferences
-                = context.getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
+    public static SharedPreferences getDefaultPreferences(Context context){
+        return context.getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
+    }
+
+    public void savePreferences(Preferences preferences) {
+//        SharedPreferences sharedPreferences
+//                = context.getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
+        //Dialog dialog = view.getRootView().findViewById();
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        CheckBox autoExamineCheckbox
-                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
-        editor.putBoolean(AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
+//        CheckBox autoExamineCheckbox
+//                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
+        editor.putBoolean(AUTO_EXAMINE_KEY, preferences.isAutoExamine());
 
-        CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
-        boolean autoSave = checkBox.isChecked();
-        editor.putBoolean(AUTO_SAVE_KEY, autoSave);
+        editor.putBoolean(AUTO_SAVE_KEY, preferences.isAutoSave());
 
-        CheckBox showExamineButton
-                = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
-        editor.putBoolean(SHOW_EXAMINE_BUTTON_KEY, showExamineButton.isChecked());
+        editor.putBoolean(SHOW_EXAMINE_BUTTON_KEY, preferences.isShowExamineButton());
 
-        EditText defaultFileName
-                = dialog.findViewById(R.id.settings_default_file_name_editText);
-        editor.putString(DEFAULT_FILE_NAME_KEY, defaultFileName.getText().toString());
+        editor.putString(DEFAULT_FILE_NAME_KEY, preferences.getDefaultFileName());
 
         editor.commit();
-
-        dialog.dismiss();
     }
 
     public static String getDefaultFileName(Context context) {
@@ -65,39 +65,58 @@ public class PreferencesUtilites  {
                         context.getString(R.string.default_file_name));
     }
 
-    public void resetPreferences(View view) {
-        SharedPreferences sharedPreferences
-                = context.getSharedPreferences(PREFERENCES_KEY, context.MODE_PRIVATE);
+    public void resetPreferences() {
+//        SharedPreferences sharedPreferences
+//                = context.getSharedPreferences(PREFERENCES_KEY, context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.commit();
     }
 
-    public void loadPreferences() {
+//    public void loadPreferences() {
+//
+////        SharedPreferences sharedPreferences
+////                = context
+////                .getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, context.MODE_PRIVATE);
+//
+//        CheckBox autoExamineCheckbox
+//                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
+//        Boolean autoExamine = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
+//        autoExamineCheckbox.setChecked(autoExamine);
+//
+//        CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
+//        boolean autoSave = checkBox.isChecked();
+//        autoSave = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_SAVE_KEY, autoSave);
+//        checkBox.setChecked(autoSave);
+//
+//        CheckBox showExamineButtonCheckBox
+//                = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
+//        Boolean showExamineButton
+//                = sharedPreferences.getBoolean(PreferencesUtilites.SHOW_EXAMINE_BUTTON_KEY, showExamineButtonCheckBox.isChecked());
+//        showExamineButtonCheckBox.setChecked(showExamineButton);
+//
+//        EditText defaultFileNameEditText
+//                = dialog.findViewById(R.id.settings_default_file_name_editText);
+//        String defaultFileName = sharedPreferences.getString(PreferencesUtilites.DEFAULT_FILE_NAME_KEY, defaultFileNameEditText.getText().toString());
+//        defaultFileNameEditText.setText(defaultFileName);
+//    }
 
-        SharedPreferences sharedPreferences
-                = context
-                .getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, context.MODE_PRIVATE);
+    public Preferences getPreferences(){
+        Preferences preferences = new Preferences();
 
-        CheckBox autoExamineCheckbox
-                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
-        Boolean autoExamine = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, autoExamineCheckbox.isChecked());
-        autoExamineCheckbox.setChecked(autoExamine);
+//        SharedPreferences sharedPreferences
+//                = context
+//                .getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, context.MODE_PRIVATE);
 
-        CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
-        boolean autoSave = checkBox.isChecked();
-        autoSave = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_SAVE_KEY, autoSave);
-        checkBox.setChecked(autoSave);
+        Boolean autoExamine = sharedPreferences.getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, preferences.isAutoExamine());
+        preferences.setAutoExamine(autoExamine);
 
-        CheckBox showExamineButtonCheckBox
-                = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
-        Boolean showExamineButton
-                = sharedPreferences.getBoolean(PreferencesUtilites.SHOW_EXAMINE_BUTTON_KEY, showExamineButtonCheckBox.isChecked());
-        showExamineButtonCheckBox.setChecked(showExamineButton);
+        preferences.setAutoSave(sharedPreferences.getBoolean(PreferencesUtilites.AUTO_SAVE_KEY, preferences.isAutoSave()));
 
-        EditText defaultFileNameEditText
-                = dialog.findViewById(R.id.settings_default_file_name_editText);
-        String defaultFileName = sharedPreferences.getString(PreferencesUtilites.DEFAULT_FILE_NAME_KEY, defaultFileNameEditText.getText().toString());
-        defaultFileNameEditText.setText(defaultFileName);
+        preferences.setShowExamineButton(sharedPreferences.getBoolean(PreferencesUtilites.SHOW_EXAMINE_BUTTON_KEY, preferences.isShowExamineButton()));
+
+        preferences.setDefaultFileName(sharedPreferences.getString(PreferencesUtilites.DEFAULT_FILE_NAME_KEY, preferences.getDefaultFileName()));
+
+        return preferences;
     }
 }

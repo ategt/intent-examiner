@@ -36,6 +36,7 @@ import android.widget.Toolbar;
 import com.example.ateg.intentexperiments.FileSelector.FileOperation;
 import com.example.ateg.intentexperiments.FileSelector.FileSelector;
 import com.example.ateg.intentexperiments.FileSelector.OnHandleFileListener;
+import com.example.ateg.intentexperiments.FileSelector.Preferences;
 
 import java.io.File;
 
@@ -44,6 +45,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     private static final String TEXT_WINDOW_VALUE = "com.example.ateg.intentexperiments.TEXT_WINDOW_VALUE";
 
     final String[] mFileFilter = {".txt", "*.*"};
+    private Dialog dialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,18 +89,22 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         switch (item.getItemId()) {
             case R.id.action_settings:
 
-                final Dialog dialog = new Dialog(getActivity());
+                dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.settings_dialog);
                 dialog.setTitle(R.string.settings_dialog_title);
                 //dialog.show();
 
-                new PreferencesUtilites(getActivity(), dialog).loadPreferences();
+                //new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity())).loadPreferences();
+                mPresenter.loadPreferences();
 
                 Button acceptButton = (Button) dialog.findViewById(R.id.settings_accept_button);
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new PreferencesUtilites(getActivity(), dialog).savePreferences(view);
+                        //new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity()), dialog).savePreferences(view);
+                        new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity()))
+                                .savePreferences(buildPreferences(dialog));
+                        dialog.dismiss();
                     }
                 });
 
@@ -106,10 +112,12 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 resetButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mPresenter.resetPreferences(dialog);
-                        PreferencesUtilites preferencesUtilites = new PreferencesUtilites(getActivity(), dialog);
-                        preferencesUtilites.resetPreferences(view);
-                        preferencesUtilites.loadPreferences();
+                        mPresenter.resetPreferences();
+//                        PreferencesUtilites preferencesUtilites = new PreferencesUtilites(getActivity(), dialog);
+//                        preferencesUtilites.resetPreferences(view);
+//                        preferencesUtilites.loadPreferences();
+
+                        //dialog.inv
                     }
                 });
 
@@ -267,5 +275,46 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     @Override
     protected MainPresenter createPresenter() {
         return new MainPresenter(this);
+    }
+
+    @Override
+    public void updatePreferences(Preferences preferences) {
+
+        CheckBox autoExamineCheckbox
+                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
+        autoExamineCheckbox.setChecked(preferences.isAutoExamine());
+
+        CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
+        checkBox.setChecked(preferences.isAutoSave());
+
+        CheckBox showExamineButtonCheckBox
+                = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
+        showExamineButtonCheckBox.setChecked(preferences.isShowExamineButton());
+
+        EditText defaultFileNameEditText
+                = dialog.findViewById(R.id.settings_default_file_name_editText);
+        defaultFileNameEditText.setText(preferences.getDefaultFileName());
+    }
+
+    private Preferences buildPreferences(Dialog dialog){
+        Preferences preferences = new Preferences();
+
+        CheckBox autoExamineCheckbox
+                = dialog.findViewById(R.id.settings_auto_examine_checkBox);
+        preferences.setAutoExamine(autoExamineCheckbox.isChecked());
+
+        CheckBox checkBox = dialog.findViewById(R.id.settings_auto_save_checkBox);
+        boolean autoSave = checkBox.isChecked();
+        preferences.setAutoSave(autoSave);
+
+        CheckBox showExamineButton
+                = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
+        preferences.setShowExamineButton(showExamineButton.isChecked());
+
+        EditText defaultFileName
+                = dialog.findViewById(R.id.settings_default_file_name_editText);
+        preferences.setDefaultFileName(defaultFileName.getText().toString());
+
+        return preferences;
     }
 }
