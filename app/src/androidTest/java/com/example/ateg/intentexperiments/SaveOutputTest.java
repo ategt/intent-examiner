@@ -3,16 +3,24 @@ package com.example.ateg.intentexperiments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.core.deps.guava.base.Objects;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.VerificationMode;
 import android.support.test.espresso.intent.matcher.IntentMatchers;
@@ -20,6 +28,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -34,10 +44,12 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -71,6 +83,10 @@ public class SaveOutputTest {
     public void before() {
         Intents.init();
         filesToBeDeleted = new ArrayList<>();
+
+        mainActivityActivityTestRule.getActivity()
+                .getFragmentManager()
+                .beginTransaction();
     }
 
     @After
@@ -428,7 +444,7 @@ public class SaveOutputTest {
     }
 
     @Test
-    public void retainTextOnRotateTest() {
+    public void retainTextOnRotateTest() throws InterruptedException {
 
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -440,16 +456,65 @@ public class SaveOutputTest {
         TextView textView = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
 
         Activity activity = mainActivityActivityTestRule.getActivity();
+
+        FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+        //fragmentTransaction.
+
         CoordinatorLayout coordinatorLayout = activity.findViewById(R.id.root_view_coordinatorLayout);
         TextView textView1 = activity.findViewById(R.id.central_textView);
+        FloatingActionButton floatingActionButton = activity.findViewById(R.id.action_button);
 
         FragmentManager fragmentManager = activity.getFragmentManager();
         //Fragment fragment = fragmentManager.getPrimaryNavigationFragment();
         //List<Fragment> fragments = fragmentManager.getFragments();
 
+        List<IdlingResource> idlingResources = Espresso.getIdlingResources();
+        Iterator<IdlingResource> idlingResourceIterator = idlingResources.iterator();
+
+        while(idlingResourceIterator.hasNext()){
+            IdlingResource idlingResource = idlingResourceIterator.next();
+            Log.e("TAG", idlingResource.getName() + " is idling.");
+        }
+
+        //activity.getResources().
+
+        final View[] aview = {null};
+
+        Espresso.onView(withId(R.id.central_textView))
+                .check(new ViewAssertion() {
+                    @Override
+                    public void check(View view, NoMatchingViewException noViewFoundException) {
+                        aview[0] = view;
+                    }
+                })
+                .check(new ViewAssertion() {
+                    @Override
+                    public void check(View view, NoMatchingViewException noViewFoundException) {
+                        return;
+                    }
+                });
+
+        //aview[0].
+
+        Thread.sleep(4000);
+
+        TextView textView3 = activity.getWindow().getDecorView().findViewById(R.id.central_textView);
+
+
         Window window = activity.getWindow();
         Context context = window.getContext();
         TextView textView2 = window.findViewById(R.id.central_textView);
+
+        textView = (TextView) aview[0];
+        Context context1 = textView.getContext();
+
+        boolean focused = textView.isFocused();
+
+        boolean equal = Objects.equal(context1, activity);
+        boolean equal2 = Objects.equal(context1, context);
+        boolean equal3 = Objects.equal(context1, getTargetContext());
+        boolean equal4 = Objects.equal(context1, context1);
+
 
         String displayedText = textView.getText().toString();
         String noExaminationYet = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.opening_greeting);
