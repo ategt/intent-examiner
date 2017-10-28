@@ -1,5 +1,7 @@
 package com.example.ateg.intentexperiments;
 
+import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -34,10 +38,30 @@ public class IntentRepository {
     public static final String INTENT_EXAMINER_TABLE_NAME = "intent_examiner";
     private static final String INTENT_EXAMINER_COLUMN_INTENT = "intent";
 
-    private static final String SQL_CREATE_INTENT_TABLE = "CREATE TABLE IF NOT EXISTS intent_examiner (intent TEXT, archived BIT DEFAULT false)";
+
+    private static final String INTENT_EXAMINER_COLUMN_EXTRAS = "extras";
+    private static final String INTENT_EXAMINER_COLUMN_ACTION = "action";
+    private static final String INTENT_EXAMINER_COLUMN_CATEGORIES = "categories";
+    private static final String INTENT_EXAMINER_COLUMN_FLAGS = "flags";
+    private static final String INTENT_EXAMINER_COLUMN_TYPE = "type";
+    private static final String INTENT_EXAMINER_COLUMN_DATA_STRING = "dataString";
+    private static final String INTENT_EXAMINER_COLUMN_INTENT_PACKAGE = "package";
+    private static final String INTENT_EXAMINER_COLUMN_COMPONENT = "component";
+    private static final String INTENT_EXAMINER_COLUMN_SCHEME = "scheme";
+
+    private static final String SQL_CREATE_INTENT_TABLE = "CREATE TABLE IF NOT EXISTS intent_examiner (intent TEXT, " +
+            "extras TEXT, " +
+            "action TEXT, " +
+            "categories TEXT, " +
+            "flags INTEGER, " +
+            "type TEXT, " +
+            "dataString TEXT, " +
+            "package TEXT, " +
+            "component TEXT, " +
+            "scheme TEXT, " +
+            "archived BIT DEFAULT false)";
     private static final String SQL_DROP_INTENT_TABLE = "DROP TABLE IF EXISTS intent_examiner";
 
-    private static final String SQL_INSERT_INTENT = "INSERT INTO intent_examiner (intent) VALUES (?)";
     private static final String SQL_GET_ALL_INTENT = "SELECT * FROM intent_examiner";
     private static final String SQL_GET_DIFFERENTIAL_INTENT = "SELECT * FROM intent_examiner WHERE archived = 'false'";
     private static final String SQL_MARK_ARCHIVED = "UPDATE intent_examiner SET archived = 'true' WHERE archived = 'false'";
@@ -97,6 +121,18 @@ public class IntentRepository {
         ContentValues contentValues = new ContentValues();
         contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, gson.toJson(intent));
 
+        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
+        contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
+        contentValues.put(INTENT_EXAMINER_COLUMN_TYPE, intent.getType());
+        contentValues.put(INTENT_EXAMINER_COLUMN_DATA_STRING, intent.getDataString());
+        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT_PACKAGE, intent.getPackage());
+        contentValues.put(INTENT_EXAMINER_COLUMN_COMPONENT, gson.toJson(intent.getComponent()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intent.getScheme());
+
+        //ComponentName componentName = intent.getComponent();
+
         sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);
 
         sqLiteDatabase.close();
@@ -149,8 +185,41 @@ public class IntentRepository {
     }
 
     private Intent getIntent(Cursor cursor) {
-        String resultJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT));
-        return gson.fromJson(resultJson, Intent.class);
+        String intentJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT));
+        String action = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_ACTION));
+        String extrasJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_EXTRAS));
+        String categoriesJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_CATEGORIES));
+        Integer flags = cursor.getInt(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_FLAGS));
+        String type = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_TYPE));
+        String dataString = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_DATA_STRING));
+        String packageName = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT_PACKAGE));
+        String componentJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_COMPONENT));
+        String scheme = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_SCHEME));
+        String dataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_DATA));
+        String clipDataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_CLIP_DATA));
+
+        ComponentName componentName = gson.fromJson(componentJson, ComponentName.class);
+        Bundle extras = gson.fromJson(extrasJson, Bundle.class);
+        Uri data = gson.fromJson(dataJson, Uri.class);
+        ClipData clipData = gson.fromJson(clipDataJson, ClipData.class);
+        String[] categories = gson.fromJson(categoriesJson, String[].class);
+
+        Intent intent = new Intent();
+
+        intent.setAction(action);
+        intent.setComponent(componentName);
+        intent.setFlags(flags);
+        intent.putExtras(extras);
+        intent.setType(type);
+        intent.setData(data);
+        intent.setClipData(clipData);
+        intent.setPackage(packageName);
+
+        for (String category : categories) {
+            intent.addCategory(category);
+        }
+
+        return intent;
     }
 
     private void resetDatabase(SQLiteDatabase sqLiteDatabase) {

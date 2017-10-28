@@ -97,18 +97,9 @@ public class IntentSqliteRepositoryTest {
 
         String json = gson.toJson(intent);
 
-        try {
+
             intent = gson.fromJson(json, Intent.class);
-        } catch (java.lang.RuntimeException ex){
-            Throwable throwable = ex.getCause();
 
-            while (!(throwable instanceof java.lang.InstantiationException)){
-                throwable = throwable.getCause();
-            }
-
-            java.lang.InstantiationException instantiationException = (java.lang.InstantiationException) throwable;
-            instantiationException.
-        }
         return intent;
     }
 
