@@ -1,11 +1,13 @@
 package com.example.ateg.intentexperiments;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.ateg.intentexperiments.annotations.ApplicationContext;
@@ -30,11 +32,13 @@ public class IntentRepository {
     public static final String INTENT_EXAMINER_TABLE_NAME = "intent_examiner";
     private static final String INTENT_EXAMINER_COLUMN_INTENT = "intent";
 
-    private static final String SQL_CREATE_INTENT_TABLE = "CREATE TABLE IF NOT EXISTS intent_examiner (intent TEXT)";
+    private static final String SQL_CREATE_INTENT_TABLE = "CREATE TABLE IF NOT EXISTS intent_examiner (intent TEXT, archived BIT DEFAULT false)";
     private static final String SQL_DROP_INTENT_TABLE = "DROP TABLE IF EXISTS intent_examiner";
 
     private static final String SQL_INSERT_INTENT = "INSERT INTO intent_examiner (intent) VALUES (?)";
     private static final String SQL_GET_ALL_INTENT = "SELECT * FROM intent_examiner";
+    private static final String SQL_GET_DIFFERENTIAL_INTENT = "SELECT * FROM intent_examiner WHERE archived = 'false'";
+    private static final String SQL_MARK_ARCHIVED = "UPDATE intent_examiner SET archived = 'true' WHERE archived = 'false'";
 
     public IntentRepository(@ApplicationContext Context context,
                             @DatabaseInfo String name,
@@ -65,34 +69,48 @@ public class IntentRepository {
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-            sqLiteDatabase.execSQL(SQL_DROP_INTENT_TABLE);
-            onCreate(sqLiteDatabase);
+            resetDatabase(sqLiteDatabase);
         }
     }
-
     public Intent create(Intent intent) {
         if (intent == null)
             return null;
 
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
 
-        Cursor cursor = sqLiteDatabase.rawQuery(SQL_INSERT_INTENT, new String[]{gson.toJson(intent)});
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, gson.toJson(intent));
 
-        Intent result = null;
-        if (cursor.moveToFirst()) {
-            result = getIntent(cursor);
-        } else {
-            throw new RuntimeException("Something went wrong durring intent database serialization.");
-        }
+        sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);
 
         sqLiteDatabase.close();
-        return result;
+        return intent;
     }
 
     public List<Intent> getAll() {
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+
         Cursor cursor = sqLiteDatabase.rawQuery(SQL_GET_ALL_INTENT, null);
 
+        List<Intent> intentList = buildIntentList(cursor);
+
+        sqLiteDatabase.close();
+        return intentList;
+    }
+
+    public List<Intent> getDifferential() {
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(SQL_GET_DIFFERENTIAL_INTENT, null);
+
+        List<Intent> intentList = buildIntentList(cursor);
+
+        sqLiteDatabase.close();
+        return intentList;
+    }
+
+    @NonNull
+    private List<Intent> buildIntentList(Cursor cursor) {
         List<Intent> intentList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
@@ -102,13 +120,25 @@ public class IntentRepository {
         } else {
             // Database empty
         }
-
-        sqLiteDatabase.close();
         return intentList;
+    }
+
+    public void markAllArchived(){
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+        sqLiteDatabase.execSQL(SQL_MARK_ARCHIVED);
+    }
+
+    public void deleteAll(){
+        resetDatabase(databaseHelper.getWritableDatabase());
     }
 
     private Intent getIntent(Cursor cursor) {
         String resultJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT));
         return gson.fromJson(resultJson, Intent.class);
+    }
+
+    private void resetDatabase(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL(SQL_DROP_INTENT_TABLE);
+        databaseHelper.onCreate(sqLiteDatabase);
     }
 }

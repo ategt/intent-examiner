@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import java.util.List;
 import java.util.UUID;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +32,7 @@ public class IntentSqliteRepositoryTest {
     @Before
     public void setup() {
         context = InstrumentationRegistry.getTargetContext();
-        intentRepository = new IntentRepository(context, IntentRepository.INTENT_EXAMINER_TABLE_NAME, 2);
+        intentRepository = new IntentRepository(context, "TestDataBase.db", 3);
     }
 
     @Test
@@ -62,5 +64,48 @@ public class IntentSqliteRepositoryTest {
         assertTrue(intentList.contains(intent));
 
         assertTrue(intentList.size() > 0);
+    }
+
+    @Test
+    public void archiveFeatureTest() {
+        String randomStringKey = "com.example.ateg.intentexperiments.RANDOM_STRING";
+
+        Intent archivedIntent = intentRepository.create(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+
+        intentRepository.markAllArchived();
+
+        Intent newIntent = intentRepository.create(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+
+        List<Intent> intentList = intentRepository.getAll();
+        assertTrue(intentList.contains(archivedIntent));
+        assertTrue(intentList.contains(newIntent));
+
+        int allListSize = intentList.size();
+        assertTrue(allListSize > 1);
+
+        intentList = intentRepository.getDifferential();
+        assertFalse(intentList.contains(archivedIntent));
+        assertTrue(intentList.contains(newIntent));
+
+        assertTrue( allListSize > intentList.size());
+    }
+
+    @Test
+    public void resetTest() {
+        String randomStringKey = "com.example.ateg.intentexperiments.RANDOM_STRING";
+
+        intentRepository.create(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+
+        intentRepository.deleteAll();
+
+        List<Intent> intentList = intentRepository.getAll();
+
+        assertNotNull(intentList);
+        assertTrue(intentList.isEmpty());
+
+        intentList = intentRepository.getDifferential();
+
+        assertNotNull(intentList);
+        assertTrue(intentList.isEmpty());
     }
 }
