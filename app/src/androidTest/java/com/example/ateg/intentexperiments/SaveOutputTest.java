@@ -445,42 +445,40 @@ public class SaveOutputTest {
 
     @Test
     public void retainTextOnRotateTest() throws InterruptedException {
+        TextView textView = (TextView) getView(R.id.central_textView);
 
-        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        Activity activity = (Activity) textView.getContext();
+
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(isDisplayed()));
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.opening_greeting)));
 
-        TextView textView = (TextView) mainActivityActivityTestRule.getActivity().findViewById(R.id.central_textView);
+        String displayedText = textView.getText().toString();
+        String noExaminationYet = activity.getResources().getString(R.string.opening_greeting);
 
-        Activity activity = mainActivityActivityTestRule.getActivity();
+        Assert.assertEquals(noExaminationYet, displayedText);
 
-        FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-        //fragmentTransaction.
+        Espresso.onView(withId(R.id.action_button)).check(matches(isDisplayed()));
 
-        CoordinatorLayout coordinatorLayout = activity.findViewById(R.id.root_view_coordinatorLayout);
-        TextView textView1 = activity.findViewById(R.id.central_textView);
-        FloatingActionButton floatingActionButton = activity.findViewById(R.id.action_button);
+        Espresso.onView(withId(R.id.action_button)).perform(click());
 
-        FragmentManager fragmentManager = activity.getFragmentManager();
-        //Fragment fragment = fragmentManager.getPrimaryNavigationFragment();
-        //List<Fragment> fragments = fragmentManager.getFragments();
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
-        List<IdlingResource> idlingResources = Espresso.getIdlingResources();
-        Iterator<IdlingResource> idlingResourceIterator = idlingResources.iterator();
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        while(idlingResourceIterator.hasNext()){
-            IdlingResource idlingResource = idlingResourceIterator.next();
-            Log.e("TAG", idlingResource.getName() + " is idling.");
-        }
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
-        //activity.getResources().
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
+    }
 
+    private View getView(int id) {
         final View[] aview = {null};
 
-        Espresso.onView(withId(R.id.central_textView))
+        Espresso.onView(withId(id))
                 .check(new ViewAssertion() {
                     @Override
                     public void check(View view, NoMatchingViewException noViewFoundException) {
@@ -494,46 +492,7 @@ public class SaveOutputTest {
                     }
                 });
 
-        //aview[0].
-
-        Thread.sleep(4000);
-
-        TextView textView3 = activity.getWindow().getDecorView().findViewById(R.id.central_textView);
-
-
-        Window window = activity.getWindow();
-        Context context = window.getContext();
-        TextView textView2 = window.findViewById(R.id.central_textView);
-
-        textView = (TextView) aview[0];
-        Context context1 = textView.getContext();
-
-        boolean focused = textView.isFocused();
-
-        boolean equal = Objects.equal(context1, activity);
-        boolean equal2 = Objects.equal(context1, context);
-        boolean equal3 = Objects.equal(context1, getTargetContext());
-        boolean equal4 = Objects.equal(context1, context1);
-
-
-        String displayedText = textView.getText().toString();
-        String noExaminationYet = mainActivityActivityTestRule.getActivity().getResources().getString(R.string.opening_greeting);
-
-        Assert.assertEquals(noExaminationYet, displayedText);
-
-        Espresso.onView(withId(R.id.action_button)).check(matches(isDisplayed()));
-
-        Espresso.onView(withId(R.id.action_button)).perform(click());
-
-        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
-
-        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
-
-        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
-
+        return aview[0];
     }
 
     @Test
