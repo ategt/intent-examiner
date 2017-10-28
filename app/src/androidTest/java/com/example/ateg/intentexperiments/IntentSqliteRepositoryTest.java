@@ -2,8 +2,16 @@ package com.example.ateg.intentexperiments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -60,10 +68,48 @@ public class IntentSqliteRepositoryTest {
 
         intent = intentRepository.create(intent);
 
+        Bundle extras = intent.getExtras();
+        intent = removeUnserializablePortions(intent);
+
+        assertEquals(extras, intent.getExtras());
+
         List<Intent> intentList = intentRepository.getAll();
         assertTrue(intentList.contains(intent));
 
         assertTrue(intentList.size() > 0);
+    }
+
+    private Intent removeUnserializablePortions(Intent intent) {
+        Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                Log.d("fdsa", f.getName() + " = " + f.toString());
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                Log.d("asd", clazz.toString());
+                return clazz.isInstance(java.lang.ClassLoader.class);
+            }
+        })
+                .create();
+
+        String json = gson.toJson(intent);
+
+        try {
+            intent = gson.fromJson(json, Intent.class);
+        } catch (java.lang.RuntimeException ex){
+            Throwable throwable = ex.getCause();
+
+            while (!(throwable instanceof java.lang.InstantiationException)){
+                throwable = throwable.getCause();
+            }
+
+            java.lang.InstantiationException instantiationException = (java.lang.InstantiationException) throwable;
+            instantiationException.
+        }
+        return intent;
     }
 
     @Test
@@ -87,7 +133,7 @@ public class IntentSqliteRepositoryTest {
         assertFalse(intentList.contains(archivedIntent));
         assertTrue(intentList.contains(newIntent));
 
-        assertTrue( allListSize > intentList.size());
+        assertTrue(allListSize > intentList.size());
     }
 
     @Test

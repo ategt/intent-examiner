@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.example.ateg.intentexperiments.annotations.ApplicationContext;
 import com.example.ateg.intentexperiments.annotations.DatabaseInfo;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -44,7 +46,20 @@ public class IntentRepository {
                             @DatabaseInfo String name,
                             @DatabaseInfo int version) {
         databaseHelper = new DatabaseHelper(context, name, null, version);
-        gson = new GsonBuilder().create();
+        gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                if (clazz.isInstance(java.lang.ClassLoader.class))
+                    return true;
+                else
+                    return false;
+            }
+        }).create();
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {
@@ -72,6 +87,7 @@ public class IntentRepository {
             resetDatabase(sqLiteDatabase);
         }
     }
+
     public Intent create(Intent intent) {
         if (intent == null)
             return null;
@@ -123,12 +139,12 @@ public class IntentRepository {
         return intentList;
     }
 
-    public void markAllArchived(){
+    public void markAllArchived() {
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
         sqLiteDatabase.execSQL(SQL_MARK_ARCHIVED);
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         resetDatabase(databaseHelper.getWritableDatabase());
     }
 
