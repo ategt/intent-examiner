@@ -216,7 +216,7 @@ public class SaveOutputTest {
         File originalLogFile = new File(templogFile.getParentFile(), "IntentExamination.txt");
 
         filesToBeDeleted.add(testLogFile);
-        //filesToBeDeleted.add(templogFile);
+        filesToBeDeleted.add(templogFile);
 
         long startingOriginalLogFileSize = originalLogFile.length();
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
