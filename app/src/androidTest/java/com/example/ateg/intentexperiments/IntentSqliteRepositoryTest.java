@@ -97,9 +97,11 @@ public class IntentSqliteRepositoryTest {
 //        String list = gson.toJson(intentList);
 //        String test = gson.toJson(wrappedIntent);
 //        boolean result = list.contains(test);
-//        assertTrue(result);
+        assertTrue(result);
 
-        //assertTrue(.contains(wrappedIntent));
+
+
+        assertTrue(intentList.contains(wrappedIntent));
 
         assertTrue(intentList.size() > 0);
     }

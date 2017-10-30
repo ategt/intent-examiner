@@ -47,6 +47,7 @@ public class IntentRepository {
 
     private static final String INTENT_EXAMINER_TABLE_NAME = "intent_examiner";
 
+    private static final String INTENT_EXAMINER_COLUMN_ROWID = "id";
     private static final String INTENT_EXAMINER_COLUMN_EXTRAS = "extras";
     private static final String INTENT_EXAMINER_COLUMN_INTENT = "intent";
     private static final String INTENT_EXAMINER_COLUMN_ACTION = "action";
@@ -76,8 +77,8 @@ public class IntentRepository {
             "archived BIT DEFAULT false)";
     private static final String SQL_DROP_INTENT_TABLE = "DROP TABLE IF EXISTS " + INTENT_EXAMINER_TABLE_NAME;
 
-    private static final String SQL_GET_ALL_INTENT = "SELECT * FROM " + INTENT_EXAMINER_TABLE_NAME;
-    private static final String SQL_GET_DIFFERENTIAL_INTENT = "SELECT * FROM " + INTENT_EXAMINER_TABLE_NAME + " WHERE archived = 'false'";
+    private static final String SQL_GET_ALL_INTENT = "SELECT *, ROWID AS id FROM " + INTENT_EXAMINER_TABLE_NAME;
+    private static final String SQL_GET_DIFFERENTIAL_INTENT = "SELECT *, ROWID AS id FROM " + INTENT_EXAMINER_TABLE_NAME + " WHERE archived = 'false'";
     private static final String SQL_MARK_ARCHIVED = "UPDATE " + INTENT_EXAMINER_TABLE_NAME + " SET archived = 'true' WHERE archived = 'false'";
 
     public IntentRepository(@ApplicationContext Context context,
@@ -158,7 +159,9 @@ public class IntentRepository {
         }
         contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(parcelableMap));
 
-        sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);
+        Long id = sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);
+
+        intentWrapper.setId(id.intValue());
 
         sqLiteDatabase.close();
         return intentWrapper;
@@ -210,6 +213,8 @@ public class IntentRepository {
     }
 
     private IntentWrapper getIntent(Cursor cursor) {
+        Long longId = cursor.getLong(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_ROWID));
+        Integer id = (longId > Integer.MAX_VALUE) ? null : longId.intValue();
         String intentJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT));
         String action = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_ACTION));
         String extrasJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_EXTRAS));
@@ -307,6 +312,7 @@ public class IntentRepository {
         IntentWrapper intentWrapper = new IntentWrapper(intent);
 
         intentWrapper.setIntentJson(intentJson);
+        intentWrapper.setId(id);
 
         return intentWrapper;
     }

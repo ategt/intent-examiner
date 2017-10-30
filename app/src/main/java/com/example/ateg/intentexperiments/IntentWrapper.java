@@ -47,6 +47,8 @@ public class IntentWrapper {
         setIntent(intent);
     }
 
+    private Integer id;
+
     private Intent intent;
 
     private String intentJson;
@@ -87,7 +89,7 @@ public class IntentWrapper {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return id == null ? 0 : id;
     }
 
     @Override
@@ -95,14 +97,30 @@ public class IntentWrapper {
         if (obj != null && obj instanceof IntentWrapper) {
             IntentWrapper otherIntentWrapper = (IntentWrapper) obj;
 
-            return Objects.equals(this.getScheme(), otherIntentWrapper.getScheme()) &&
-                    Objects.equals(this.getDataString(), otherIntentWrapper.getDataString()) &&
-                    Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
+            boolean one = Objects.equals(this.hashCode(), otherIntentWrapper.hashCode());
+            boolean two = Objects.equals(this.getId(), otherIntentWrapper.getId());
+            boolean three = Objects.equals(this.getScheme(), otherIntentWrapper.getScheme());
+            boolean four = Objects.equals(this.getDataString(), otherIntentWrapper.getDataString());
+
+            
+
+            boolean five = Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
+
+            return one && two && three && four && five;
+
         } else return false;
     }
 
     @Override
     public String toString() {
         return getIntentJson();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
