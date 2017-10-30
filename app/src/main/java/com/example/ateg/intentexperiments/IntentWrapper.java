@@ -1,11 +1,19 @@
 package com.example.ateg.intentexperiments;
 
+import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by ATeg on 10/28/2017.
@@ -87,6 +95,42 @@ public class IntentWrapper {
         this.scheme = scheme;
     }
 
+    public Bundle getExtras() {
+        return intent.getExtras();
+    }
+
+    public String getAction() {
+        return intent.getAction();
+    }
+
+    public Set<String> getCategories() {
+        return intent.getCategories();
+    }
+
+    public int getFlags() {
+        return intent.getFlags();
+    }
+
+    public String getType() {
+        return intent.getType();
+    }
+
+    public String getPackage() {
+        return intent.getPackage();
+    }
+
+    public ComponentName getComponent() {
+        return intent.getComponent();
+    }
+
+    public ClipData getClipData() {
+        return intent.getClipData();
+    }
+
+    public Uri getData() {
+        return intent.getData();
+    }
+
     @Override
     public int hashCode() {
         return id == null ? 0 : id;
@@ -97,16 +141,44 @@ public class IntentWrapper {
         if (obj != null && obj instanceof IntentWrapper) {
             IntentWrapper otherIntentWrapper = (IntentWrapper) obj;
 
+            if (Objects.equals(this.getId(), otherIntentWrapper.getId())) {
+                System.out.println("Found a match.");
+            }
+
             boolean one = Objects.equals(this.hashCode(), otherIntentWrapper.hashCode());
             boolean two = Objects.equals(this.getId(), otherIntentWrapper.getId());
             boolean three = Objects.equals(this.getScheme(), otherIntentWrapper.getScheme());
             boolean four = Objects.equals(this.getDataString(), otherIntentWrapper.getDataString());
 
-            
+            //boolean six = Objects.equals(this.getExtras(), otherIntentWrapper.getExtras());
 
-            boolean five = Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
+            Bundle thisBundle = this.getExtras();
+            Bundle otherBundle = otherIntentWrapper.getExtras();
 
-            return one && two && three && four && five;
+            boolean six = Objects.equals(thisBundle.size(), otherBundle.size());
+
+            boolean five = thisBundle.size() > 0 ? false : true;
+            for (String key : thisBundle.keySet()) {
+                if (otherBundle.containsKey(key) && Objects.equals(thisBundle.getParcelable(key), otherBundle.getParcelable(key))) {
+                    five = true;
+                } else {
+                    five = false;
+                    break;
+                }
+            }
+
+            boolean seven = Objects.equals(this.getAction(), otherIntentWrapper.getAction());
+            boolean eight = Objects.equals(this.getCategories(), otherIntentWrapper.getCategories());
+            boolean nine = Objects.equals(this.getFlags(), otherIntentWrapper.getFlags());
+            boolean ten = Objects.equals(this.getType(), otherIntentWrapper.getType());
+            boolean eleven = Objects.equals(this.getPackage(), otherIntentWrapper.getPackage());
+            boolean tweleve = Objects.equals(this.getComponent(), otherIntentWrapper.getComponent());
+            boolean thirteen = Objects.equals(this.getClipData(), otherIntentWrapper.getClipData());
+            boolean fourteen = Objects.equals(this.getData(), otherIntentWrapper.getData());
+
+//            boolean five = Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
+
+            return one && two && three && four && five && six && seven && eight && nine && ten && eleven && tweleve && thirteen && fourteen;
 
         } else return false;
     }
