@@ -51,11 +51,13 @@ public class IntentSqliteRepositoryTest {
         Intent intent = new Intent();
         intent.putExtra(randomStringKey, randomString);
 
-        Intent returnedIntent = intentRepository.create(intent);
+        IntentWrapper wrappedIntent = new IntentWrapper(intent);
 
-        assertEquals(intent, returnedIntent);
-        assertNotEquals(intent, new Intent());
-        assertNotEquals(intent, new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+        IntentWrapper returnedWrappedIntent = intentRepository.create(wrappedIntent);
+
+        assertEquals(wrappedIntent, returnedWrappedIntent);
+        assertNotEquals(wrappedIntent, new IntentWrapper(new Intent()));
+        assertNotEquals(wrappedIntent, new IntentWrapper(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString())));
     }
 
     @Test
@@ -66,64 +68,39 @@ public class IntentSqliteRepositoryTest {
         Intent intent = new Intent();
         intent.putExtra(randomStringKey, randomString);
 
-        intent = intentRepository.create(intent);
+        IntentWrapper wrappedIntent = new IntentWrapper(intent);
+        wrappedIntent = intentRepository.create(wrappedIntent);
 
-        Bundle extras = intent.getExtras();
-        intent = removeUnserializablePortions(intent);
+        Bundle extras = wrappedIntent.getIntent().getExtras();
 
         assertEquals(extras, intent.getExtras());
 
-        List<Intent> intentList = intentRepository.getAll();
-        assertTrue(intentList.contains(intent));
+        List<IntentWrapper> intentList = intentRepository.getAll();
+        assertTrue(intentList.contains(wrappedIntent));
 
         assertTrue(intentList.size() > 0);
-    }
-
-    private Intent removeUnserializablePortions(Intent intent) {
-        Gson gson = new GsonBuilder().serializeNulls()
-                .setExclusionStrategies(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                Log.d("fdsa", f.getName() + " = " + f.toString());
-                return false;
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> clazz) {
-                Log.d("asd", clazz.toString());
-                return clazz.isInstance(java.lang.ClassLoader.class);
-            }
-        })
-                .create();
-
-        String json = gson.toJson(intent);
-
-
-            intent = gson.fromJson(json, Intent.class);
-
-        return intent;
     }
 
     @Test
     public void archiveFeatureTest() {
         String randomStringKey = "com.example.ateg.intentexperiments.RANDOM_STRING";
 
-        Intent archivedIntent = intentRepository.create(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+        IntentWrapper archivedIntentWrapper = intentRepository.create(new IntentWrapper(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString())));
 
         intentRepository.markAllArchived();
 
-        Intent newIntent = intentRepository.create(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+        IntentWrapper newIntentWrapper = intentRepository.create(new IntentWrapper(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString())));
 
-        List<Intent> intentList = intentRepository.getAll();
-        assertTrue(intentList.contains(archivedIntent));
-        assertTrue(intentList.contains(newIntent));
+        List<IntentWrapper> intentList = intentRepository.getAll();
+        assertTrue(intentList.contains(archivedIntentWrapper));
+        assertTrue(intentList.contains(newIntentWrapper));
 
         int allListSize = intentList.size();
         assertTrue(allListSize > 1);
 
         intentList = intentRepository.getDifferential();
-        assertFalse(intentList.contains(archivedIntent));
-        assertTrue(intentList.contains(newIntent));
+        assertFalse(intentList.contains(archivedIntentWrapper));
+        assertTrue(intentList.contains(newIntentWrapper));
 
         assertTrue(allListSize > intentList.size());
     }
@@ -132,11 +109,11 @@ public class IntentSqliteRepositoryTest {
     public void resetTest() {
         String randomStringKey = "com.example.ateg.intentexperiments.RANDOM_STRING";
 
-        intentRepository.create(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString()));
+        intentRepository.create(new IntentWrapper(new Intent().putExtra(randomStringKey, UUID.randomUUID().toString())));
 
         intentRepository.deleteAll();
 
-        List<Intent> intentList = intentRepository.getAll();
+        List<IntentWrapper> intentList = intentRepository.getAll();
 
         assertNotNull(intentList);
         assertTrue(intentList.isEmpty());

@@ -14,8 +14,8 @@ import java.util.Objects;
 public class IntentWrapper {
     private Gson gson = new GsonBuilder().create();
 
-    public IntentWrapper() {
-    }
+    //public IntentWrapper() {
+    //}
 
     public IntentWrapper(Intent sourceIntent) {
         buildIntent(sourceIntent);

@@ -35,11 +35,10 @@ public class IntentRepository {
     private Gson gson;
     private DatabaseHelper databaseHelper;
 
-    public static final String INTENT_EXAMINER_TABLE_NAME = "intent_examiner";
-    private static final String INTENT_EXAMINER_COLUMN_INTENT = "intent";
-
+    private static final String INTENT_EXAMINER_TABLE_NAME = "intent_examiner";
 
     private static final String INTENT_EXAMINER_COLUMN_EXTRAS = "extras";
+    private static final String INTENT_EXAMINER_COLUMN_INTENT = "intent";
     private static final String INTENT_EXAMINER_COLUMN_ACTION = "action";
     private static final String INTENT_EXAMINER_COLUMN_CATEGORIES = "categories";
     private static final String INTENT_EXAMINER_COLUMN_FLAGS = "flags";
@@ -48,17 +47,22 @@ public class IntentRepository {
     private static final String INTENT_EXAMINER_COLUMN_INTENT_PACKAGE = "package";
     private static final String INTENT_EXAMINER_COLUMN_COMPONENT = "component";
     private static final String INTENT_EXAMINER_COLUMN_SCHEME = "scheme";
+    private static final String INTENT_EXAMINER_COLUMN_DATA = "data";
+    private static final String INTENT_EXAMINER_COLUMN_CLIP_DATA = "clipData";
 
-    private static final String SQL_CREATE_INTENT_TABLE = "CREATE TABLE IF NOT EXISTS intent_examiner (intent TEXT, " +
-            "extras TEXT, " +
-            "action TEXT, " +
-            "categories TEXT, " +
-            "flags INTEGER, " +
-            "type TEXT, " +
-            "dataString TEXT, " +
-            "package TEXT, " +
-            "component TEXT, " +
-            "scheme TEXT, " +
+    private static final String SQL_CREATE_INTENT_TABLE = "CREATE TABLE IF NOT EXISTS " + INTENT_EXAMINER_TABLE_NAME + " (" +
+            INTENT_EXAMINER_COLUMN_INTENT + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_EXTRAS + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_ACTION + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_CATEGORIES + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_FLAGS + " INTEGER, " +
+            INTENT_EXAMINER_COLUMN_TYPE + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_DATA_STRING + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_INTENT_PACKAGE + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_COMPONENT + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_SCHEME + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_DATA + "TEXT, " +
+            INTENT_EXAMINER_COLUMN_CLIP_DATA + "TEXT, " +
             "archived BIT DEFAULT false)";
     private static final String SQL_DROP_INTENT_TABLE = "DROP TABLE IF EXISTS intent_examiner";
 
@@ -124,56 +128,49 @@ public class IntentRepository {
         contentValues.put(INTENT_EXAMINER_COLUMN_DATA_STRING, intentWrapper.getDataString());
         contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, intentWrapper.getIntentJson());
 
+        Intent intent = intentWrapper.getIntent();
 
-Intent intent = intentWrapper.getIntent();
-
-
-
-        //contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, in);
-
-        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent..getExtras()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
         contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
         contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
         contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
         contentValues.put(INTENT_EXAMINER_COLUMN_TYPE, intent.getType());
-        contentValues.put(INTENT_EXAMINER_COLUMN_DATA_STRING, intent.getDataString());
         contentValues.put(INTENT_EXAMINER_COLUMN_INTENT_PACKAGE, intent.getPackage());
         contentValues.put(INTENT_EXAMINER_COLUMN_COMPONENT, gson.toJson(intent.getComponent()));
-        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intent.getScheme());
-
-        //ComponentName componentName = intent.getComponent();
+        contentValues.put(INTENT_EXAMINER_COLUMN_CLIP_DATA, gson.toJson(intent.getClipData()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_DATA, gson.toJson(intent.getData()));
 
         sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);
 
         sqLiteDatabase.close();
-        return intent;
+        return intentWrapper;
     }
 
-    public List<Intent> getAll() {
+    public List<IntentWrapper> getAll() {
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
 
         Cursor cursor = sqLiteDatabase.rawQuery(SQL_GET_ALL_INTENT, null);
 
-        List<Intent> intentList = buildIntentList(cursor);
+        List<IntentWrapper> intentList = buildIntentList(cursor);
 
         sqLiteDatabase.close();
         return intentList;
     }
 
-    public List<Intent> getDifferential() {
+    public List<IntentWrapper> getDifferential() {
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
 
         Cursor cursor = sqLiteDatabase.rawQuery(SQL_GET_DIFFERENTIAL_INTENT, null);
 
-        List<Intent> intentList = buildIntentList(cursor);
+        List<IntentWrapper> intentList = buildIntentList(cursor);
 
         sqLiteDatabase.close();
         return intentList;
     }
 
     @NonNull
-    private List<Intent> buildIntentList(Cursor cursor) {
-        List<Intent> intentList = new ArrayList<>();
+    private List<IntentWrapper> buildIntentList(Cursor cursor) {
+        List<IntentWrapper> intentList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 intentList.add(getIntent(cursor));
@@ -194,7 +191,7 @@ Intent intent = intentWrapper.getIntent();
         resetDatabase(databaseHelper.getWritableDatabase());
     }
 
-    private Intent getIntent(Cursor cursor) {
+    private IntentWrapper getIntent(Cursor cursor) {
         String intentJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT));
         String action = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_ACTION));
         String extrasJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_EXTRAS));
@@ -207,6 +204,24 @@ Intent intent = intentWrapper.getIntent();
         String scheme = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_SCHEME));
         String dataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_DATA));
         String clipDataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_CLIP_DATA));
+        ////////////////
+        /*
+        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intentWrapper.getScheme());
+
+        contentValues.put(INTENT_EXAMINER_COLUMN_DATA_STRING, intentWrapper.getDataString());
+        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, intentWrapper.getIntentJson());
+
+        Intent intent = intentWrapper.getIntent();
+
+        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
+        contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
+        contentValues.put(INTENT_EXAMINER_COLUMN_TYPE, intent.getType());
+        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT_PACKAGE, intent.getPackage());
+        contentValues.put(INTENT_EXAMINER_COLUMN_COMPONENT, gson.toJson(intent.getComponent()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intent.getScheme());
+        */
 
         ComponentName componentName = gson.fromJson(componentJson, ComponentName.class);
         Bundle extras = gson.fromJson(extrasJson, Bundle.class);
@@ -229,7 +244,11 @@ Intent intent = intentWrapper.getIntent();
             intent.addCategory(category);
         }
 
-        return intent;
+        IntentWrapper intentWrapper = new IntentWrapper(intent);
+
+        intentWrapper.setIntentJson(intentJson);
+
+        return intentWrapper;
     }
 
     private void resetDatabase(SQLiteDatabase sqLiteDatabase) {
