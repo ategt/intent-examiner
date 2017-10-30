@@ -2,11 +2,18 @@ package com.example.ateg.intentexperiments;
 
 import android.content.Intent;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Objects;
+
 /**
  * Created by ATeg on 10/28/2017.
  */
 
 public class IntentWrapper {
+    private Gson gson = new GsonBuilder().create();
+
     public IntentWrapper(){}
     public IntentWrapper(Intent sourceIntent){
         buildIntent(sourceIntent);
@@ -30,6 +37,8 @@ public class IntentWrapper {
 
         setDataString(sourceIntent.getDataString());
         setScheme(sourceIntent.getScheme());
+
+        setIntentJson(gson.toJson(sourceIntent));
     }
 
     private Intent intent;
@@ -74,8 +83,18 @@ public class IntentWrapper {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof IntentWrapper){
-            
+        if (obj != null && obj instanceof IntentWrapper){
+            IntentWrapper otherIntentWrapper = (IntentWrapper) obj;
+
+            return Objects.equals(this.getScheme(), otherIntentWrapper.getScheme()) &&
+                    Objects.equals(this.getDataString(), otherIntentWrapper.getDataString()) &&
+                    Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
         }
+        else return false;
+    }
+
+    @Override
+    public String toString() {
+        return getIntentJson();
     }
 }
