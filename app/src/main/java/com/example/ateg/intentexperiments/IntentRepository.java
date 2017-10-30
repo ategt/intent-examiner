@@ -112,16 +112,26 @@ public class IntentRepository {
         }
     }
 
-    public Intent create(Intent intent) {
-        if (intent == null)
+    public IntentWrapper create(IntentWrapper intentWrapper) {
+        if (intentWrapper == null)
             return null;
 
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, gson.toJson(intent));
 
-        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
+        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intentWrapper.getScheme());
+        contentValues.put(INTENT_EXAMINER_COLUMN_DATA_STRING, intentWrapper.getDataString());
+        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, intentWrapper.getIntentJson());
+
+
+Intent intent = intentWrapper.getIntent();
+
+
+
+        //contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, in);
+
+        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent..getExtras()));
         contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
         contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
         contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
@@ -195,13 +205,13 @@ public class IntentRepository {
         String packageName = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_INTENT_PACKAGE));
         String componentJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_COMPONENT));
         String scheme = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_SCHEME));
-        //String dataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_DATA));
-        //String clipDataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_CLIP_DATA));
+        String dataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_DATA));
+        String clipDataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_CLIP_DATA));
 
         ComponentName componentName = gson.fromJson(componentJson, ComponentName.class);
         Bundle extras = gson.fromJson(extrasJson, Bundle.class);
-        //Uri data = gson.fromJson(dataJson, Uri.class);
-        //ClipData clipData = gson.fromJson(clipDataJson, ClipData.class);
+        Uri data = gson.fromJson(dataJson, Uri.class);
+        ClipData clipData = gson.fromJson(clipDataJson, ClipData.class);
         String[] categories = gson.fromJson(categoriesJson, String[].class);
 
         Intent intent = new Intent();
@@ -211,8 +221,8 @@ public class IntentRepository {
         intent.setFlags(flags);
         intent.putExtras(extras);
         intent.setType(type);
-        //intent.setData(data);
-        //intent.setClipData(clipData);
+        intent.setData(data);
+        intent.setClipData(clipData);
         intent.setPackage(packageName);
 
         for (String category : categories) {
