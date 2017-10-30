@@ -42,6 +42,7 @@ public class IntentWrapper {
         setScheme(sourceIntent.getScheme());
 
         setIntentJson(gson.toJson(sourceIntent));
+        setIntent(intent);
     }
 
     private Intent intent;
@@ -50,9 +51,11 @@ public class IntentWrapper {
     private String dataString;
     private String scheme;
 
-
     public Intent getIntent() {
         return intent;
+    }
+    private void setIntent(Intent intent){
+        this.intent = intent;
     }
 
     public String getIntentJson() {
