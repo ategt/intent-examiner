@@ -27,11 +27,13 @@ public class IntentWrapper {
         intent.setAction(sourceIntent.getAction());
         intent.setComponent(sourceIntent.getComponent());
         intent.setFlags(sourceIntent.getFlags());
-        intent.putExtras(sourceIntent.getExtras());
         intent.setType(sourceIntent.getType());
         intent.setData(sourceIntent.getData());
         intent.setClipData(sourceIntent.getClipData());
         intent.setPackage(sourceIntent.getPackage());
+
+        if (sourceIntent.getExtras() != null)
+            intent.putExtras(sourceIntent.getExtras());
 
         if (sourceIntent.getCategories() != null)
             for (String category : sourceIntent.getCategories()) {
@@ -54,7 +56,8 @@ public class IntentWrapper {
     public Intent getIntent() {
         return intent;
     }
-    private void setIntent(Intent intent){
+
+    private void setIntent(Intent intent) {
         this.intent = intent;
     }
 

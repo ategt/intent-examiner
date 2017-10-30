@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertFalse;
@@ -34,13 +35,15 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class IntentSqliteRepositoryTest {
 
+    private Gson gson = new GsonBuilder().create();
+
     private Context context;
     private IntentRepository intentRepository;
 
     @Before
     public void setup() {
         context = InstrumentationRegistry.getTargetContext();
-        intentRepository = new IntentRepository(context, "TestDataBase.db", 3);
+        intentRepository = new IntentRepository(context, "TestDataBase.db", 6);
     }
 
     @Test
@@ -73,10 +76,30 @@ public class IntentSqliteRepositoryTest {
 
         Bundle extras = wrappedIntent.getIntent().getExtras();
 
-        assertEquals(extras, intent.getExtras());
+        assertEquals(extras.hashCode() + " has " + extras.size() + ", " +
+                        intent.getExtras().hashCode() + " has " + intent.getExtras().size() + "\n" +
+                        "1-" + gson.toJson(extras) +
+                        "2-" + gson.toJson(intent.getExtras())
+                , gson.toJson(extras),
+                gson.toJson(intent.getExtras()));
 
         List<IntentWrapper> intentList = intentRepository.getAll();
-        assertTrue(intentList.contains(wrappedIntent));
+
+        boolean result = false;
+        for (IntentWrapper testIntentWrapper : intentList){
+            if (Objects.equals(testIntentWrapper, wrappedIntent)){
+                result = true;
+                break;
+            }
+        }
+
+        assertTrue(result);
+//        String list = gson.toJson(intentList);
+//        String test = gson.toJson(wrappedIntent);
+//        boolean result = list.contains(test);
+//        assertTrue(result);
+
+        //assertTrue(.contains(wrappedIntent));
 
         assertTrue(intentList.size() > 0);
     }

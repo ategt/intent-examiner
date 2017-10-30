@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -20,9 +21,18 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by ATeg on 10/27/2017.
@@ -61,14 +71,14 @@ public class IntentRepository {
             INTENT_EXAMINER_COLUMN_INTENT_PACKAGE + " TEXT, " +
             INTENT_EXAMINER_COLUMN_COMPONENT + " TEXT, " +
             INTENT_EXAMINER_COLUMN_SCHEME + " TEXT, " +
-            INTENT_EXAMINER_COLUMN_DATA + "TEXT, " +
-            INTENT_EXAMINER_COLUMN_CLIP_DATA + "TEXT, " +
+            INTENT_EXAMINER_COLUMN_DATA + " TEXT, " +
+            INTENT_EXAMINER_COLUMN_CLIP_DATA + " TEXT, " +
             "archived BIT DEFAULT false)";
-    private static final String SQL_DROP_INTENT_TABLE = "DROP TABLE IF EXISTS intent_examiner";
+    private static final String SQL_DROP_INTENT_TABLE = "DROP TABLE IF EXISTS " + INTENT_EXAMINER_TABLE_NAME;
 
-    private static final String SQL_GET_ALL_INTENT = "SELECT * FROM intent_examiner";
-    private static final String SQL_GET_DIFFERENTIAL_INTENT = "SELECT * FROM intent_examiner WHERE archived = 'false'";
-    private static final String SQL_MARK_ARCHIVED = "UPDATE intent_examiner SET archived = 'true' WHERE archived = 'false'";
+    private static final String SQL_GET_ALL_INTENT = "SELECT * FROM " + INTENT_EXAMINER_TABLE_NAME;
+    private static final String SQL_GET_DIFFERENTIAL_INTENT = "SELECT * FROM " + INTENT_EXAMINER_TABLE_NAME + " WHERE archived = 'false'";
+    private static final String SQL_MARK_ARCHIVED = "UPDATE " + INTENT_EXAMINER_TABLE_NAME + " SET archived = 'true' WHERE archived = 'false'";
 
     public IntentRepository(@ApplicationContext Context context,
                             @DatabaseInfo String name,
@@ -130,7 +140,7 @@ public class IntentRepository {
 
         Intent intent = intentWrapper.getIntent();
 
-        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
+        //contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
         contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
         contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
         contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
@@ -139,6 +149,14 @@ public class IntentRepository {
         contentValues.put(INTENT_EXAMINER_COLUMN_COMPONENT, gson.toJson(intent.getComponent()));
         contentValues.put(INTENT_EXAMINER_COLUMN_CLIP_DATA, gson.toJson(intent.getClipData()));
         contentValues.put(INTENT_EXAMINER_COLUMN_DATA, gson.toJson(intent.getData()));
+
+        Map<String, Parcelable> parcelableMap = new HashMap<>();
+        Set<String> keys = intent.getExtras().keySet();
+        for (String key : keys) {
+            Parcelable parcelable = intent.getExtras().getParcelable(key);
+            parcelableMap.put(key, parcelable);
+        }
+        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(parcelableMap));
 
         sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);
 
@@ -224,7 +242,48 @@ public class IntentRepository {
         */
 
         ComponentName componentName = gson.fromJson(componentJson, ComponentName.class);
-        Bundle extras = gson.fromJson(extrasJson, Bundle.class);
+
+
+        //ClassLoader classLoader = new ClassLoader
+
+        //Bundle bundle = new Bundle();
+        //bundle.
+
+//        new GsonBuilder().registerTypeHierarchyAdapter(ClassLoader.class, new TypeAdapter<ClassLoader>() {
+//            @Override
+//            public void write(JsonWriter out, ClassLoader value) throws IOException {
+//                out.name(value.getClass().getCanonicalName());
+//
+//                Enumeration<URL> urls = value.getResources("");
+//                while (urls.hasMoreElements()) {
+//                    URL url = urls.nextElement();
+//                    out.value(url.toString());
+//                }
+//            }
+//
+//            @Override
+//            public ClassLoader read(JsonReader in) throws IOException {
+////                new Parcelable.ClassLoaderCreator().
+////                //ClassLoader classLoader = new ClassLoader
+////
+////                while (in.hasNext()) {
+////                    in.nextString()
+////                }
+//                return null;
+//            }
+//        }).create();
+
+
+        Map<String, Parcelable> parcelableMap = gson.fromJson(extrasJson, HashMap.class);
+
+        //Bundle extras = gson.fromJson(extrasJson, Bundle.class);
+
+        Bundle extras = new Bundle();
+
+        for (String key : parcelableMap.keySet()) {
+            extras.putParcelable(key, parcelableMap.get(key));
+        }
+
         Uri data = gson.fromJson(dataJson, Uri.class);
         ClipData clipData = gson.fromJson(clipDataJson, ClipData.class);
         String[] categories = gson.fromJson(categoriesJson, String[].class);
@@ -240,9 +299,10 @@ public class IntentRepository {
         intent.setClipData(clipData);
         intent.setPackage(packageName);
 
-        for (String category : categories) {
-            intent.addCategory(category);
-        }
+        if (categories != null)
+            for (String category : categories) {
+                intent.addCategory(category);
+            }
 
         IntentWrapper intentWrapper = new IntentWrapper(intent);
 
