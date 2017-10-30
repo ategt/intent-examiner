@@ -80,7 +80,8 @@ public class IntentSqliteRepositoryTest {
     }
 
     private Intent removeUnserializablePortions(Intent intent) {
-        Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+        Gson gson = new GsonBuilder().serializeNulls()
+                .setExclusionStrategies(new ExclusionStrategy() {
             @Override
             public boolean shouldSkipField(FieldAttributes f) {
                 Log.d("fdsa", f.getName() + " = " + f.toString());

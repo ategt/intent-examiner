@@ -14,8 +14,10 @@ import java.util.Objects;
 public class IntentWrapper {
     private Gson gson = new GsonBuilder().create();
 
-    public IntentWrapper(){}
-    public IntentWrapper(Intent sourceIntent){
+    public IntentWrapper() {
+    }
+
+    public IntentWrapper(Intent sourceIntent) {
         buildIntent(sourceIntent);
     }
 
@@ -31,9 +33,10 @@ public class IntentWrapper {
         intent.setClipData(sourceIntent.getClipData());
         intent.setPackage(sourceIntent.getPackage());
 
-        for (String category : sourceIntent.getCategories()) {
-            intent.addCategory(category);
-        }
+        if (sourceIntent.getCategories() != null)
+            for (String category : sourceIntent.getCategories()) {
+                intent.addCategory(category);
+            }
 
         setDataString(sourceIntent.getDataString());
         setScheme(sourceIntent.getScheme());
@@ -83,14 +86,13 @@ public class IntentWrapper {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof IntentWrapper){
+        if (obj != null && obj instanceof IntentWrapper) {
             IntentWrapper otherIntentWrapper = (IntentWrapper) obj;
 
             return Objects.equals(this.getScheme(), otherIntentWrapper.getScheme()) &&
                     Objects.equals(this.getDataString(), otherIntentWrapper.getDataString()) &&
                     Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
-        }
-        else return false;
+        } else return false;
     }
 
     @Override
