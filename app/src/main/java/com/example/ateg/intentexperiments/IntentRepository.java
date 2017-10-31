@@ -26,6 +26,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -151,11 +152,12 @@ public class IntentRepository {
         contentValues.put(INTENT_EXAMINER_COLUMN_CLIP_DATA, gson.toJson(intent.getClipData()));
         contentValues.put(INTENT_EXAMINER_COLUMN_DATA, gson.toJson(intent.getData()));
 
-        Map<String, Parcelable> parcelableMap = new HashMap<>();
+        Map<String, Object> parcelableMap = new HashMap<>();
         Set<String> keys = intent.getExtras().keySet();
         for (String key : keys) {
             Parcelable parcelable = intent.getExtras().getParcelable(key);
-            parcelableMap.put(key, parcelable);
+            Object object = intent.getExtras().get(key);
+            parcelableMap.put(key, object);
         }
         contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(parcelableMap));
 
@@ -279,14 +281,15 @@ public class IntentRepository {
 //        }).create();
 
 
-        Map<String, Parcelable> parcelableMap = gson.fromJson(extrasJson, HashMap.class);
+        Map<String, Serializable> parcelableMap = gson.fromJson(extrasJson, HashMap.class);
 
         //Bundle extras = gson.fromJson(extrasJson, Bundle.class);
 
         Bundle extras = new Bundle();
 
         for (String key : parcelableMap.keySet()) {
-            extras.putParcelable(key, parcelableMap.get(key));
+            //extras.putParcelable(key, parcelableMap.get(key));
+            extras.putSerializable(key, parcelableMap.get(key));
         }
 
         Uri data = gson.fromJson(dataJson, Uri.class);
