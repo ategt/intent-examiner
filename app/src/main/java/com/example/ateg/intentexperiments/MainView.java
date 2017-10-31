@@ -6,4 +6,6 @@ package com.example.ateg.intentexperiments;
 
 public interface MainView extends LEView {
     void updatePreferences(Preferences preferences);
+
+    void populateMainView(String stringifiedIntent);
 }

@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.view.Gravity;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
@@ -226,13 +227,24 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected void setUi(View v) {
-        //setHasOptionsMenu(true);
-        //setHasOptionsMenu(true);
-        //getActivity().setM
+        Preferences preferences = new PreferencesServices(getActivity()).load();
 
-//        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-//
-//        getActivity().setActionBar(toolbar);
+        FloatingActionButton floatingActionButton = v.findViewById(R.id.action_button);
+        if (preferences.isShowExamineButton())
+            floatingActionButton.setVisibility(View.VISIBLE);
+        else
+            floatingActionButton.setVisibility(View.INVISIBLE);
+
+        TextView centralTextView = getView().findViewById(R.id.central_textView);
+
+        if (preferences.isClickAnywhere()){
+            centralTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPresenter.examineIntent();
+                }
+            });
+        }
 
     }
 
@@ -242,22 +254,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected void populate() {
-
-        Preferences preferences =
-                new PreferencesUtilites(getActivity().getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, Context.MODE_PRIVATE))
-                .getPreferences();
-
-//        Boolean autoExamine = getActivity().getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, Context.MODE_PRIVATE)
-  //              .getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, false);
-        if (preferences.isAutoExamine()) {
-            new ExamineServices(getActivity()).examineIntent(getCreatedView(), getActivity().getIntent());
-        }
-
-
-        if (preferences.isAutoSave()){
-
-        }
-
+        mPresenter.considerAutoClick();
     }
 
     @Override
@@ -266,14 +263,17 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ExamineServices(getActivity()).examineIntent(view, getActivity().getIntent());
+                mPresenter.examineIntent();
             }
         });
     }
 
     @Override
     protected MainPresenter createPresenter() {
-        return new MainPresenter(this);
+        IntentRepository intentRepository = new IntentRepository(getActivity(), getString(R.string.db_name), 1);
+        PreferencesServices preferencesServices = new PreferencesServices(getActivity());
+        IntentWrapperServices intentWrapperServices = new IntentWrapperServices(getActivity(), intentRepository, preferencesServices);
+        return new MainPresenter(this, intentWrapperServices, preferencesServices);
     }
 
     @Override
@@ -290,12 +290,33 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
         showExamineButtonCheckBox.setChecked(preferences.isShowExamineButton());
 
+        CheckBox autoLogCheckBox
+                = dialog.findViewById(R.id.settings_auto_log_checkBox);
+        autoLogCheckBox.setChecked(preferences.isAutoLog());
+
+        CheckBox clickAnywhereCheckBox
+                = dialog.findViewById(R.id.settings_click_anywhere_examines_checkBox);
+        clickAnywhereCheckBox.setChecked(preferences.isClickAnywhere());
+
         EditText defaultFileNameEditText
                 = dialog.findViewById(R.id.settings_default_file_name_editText);
         defaultFileNameEditText.setText(preferences.getDefaultFileName());
     }
 
-    private Preferences buildPreferences(Dialog dialog){
+    @Override
+    public void populateMainView(String stringifiedIntent) {
+        TextView textView = (TextView) getView().getRootView().findViewById(R.id.central_textView);
+
+        if (stringifiedIntent != null) {
+            textView.setText(stringifiedIntent);
+            textView.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+            textView.setText(R.string.intent_empty);
+            textView.setGravity(Gravity.CENTER);
+        }
+    }
+
+    private Preferences buildPreferences(Dialog dialog) {
         Preferences preferences = new Preferences();
 
         CheckBox autoExamineCheckbox
@@ -309,6 +330,14 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         CheckBox showExamineButton
                 = dialog.findViewById(R.id.settings_show_examine_button_checkBox);
         preferences.setShowExamineButton(showExamineButton.isChecked());
+
+        CheckBox autoLogBox
+                = dialog.findViewById(R.id.settings_auto_log_checkBox);
+        preferences.setAutoLog(autoLogBox.isChecked());
+
+        CheckBox clickAnywhereCheckBox
+                = dialog.findViewById(R.id.settings_click_anywhere_examines_checkBox);
+        preferences.setClickAnywhere(clickAnywhereCheckBox.isChecked());
 
         EditText defaultFileName
                 = dialog.findViewById(R.id.settings_default_file_name_editText);

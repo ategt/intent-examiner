@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Intent Examiner</string>
+    <string name="db_name">intent_examiner.db</string>
     <string name="action_settings">Settings</string>
     <string name="intent_empty">Intent Empty</string>
     <string name="opening_greeting">Press the Button to Examine Intent</string>
@@ -32,4 +33,6 @@
     <string name="settings_dialog_title">Settings</string>
     <string name="reset_settings">Reset</string>
     <string name="logo_description">Application Logo</string>
+    <string name="auto_log">Auto Log To Database</string>
+    <string name="click_anywhere">Tapping Anywhere Examines Intent</string>
 </resources>

@@ -9,8 +9,16 @@ import android.os.AsyncTask;
  */
 
 class MainPresenter extends BasePresenter<MainView>{
-    public MainPresenter(MainView viewInstance) {
+
+    private IntentWrapperServices intentWrapperServices;
+    private PreferencesServices preferencesServices;
+
+    public MainPresenter(MainView viewInstance,
+                         IntentWrapperServices intentWrapperServices,
+                         PreferencesServices preferencesServices) {
         super(viewInstance);
+        this.intentWrapperServices = intentWrapperServices;
+        this.preferencesServices = preferencesServices;
     }
 
     public void resetPreferences() {
@@ -34,5 +42,28 @@ class MainPresenter extends BasePresenter<MainView>{
                 getView().updatePreferences(preferences);
             }
         }.execute(PreferencesUtilites.getDefaultPreferences(((Fragment)getView()).getActivity()));
+    }
+
+    public void considerAutoClick() {
+        Preferences preferences = preferencesServices.load();
+
+        if (preferences.isAutoExamine()){
+            examineIntent();
+        }
+    }
+
+    public void examineIntent() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                return new ExamineServices().examineIntent(intentWrapperServices.buildIntentWrapper());
+            }
+
+            @Override
+            protected void onPostExecute(String stringifiedIntent) {
+                getView().populateMainView(stringifiedIntent);
+            }
+        }.execute();
+        //String stringifiedIntent = new ExamineServices().examineIntent(intentWrapperServices.buildIntentWrapper());
     }
 }

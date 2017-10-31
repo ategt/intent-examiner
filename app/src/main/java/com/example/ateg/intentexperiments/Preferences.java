@@ -9,6 +9,8 @@ public class Preferences {
     private boolean autoExamine;
     private boolean autoSave;
     private boolean showExamineButton;
+    private boolean autoLog;
+    private boolean clickAnywhere;
     private String defaultFileName = "IntentExamination.txt";
 
     public boolean isAutoExamine() {
@@ -41,5 +43,21 @@ public class Preferences {
 
     public void setDefaultFileName(String defaultFileName) {
         this.defaultFileName = defaultFileName;
+    }
+
+    public boolean isAutoLog() {
+        return autoLog;
+    }
+
+    public void setAutoLog(boolean autoLog) {
+        this.autoLog = autoLog;
+    }
+
+    public boolean isClickAnywhere() {
+        return clickAnywhere;
+    }
+
+    public void setClickAnywhere(boolean clickAnywhere) {
+        this.clickAnywhere = clickAnywhere;
     }
 }
