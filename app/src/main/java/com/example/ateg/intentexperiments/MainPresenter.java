@@ -21,6 +21,19 @@ class MainPresenter extends BasePresenter<MainView>{
         super(viewInstance);
         this.intentWrapperServices = intentWrapperServices;
         this.preferencesServices = preferencesServices;
+        init();
+    }
+
+    private void init() {
+        new AsyncTask<IntentWrapperServices, Void, Void>() {
+            @Override
+            protected Void doInBackground(IntentWrapperServices... intentWrapperServices) {
+                for (IntentWrapperServices intentWrapperServices1 : intentWrapperServices){
+                    intentWrapperServices1.init();
+                }
+                return null;
+            }
+        }.execute(intentWrapperServices);
     }
 
     public void resetPreferences() {

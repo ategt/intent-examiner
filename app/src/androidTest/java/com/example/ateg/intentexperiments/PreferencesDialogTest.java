@@ -211,6 +211,20 @@ public class PreferencesDialogTest {
     public void settingsSaveAndResetCorrectlyTest() {
         openSettingsDialog();
 
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_reset_button))
+                .check(matches(isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_reset_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeDown())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
         Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
                 .check(ViewAssertions.matches(isNotChecked()))
                 .perform(click())

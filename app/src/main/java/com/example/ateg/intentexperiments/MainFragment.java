@@ -287,9 +287,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     protected MainPresenter createPresenter() {
         IntentRepository intentRepository = new IntentRepository(getActivity(), getString(R.string.db_name), 1);
         PreferencesServices preferencesServices = new PreferencesServices(getActivity());
-        IntentWrapperServices intentWrapperServices =
-
-                new IntentWrapperServices(getActivity(), intentRepository, preferencesServices);
+        IntentWrapperServices intentWrapperServices = new IntentWrapperServices(getActivity(), intentRepository, preferencesServices);
         return new MainPresenter(this, intentWrapperServices, preferencesServices);
     }
 
