@@ -35,4 +35,5 @@
     <string name="logo_description">Application Logo</string>
     <string name="auto_log">Auto Log To Database</string>
     <string name="click_anywhere">Tapping Anywhere Examines Intent</string>
+    <string name="action_export_db">Export DB</string>
 </resources>

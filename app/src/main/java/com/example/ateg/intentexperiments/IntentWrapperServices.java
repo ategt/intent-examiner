@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,6 +72,31 @@ public class IntentWrapperServices {
 
         if (markArchived)
             archive();
+    }
+
+    public File export(File destinationFile, ExportProgress exportProgress, boolean markArchived) {
+        ExamineServices examineServices = new ExamineServices();
+        StringBuilder stringBuilder = new StringBuilder();
+        List<IntentWrapper> intentWrapperList = this.intentRepository.getDifferential();
+        int intentWrapperListSize = intentWrapperList.size();
+        for (IntentWrapper intentWrapper : intentWrapperList) {
+            if (exportProgress != null)
+                exportProgress.updateExportProgress(intentWrapperList.indexOf(intentWrapper), intentWrapperListSize);
+            stringBuilder.append(examineServices.examineIntent(intentWrapper));
+        }
+
+        LoggingUtilities loggingUtilities = new LoggingUtilities(context, destinationFile);
+        loggingUtilities.updateTextFile(stringBuilder.toString());
+        //return loggingUtilities.getLogFile();
+        //}
+
+        if (exportProgress != null)
+            exportProgress.exportDone();
+
+        if (markArchived)
+            archive();
+
+        return loggingUtilities.getLogFile();
     }
 
     public void archive() {

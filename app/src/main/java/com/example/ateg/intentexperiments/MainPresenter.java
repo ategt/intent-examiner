@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import java.io.File;
+
 /**
  * Created by ATeg on 10/20/2017.
  */
@@ -65,5 +67,21 @@ class MainPresenter extends BasePresenter<MainView>{
             }
         }.execute();
         //String stringifiedIntent = new ExamineServices().examineIntent(intentWrapperServices.buildIntentWrapper());
+    }
+
+    public void exportDb(File dest) {
+        new AsyncTask<File, Void, File>() {
+            @Override
+            protected File doInBackground(File... files) {
+                return intentWrapperServices.export(files[0], null, false);
+            }
+
+            @Override
+            protected void onPostExecute(File logFileWritten) {
+                getView().announceExportComplete(logFileWritten);
+            }
+        }.execute(dest);
+        //File logFileWritten = intentWrapperServices.export(dest, null, false);
+
     }
 }

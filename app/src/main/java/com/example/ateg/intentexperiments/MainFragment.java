@@ -60,10 +60,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 return onOptionsItemSelected(menuItem);
             }
         });
-
-        //toolbar.getLogo();
-        //getActivity().setActionBar(toolbar);
-        //getActivity().getActionBar().setDisplayShowTitleEnabled(true);
     }
 
     @Override
@@ -81,16 +77,13 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.settings_dialog);
                 dialog.setTitle(R.string.settings_dialog_title);
-                //dialog.show();
 
-                //new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity())).loadPreferences();
                 mPresenter.loadPreferences();
 
                 Button acceptButton = (Button) dialog.findViewById(R.id.settings_accept_button);
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity()), dialog).savePreferences(view);
                         new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity()))
                                 .savePreferences(buildPreferences(dialog));
                         dialog.dismiss();
@@ -102,11 +95,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                     @Override
                     public void onClick(View view) {
                         mPresenter.resetPreferences();
-//                        PreferencesUtilites preferencesUtilites = new PreferencesUtilites(getActivity(), dialog);
-//                        preferencesUtilites.resetPreferences(view);
-//                        preferencesUtilites.loadPreferences();
-
-                        //dialog.inv
                     }
                 });
 
@@ -119,10 +107,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 });
 
                 dialog.show();
-
-//                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-//                layoutParams.copyFrom(dialog.getWindow().getAttributes());
-//                layoutParams.width
 
                 return true;
             case R.id.save_to_file:
@@ -154,6 +138,37 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                         .show();
 
                 return true;
+            case R.id.action_export:
+
+                File[] filesa = ContextCompat.getExternalFilesDirs(getActivity(), Environment.DIRECTORY_DOCUMENTS);
+
+                File storageDira = filesa[filesa.length - 1];
+
+                new FileSelector(getActivity(),
+                        FileOperation.SAVE,
+                        new OnHandleFileListener() {
+                            @Override
+                            public void handleFile(String filePath) {
+                                //TextView textViewAs = (TextView) getCreatedView().findViewById(R.id.central_textView);
+                                //File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
+
+                                //fileSaveCompleteSnackBar(textViewAs, logFileAs);
+
+                                mPresenter.exportDb(new File(filePath));
+                            }
+                        },
+                        mFileFilter,
+                        new File(storageDira, LoggingUtilities.getDefaultFileName(getActivity())))
+                        .show();
+
+
+//                String examinationReport = textView.getText().toString();
+//                LoggingUtilities loggingUtilities = new LoggingUtilities(getActivity(), destinationFile);
+//                loggingUtilities.updateTextFile(examinationReport);
+//                return loggingUtilities.getLogFile();
+
+            //mPresenter.exportDb();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -166,7 +181,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         outState.putCharSequence(TEXT_WINDOW_VALUE, textViewAs.getText());
     }
 
-    private void fileSaveCompleteSnackBar(TextView textViewAs, final File logFileAs) {
+    private void fileSaveCompleteSnackBar(View textViewAs, final File logFileAs) {
         Snackbar.make(textViewAs, "File Saved", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Open", new View.OnClickListener() {
                     @Override
@@ -314,6 +329,11 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
             textView.setText(R.string.intent_empty);
             textView.setGravity(Gravity.CENTER);
         }
+    }
+
+    @Override
+    public void announceExportComplete(File logFileWritten) {
+        fileSaveCompleteSnackBar(getView(), logFileWritten);
     }
 
     private Preferences buildPreferences(Dialog dialog) {
