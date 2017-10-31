@@ -141,16 +141,10 @@ public class IntentWrapper {
         if (obj != null && obj instanceof IntentWrapper) {
             IntentWrapper otherIntentWrapper = (IntentWrapper) obj;
 
-            if (Objects.equals(this.getId(), otherIntentWrapper.getId())) {
-                System.out.println("Found a match.");
-            }
-
-            boolean one = Objects.equals(this.hashCode(), otherIntentWrapper.hashCode());
-            boolean two = Objects.equals(this.getId(), otherIntentWrapper.getId());
-            boolean three = Objects.equals(this.getScheme(), otherIntentWrapper.getScheme());
-            boolean four = Objects.equals(this.getDataString(), otherIntentWrapper.getDataString());
-
-            //boolean six = Objects.equals(this.getExtras(), otherIntentWrapper.getExtras());
+            boolean one = Objects.equals(this.hashCode(), otherIntentWrapper.hashCode()) &&
+                    Objects.equals(this.getId(), otherIntentWrapper.getId()) &&
+                    Objects.equals(this.getScheme(), otherIntentWrapper.getScheme()) &&
+                    Objects.equals(this.getDataString(), otherIntentWrapper.getDataString());
 
             Bundle thisBundle = this.getExtras();
             Bundle otherBundle = otherIntentWrapper.getExtras();
@@ -176,9 +170,7 @@ public class IntentWrapper {
             boolean thirteen = Objects.equals(this.getClipData(), otherIntentWrapper.getClipData());
             boolean fourteen = Objects.equals(this.getData(), otherIntentWrapper.getData());
 
-//            boolean five = Objects.equals(gson.toJson(this.getIntent()), gson.toJson(otherIntentWrapper.getIntent()));
-
-            return one && two && three && four && five && six && seven && eight && nine && ten && eleven && tweleve && thirteen && fourteen;
+            return one && five && six && seven && eight && nine && ten && eleven && tweleve && thirteen && fourteen;
 
         } else return false;
     }

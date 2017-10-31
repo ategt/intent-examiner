@@ -21,15 +21,9 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +136,6 @@ public class IntentRepository {
 
         Intent intent = intentWrapper.getIntent();
 
-        //contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
         contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
         contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
         contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
@@ -155,7 +148,6 @@ public class IntentRepository {
         Map<String, Object> parcelableMap = new HashMap<>();
         Set<String> keys = intent.getExtras().keySet();
         for (String key : keys) {
-            Parcelable parcelable = intent.getExtras().getParcelable(key);
             Object object = intent.getExtras().get(key);
             parcelableMap.put(key, object);
         }
@@ -229,66 +221,14 @@ public class IntentRepository {
         String scheme = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_SCHEME));
         String dataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_DATA));
         String clipDataJson = cursor.getString(cursor.getColumnIndex(INTENT_EXAMINER_COLUMN_CLIP_DATA));
-        ////////////////
-        /*
-        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intentWrapper.getScheme());
-
-        contentValues.put(INTENT_EXAMINER_COLUMN_DATA_STRING, intentWrapper.getDataString());
-        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT, intentWrapper.getIntentJson());
-
-        Intent intent = intentWrapper.getIntent();
-
-        contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(intent.getExtras()));
-        contentValues.put(INTENT_EXAMINER_COLUMN_ACTION, intent.getAction());
-        contentValues.put(INTENT_EXAMINER_COLUMN_CATEGORIES, gson.toJson(intent.getCategories()));
-        contentValues.put(INTENT_EXAMINER_COLUMN_FLAGS, intent.getFlags());
-        contentValues.put(INTENT_EXAMINER_COLUMN_TYPE, intent.getType());
-        contentValues.put(INTENT_EXAMINER_COLUMN_INTENT_PACKAGE, intent.getPackage());
-        contentValues.put(INTENT_EXAMINER_COLUMN_COMPONENT, gson.toJson(intent.getComponent()));
-        contentValues.put(INTENT_EXAMINER_COLUMN_SCHEME, intent.getScheme());
-        */
 
         ComponentName componentName = gson.fromJson(componentJson, ComponentName.class);
 
-
-        //ClassLoader classLoader = new ClassLoader
-
-        //Bundle bundle = new Bundle();
-        //bundle.
-
-//        new GsonBuilder().registerTypeHierarchyAdapter(ClassLoader.class, new TypeAdapter<ClassLoader>() {
-//            @Override
-//            public void write(JsonWriter out, ClassLoader value) throws IOException {
-//                out.name(value.getClass().getCanonicalName());
-//
-//                Enumeration<URL> urls = value.getResources("");
-//                while (urls.hasMoreElements()) {
-//                    URL url = urls.nextElement();
-//                    out.value(url.toString());
-//                }
-//            }
-//
-//            @Override
-//            public ClassLoader read(JsonReader in) throws IOException {
-////                new Parcelable.ClassLoaderCreator().
-////                //ClassLoader classLoader = new ClassLoader
-////
-////                while (in.hasNext()) {
-////                    in.nextString()
-////                }
-//                return null;
-//            }
-//        }).create();
-
-
         Map<String, Serializable> parcelableMap = gson.fromJson(extrasJson, HashMap.class);
-
-        //Bundle extras = gson.fromJson(extrasJson, Bundle.class);
 
         Bundle extras = new Bundle();
 
         for (String key : parcelableMap.keySet()) {
-            //extras.putParcelable(key, parcelableMap.get(key));
             extras.putSerializable(key, parcelableMap.get(key));
         }
 

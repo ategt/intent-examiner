@@ -85,22 +85,6 @@ public class IntentSqliteRepositoryTest {
 
         List<IntentWrapper> intentList = intentRepository.getAll();
 
-        boolean result = false;
-        for (IntentWrapper testIntentWrapper : intentList){
-            if (Objects.equals(testIntentWrapper, wrappedIntent)){
-                result = true;
-                break;
-            }
-        }
-
-        assertTrue(result);
-//        String list = gson.toJson(intentList);
-//        String test = gson.toJson(wrappedIntent);
-//        boolean result = list.contains(test);
-        assertTrue(result);
-
-
-
         assertTrue(intentList.contains(wrappedIntent));
 
         assertTrue(intentList.size() > 0);
