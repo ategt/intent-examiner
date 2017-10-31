@@ -242,11 +242,22 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected void populate() {
-        Boolean autoExamine = getActivity().getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, Context.MODE_PRIVATE)
-                .getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, false);
-        if (autoExamine) {
+
+        Preferences preferences =
+                new PreferencesUtilites(getActivity().getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, Context.MODE_PRIVATE))
+                .getPreferences();
+
+//        Boolean autoExamine = getActivity().getSharedPreferences(PreferencesUtilites.PREFERENCES_KEY, Context.MODE_PRIVATE)
+  //              .getBoolean(PreferencesUtilites.AUTO_EXAMINE_KEY, false);
+        if (preferences.isAutoExamine()) {
             new ExamineServices(getActivity()).examineIntent(getCreatedView(), getActivity().getIntent());
         }
+
+
+        if (preferences.isAutoSave()){
+            
+        }
+
     }
 
     @Override
