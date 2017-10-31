@@ -255,7 +255,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
 
         if (preferences.isAutoSave()){
-            
+
         }
 
     }
