@@ -250,7 +250,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         else
             floatingActionButton.setVisibility(View.INVISIBLE);
 
-        TextView centralTextView = getView().findViewById(R.id.central_textView);
+        TextView centralTextView = getCreatedView().findViewById(R.id.central_textView);
 
         if (preferences.isClickAnywhere()){
             centralTextView.setOnClickListener(new View.OnClickListener() {
@@ -287,7 +287,9 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     protected MainPresenter createPresenter() {
         IntentRepository intentRepository = new IntentRepository(getActivity(), getString(R.string.db_name), 1);
         PreferencesServices preferencesServices = new PreferencesServices(getActivity());
-        IntentWrapperServices intentWrapperServices = new IntentWrapperServices(getActivity(), intentRepository, preferencesServices);
+        IntentWrapperServices intentWrapperServices =
+
+                new IntentWrapperServices(getActivity(), intentRepository, preferencesServices);
         return new MainPresenter(this, intentWrapperServices, preferencesServices);
     }
 

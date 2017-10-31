@@ -146,11 +146,17 @@ public class IntentRepository {
         contentValues.put(INTENT_EXAMINER_COLUMN_DATA, gson.toJson(intent.getData()));
 
         Map<String, Object> parcelableMap = new HashMap<>();
-        Set<String> keys = intent.getExtras().keySet();
-        for (String key : keys) {
-            Object object = intent.getExtras().get(key);
-            parcelableMap.put(key, object);
+
+        Bundle extras = intent.getExtras();
+
+        if (extras != null) {
+            Set<String> keys = extras.keySet();
+            for (String key : keys) {
+                Object object = extras.get(key);
+                parcelableMap.put(key, object);
+            }
         }
+
         contentValues.put(INTENT_EXAMINER_COLUMN_EXTRAS, gson.toJson(parcelableMap));
 
         Long id = sqLiteDatabase.insertOrThrow(INTENT_EXAMINER_TABLE_NAME, null, contentValues);

@@ -21,6 +21,7 @@ import static android.support.test.espresso.Espresso.openActionBarOverflowOrOpti
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -265,6 +266,13 @@ public class PreferencesDialogTest {
 
         Espresso.onView(withId(R.id.dialog_scrollView))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_reset_button))
+                .check(matches(isDisplayed()));
 
         Espresso.onView(withId(R.id.settings_reset_button))
                 .perform(click());
