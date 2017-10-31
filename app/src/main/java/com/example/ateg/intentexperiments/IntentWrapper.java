@@ -155,11 +155,11 @@ public class IntentWrapper {
             Bundle thisBundle = this.getExtras();
             Bundle otherBundle = otherIntentWrapper.getExtras();
 
-            boolean six = Objects.equals(thisBundle.size(), otherBundle.size());
+            boolean six = thisBundle != null && otherBundle != null ? Objects.equals(thisBundle.size(), otherBundle.size()) : true;
 
             boolean five = thisBundle.size() > 0 ? false : true;
             for (String key : thisBundle.keySet()) {
-                if (otherBundle.containsKey(key) && Objects.equals(thisBundle.getParcelable(key), otherBundle.getParcelable(key))) {
+                if (otherBundle != null && otherBundle.containsKey(key) && Objects.equals(thisBundle.getParcelable(key), otherBundle.getParcelable(key))) {
                     five = true;
                 } else {
                     five = false;
