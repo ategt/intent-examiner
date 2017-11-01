@@ -16,31 +16,18 @@ import android.widget.Toast;
  */
 
 public class ExamineServices {
-    
-    public String examineIntent(Intent intent) {
-        //TextView textView = (TextView) view.getRootView().findViewById(R.id.central_textView);
-        Log.d("njhy", "Exm examineIntent");
 
+    public String examineIntent(Intent intent) {
         StringBuilder sb = new StringBuilder();
 
         sb = IntentExaminationUtilities.stringifyIntent(intent, sb);
-
         Bundle bundle = intent.getExtras();
-        Log.d("njhy", "Exm examineIntent1");
 
         if (bundle != null) {
             sb = IntentExaminationUtilities.stringifyBundle(sb, bundle);
-            Log.d("njhy", "Exm examineIntent2");
-
             return sb.toString();
-            //textView.setText(sb.toString());
-            //textView.setGravity(Gravity.CENTER_VERTICAL);
         } else {
-            Log.d("njhy", "Exm examineIntent3");
-
             return null;
-            //textView.setText(R.string.intent_empty);
-            //textView.setGravity(Gravity.CENTER);
         }
     }
 

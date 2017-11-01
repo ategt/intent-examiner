@@ -149,11 +149,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                         new OnHandleFileListener() {
                             @Override
                             public void handleFile(String filePath) {
-                                //TextView textViewAs = (TextView) getCreatedView().findViewById(R.id.central_textView);
-                                //File logFileAs = saveTextViewContentToFile(textViewAs, new File(filePath));
-
-                                //fileSaveCompleteSnackBar(textViewAs, logFileAs);
-
                                 mPresenter.exportDb(new File(filePath));
                             }
                         },
@@ -161,13 +156,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                         new File(storageDira, LoggingUtilities.getDefaultFileName(getActivity())))
                         .show();
 
-
-//                String examinationReport = textView.getText().toString();
-//                LoggingUtilities loggingUtilities = new LoggingUtilities(getActivity(), destinationFile);
-//                loggingUtilities.updateTextFile(examinationReport);
-//                return loggingUtilities.getLogFile();
-
-            //mPresenter.exportDb();
                 return true;
         }
 
@@ -334,6 +322,11 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     @Override
     public void announceExportComplete(File logFileWritten) {
         fileSaveCompleteSnackBar(getView(), logFileWritten);
+    }
+
+    @Override
+    public void examineDone() {
+        sfa
     }
 
     private Preferences buildPreferences(Dialog dialog) {

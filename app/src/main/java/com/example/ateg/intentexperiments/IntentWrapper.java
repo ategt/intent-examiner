@@ -21,19 +21,12 @@ import java.util.Set;
  */
 
 public class IntentWrapper {
-    private Gson gson = new GsonBuilder().create();
-
-    //public IntentWrapper() {
-    //}
 
     public IntentWrapper(Intent sourceIntent) {
-        Log.d("IntentWrapper", "const");
         buildIntent(sourceIntent);
-        Log.d("IntentWrapper", "const-done");
     }
 
     private void buildIntent(Intent sourceIntent) {
-        Log.d("IntentWrapper", "builder");
         Intent intent = new Intent();
 
         intent.setAction(sourceIntent.getAction());
@@ -55,13 +48,7 @@ public class IntentWrapper {
         setDataString(sourceIntent.getDataString());
         setScheme(sourceIntent.getScheme());
 
-        Log.d("IntentWrapper", "builder-intent - to json");
-        //setIntentJson(gson.toJson(sourceIntent));
-        Log.d("IntentWrapper", "builder-json conversion done");
-
         setIntent(intent);
-        Log.d("njhy", "Wrapper built");
-
     }
 
     private Integer id;

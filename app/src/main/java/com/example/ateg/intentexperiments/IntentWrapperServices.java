@@ -25,14 +25,13 @@ public class IntentWrapperServices {
         this.defaultIntentRepository = intentRepository;
         this.preferencesServices = preferencesServices;
         this.context = context;
-        //init();
     }
 
     public void init() {
         Preferences preferences = preferencesServices.load();
-
-        if (preferences.isAutoLog())
+        if (preferences.isAutoLog()) {
             log();
+        }
 
         if (preferences.isAutoSave() && !Objects.equals(defaultIntentRepository, intentRepository)) {
             save();

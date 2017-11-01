@@ -65,6 +65,7 @@ class MainPresenter extends BasePresenter<MainView>{
 
         if (preferences.isAutoExamine()){
             examineIntent();
+            getView().examineDone();
         }
     }
 
@@ -72,17 +73,7 @@ class MainPresenter extends BasePresenter<MainView>{
         new AsyncTask<IntentWrapperServices, Void, String>() {
             @Override
             protected String doInBackground(IntentWrapperServices... intentWrapperServices) {
-                Log.d("dibg", " - 1");
-                IntentWrapperServices intentWrapperServices1 = intentWrapperServices[0];
-                Log.d("dibg", " - 2");
-                IntentWrapper intentWrapper = intentWrapperServices1.buildIntentWrapper();
-                Log.d("dibg", " - 3");
-                ExamineServices examineServices = new ExamineServices();
-                Log.d("dibg", " - 4");
-                String rd = examineServices.examineIntent(intentWrapper);
-                Log.d("dibg", " - 5");
-                return rd;
-                //return new ExamineServices().examineIntent(.buildIntentWrapper());
+                return new ExamineServices().examineIntent(intentWrapperServices[0].buildIntentWrapper());
             }
 
             @Override
@@ -90,7 +81,6 @@ class MainPresenter extends BasePresenter<MainView>{
                 getView().populateMainView(stringifiedIntent);
             }
         }.execute(intentWrapperServices);
-        //String stringifiedIntent = new ExamineServices().examineIntent(intentWrapperServices.buildIntentWrapper());
     }
 
     public void exportDb(File dest) {

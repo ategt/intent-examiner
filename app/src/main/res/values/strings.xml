@@ -36,4 +36,7 @@
     <string name="auto_log">Auto Log To Database</string>
     <string name="click_anywhere">Tapping Anywhere Examines Intent</string>
     <string name="action_export_db">Export DB</string>
+    <string name="log_successful">Log Successful</string>
+    <string name="save_successful">Save Successful</string>
+    <string name="export_successful">Export Successful</string>
 </resources>

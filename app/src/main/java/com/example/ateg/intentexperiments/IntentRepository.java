@@ -122,6 +122,14 @@ public class IntentRepository {
         }
     }
 
+    public List<IntentWrapper> create(List<IntentWrapper> intentWrapperList){
+        List<IntentWrapper> resultList = new ArrayList<>();
+        for(IntentWrapper intentWrapper : intentWrapperList){
+            resultList.add(this.create(intentWrapper));
+        }
+        return resultList;
+    }
+
     public IntentWrapper create(IntentWrapper intentWrapper) {
         if (intentWrapper == null)
             return null;

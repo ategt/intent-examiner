@@ -12,4 +12,6 @@ public interface MainView extends LEView {
     void populateMainView(String stringifiedIntent);
 
     void announceExportComplete(File logFileWritten);
+
+    void examineDone();
 }
