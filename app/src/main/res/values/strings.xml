@@ -39,4 +39,5 @@
     <string name="log_successful">Log Successful</string>
     <string name="save_successful">Save Successful</string>
     <string name="export_successful">Export Successful</string>
+    <string name="examine_completed">Scan Completed</string>
 </resources>

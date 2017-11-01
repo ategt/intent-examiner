@@ -79,6 +79,7 @@ class MainPresenter extends BasePresenter<MainView>{
             @Override
             protected void onPostExecute(String stringifiedIntent) {
                 getView().populateMainView(stringifiedIntent);
+                getView().examineDone();
             }
         }.execute(intentWrapperServices);
     }
@@ -95,7 +96,5 @@ class MainPresenter extends BasePresenter<MainView>{
                 getView().announceExportComplete(logFileWritten);
             }
         }.execute(dest);
-        //File logFileWritten = intentWrapperServices.export(dest, null, false);
-
     }
 }

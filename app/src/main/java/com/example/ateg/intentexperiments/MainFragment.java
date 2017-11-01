@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.ateg.intentexperiments.FileSelector.FileOperation;
@@ -326,7 +327,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     public void examineDone() {
-        sfa
+        Snackbar.make(getView(), R.string.examine_completed, Snackbar.LENGTH_LONG).show();
     }
 
     private Preferences buildPreferences(Dialog dialog) {
