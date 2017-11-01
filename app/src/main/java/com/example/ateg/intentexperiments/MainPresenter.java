@@ -3,6 +3,7 @@ package com.example.ateg.intentexperiments;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.File;
 
@@ -68,17 +69,27 @@ class MainPresenter extends BasePresenter<MainView>{
     }
 
     public void examineIntent() {
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<IntentWrapperServices, Void, String>() {
             @Override
-            protected String doInBackground(Void... voids) {
-                return new ExamineServices().examineIntent(intentWrapperServices.buildIntentWrapper());
+            protected String doInBackground(IntentWrapperServices... intentWrapperServices) {
+                Log.d("dibg", " - 1");
+                IntentWrapperServices intentWrapperServices1 = intentWrapperServices[0];
+                Log.d("dibg", " - 2");
+                IntentWrapper intentWrapper = intentWrapperServices1.buildIntentWrapper();
+                Log.d("dibg", " - 3");
+                ExamineServices examineServices = new ExamineServices();
+                Log.d("dibg", " - 4");
+                String rd = examineServices.examineIntent(intentWrapper);
+                Log.d("dibg", " - 5");
+                return rd;
+                //return new ExamineServices().examineIntent(.buildIntentWrapper());
             }
 
             @Override
             protected void onPostExecute(String stringifiedIntent) {
                 getView().populateMainView(stringifiedIntent);
             }
-        }.execute();
+        }.execute(intentWrapperServices);
         //String stringifiedIntent = new ExamineServices().examineIntent(intentWrapperServices.buildIntentWrapper());
     }
 

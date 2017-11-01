@@ -3,6 +3,7 @@ package com.example.ateg.intentexperiments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.io.File;
 import java.util.List;
@@ -44,6 +45,7 @@ public class IntentWrapperServices {
 
     public IntentWrapper buildIntentWrapper() {
         Intent intent = context.getIntent();
+        Log.d("asdf", "builder");
         return new IntentWrapper(intent);
     }
 

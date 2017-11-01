@@ -246,9 +246,9 @@ public class PreferencesDialogTest {
                 .check(matches(isChecked()));
 
         Espresso.onView(withId(R.id.settings_show_examine_button_checkBox))
-                .check(ViewAssertions.matches(isNotChecked()))
+                .check(ViewAssertions.matches(isChecked()))
                 .perform(click())
-                .check(matches(isChecked()));
+                .check(matches(isNotChecked()));
 
         Espresso.onView(withId(R.id.dialog_scrollView))
                 .perform(ViewActions.swipeUp())
@@ -276,7 +276,7 @@ public class PreferencesDialogTest {
                 .check(matches(isChecked()));
 
         Espresso.onView(withId(R.id.settings_show_examine_button_checkBox))
-                .check(matches(isChecked()));
+                .check(matches(isNotChecked()));
 
         Espresso.onView(withId(R.id.dialog_scrollView))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
@@ -304,7 +304,7 @@ public class PreferencesDialogTest {
                 .check(matches(not(isChecked())));
 
         Espresso.onView(withId(R.id.settings_show_examine_button_checkBox))
-                .check(matches(not(isChecked())));
+                .check(matches(isChecked()));
 
         Espresso.onView(withId(R.id.settings_accept_button))
                 .perform(click());

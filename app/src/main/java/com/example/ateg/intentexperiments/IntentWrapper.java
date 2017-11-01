@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,10 +27,13 @@ public class IntentWrapper {
     //}
 
     public IntentWrapper(Intent sourceIntent) {
+        Log.d("IntentWrapper", "const");
         buildIntent(sourceIntent);
+        Log.d("IntentWrapper", "const-done");
     }
 
     private void buildIntent(Intent sourceIntent) {
+        Log.d("IntentWrapper", "builder");
         Intent intent = new Intent();
 
         intent.setAction(sourceIntent.getAction());
@@ -51,8 +55,13 @@ public class IntentWrapper {
         setDataString(sourceIntent.getDataString());
         setScheme(sourceIntent.getScheme());
 
-        setIntentJson(gson.toJson(sourceIntent));
+        Log.d("IntentWrapper", "builder-intent - to json");
+        //setIntentJson(gson.toJson(sourceIntent));
+        Log.d("IntentWrapper", "builder-json conversion done");
+
         setIntent(intent);
+        Log.d("njhy", "Wrapper built");
+
     }
 
     private Integer id;
@@ -151,14 +160,24 @@ public class IntentWrapper {
 
             boolean six = thisBundle != null && otherBundle != null ? Objects.equals(thisBundle.size(), otherBundle.size()) : true;
 
-            boolean five = thisBundle.size() > 0 ? false : true;
-            for (String key : thisBundle.keySet()) {
-                if (otherBundle != null && otherBundle.containsKey(key) && Objects.equals(thisBundle.getParcelable(key), otherBundle.getParcelable(key))) {
-                    five = true;
-                } else {
-                    five = false;
-                    break;
+            boolean five;
+
+            if (thisBundle != null) {
+                five = thisBundle.size() > 0 ? false : true;
+                for (String key : thisBundle.keySet()) {
+                    if (otherBundle != null &&
+                            otherBundle.containsKey(key) &&
+                            Objects.equals(thisBundle.getParcelable(key), otherBundle.getParcelable(key)) &&
+                            Objects.equals(thisBundle.get(key), otherBundle.get(key))
+                            ) {
+                        five = true;
+                    } else {
+                        five = false;
+                        break;
+                    }
                 }
+            } else {
+                five = thisBundle == null && otherBundle == null;
             }
 
             boolean seven = Objects.equals(this.getAction(), otherIntentWrapper.getAction());
@@ -166,11 +185,11 @@ public class IntentWrapper {
             boolean nine = Objects.equals(this.getFlags(), otherIntentWrapper.getFlags());
             boolean ten = Objects.equals(this.getType(), otherIntentWrapper.getType());
             boolean eleven = Objects.equals(this.getPackage(), otherIntentWrapper.getPackage());
-            boolean tweleve = Objects.equals(this.getComponent(), otherIntentWrapper.getComponent());
+            boolean twelve = Objects.equals(this.getComponent(), otherIntentWrapper.getComponent());
             boolean thirteen = Objects.equals(this.getClipData(), otherIntentWrapper.getClipData());
             boolean fourteen = Objects.equals(this.getData(), otherIntentWrapper.getData());
 
-            return one && five && six && seven && eight && nine && ten && eleven && tweleve && thirteen && fourteen;
+            return one && five && six && seven && eight && nine && ten && eleven && twelve && thirteen && fourteen;
 
         } else return false;
     }

@@ -8,7 +8,7 @@ public class Preferences {
 
     private boolean autoExamine;
     private boolean autoSave;
-    private boolean showExamineButton;
+    private boolean showExamineButton = true;
     private boolean autoLog;
     private boolean clickAnywhere;
     private String defaultFileName = "IntentExamination.txt";
