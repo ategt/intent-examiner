@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -29,6 +30,7 @@ import com.example.ateg.intentexperiments.FileSelector.FileSelector;
 import com.example.ateg.intentexperiments.FileSelector.OnHandleFileListener;
 
 import java.io.File;
+import java.util.UUID;
 
 public class MainFragment extends BaseFragment<MainPresenter> implements MainView {
 
@@ -141,21 +143,97 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 return true;
             case R.id.action_export:
 
-                File[] filesa = ContextCompat.getExternalFilesDirs(getActivity(), Environment.DIRECTORY_DOCUMENTS);
+                final Dialog exportDialog = new Dialog(getActivity());
 
-                File storageDira = filesa[filesa.length - 1];
+                exportDialog.setCancelable(true);
+                exportDialog.setContentView(R.layout.export_dialog);
+                exportDialog.setTitle(R.string.export_dialog_title);
 
-                new FileSelector(getActivity(),
-                        FileOperation.SAVE,
-                        new OnHandleFileListener() {
-                            @Override
-                            public void handleFile(String filePath) {
-                                mPresenter.exportDb(new File(filePath));
-                            }
-                        },
-                        mFileFilter,
-                        new File(storageDira, LoggingUtilities.getDefaultFileName(getActivity())))
-                        .show();
+                Button exportAcceptButton = (Button) exportDialog.findViewById(R.id.export_accept_button);
+                exportAcceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        final ExportSettings exportSettings = new ExportSettings();
+
+                        RadioButton textRadioButton = exportDialog.findViewById(R.id.export_txt_radioButton);
+                        RadioButton jsonRadioButton = exportDialog.findViewById(R.id.export_json_radioButton);
+                        RadioButton xmlRadioButton = exportDialog.findViewById(R.id.export_xml_radioButton);
+
+                        CheckBox markArchiveCheckBox = exportDialog.findViewById(R.id.export_mark_archive_checkBox);
+
+                        RadioButton fullRadioButton = exportDialog.findViewById(R.id.export_full_radioButton);
+                        RadioButton diffRadioButton = exportDialog.findViewById(R.id.export_diff_radioButton);
+                        RadioButton singleRadioButton = exportDialog.findViewById(R.id.export_single_radioButton);
+
+                        RadioButton localRadioButton = exportDialog.findViewById(R.id.export_local_radioButton);
+                        RadioButton sendRadioButton = exportDialog.findViewById(R.id.export_send_radioButton);
+
+                        if (textRadioButton.isChecked()) {
+                            exportSettings.setFormat(ExportSettings.Format.TEXT);
+                        } else if (jsonRadioButton.isChecked()) {
+                            exportSettings.setFormat(ExportSettings.Format.JSON);
+                        } else if (xmlRadioButton.isChecked()) {
+                            exportSettings.setFormat(ExportSettings.Format.XML);
+                        }
+
+                        exportSettings.setMarkArchived(markArchiveCheckBox.isChecked());
+
+                        if (fullRadioButton.isChecked()) {
+                            exportSettings.setScope(ExportSettings.Scope.FULL);
+                        } else if (diffRadioButton.isChecked()) {
+                            exportSettings.setScope(ExportSettings.Scope.DIFF);
+                        } else if (singleRadioButton.isChecked()) {
+                            exportSettings.setScope(ExportSettings.Scope.SINGLE);
+                        }
+
+                        if (localRadioButton.isChecked()) {
+                            exportSettings.setDestination(ExportSettings.Destination.LOCAL);
+                        } else if (sendRadioButton.isChecked()) {
+                            exportSettings.setDestination(ExportSettings.Destination.SEND);
+                        }
+
+                        dialog.dismiss();
+
+                        File[] files = ContextCompat.getExternalFilesDirs(getActivity(), Environment.DIRECTORY_DOCUMENTS);
+
+                        File storageDir = files[files.length - 1];
+
+                        if (ExportSettings.Destination.LOCAL == exportSettings.getDestination()) {
+
+                            new FileSelector(getActivity(),
+                                    FileOperation.SAVE,
+                                    new OnHandleFileListener() {
+                                        @Override
+                                        public void handleFile(String filePath) {
+                                            File file = new File(filePath);
+                                            exportSettings.setFile(file);
+                                            mPresenter.exportDb(exportSettings);
+                                        }
+                                    },
+                                    mFileFilter,
+                                    new File(storageDir, LoggingUtilities.getDefaultFileName(getActivity())))
+                                    .show();
+                        } else {
+                            File file = new File(storageDir, "temp_stream_" + UUID.randomUUID() + ".tmp");
+                            exportSettings.setFile(file);
+                            mPresenter.exportDb(exportSettings);
+                            file.deleteOnExit();
+                        }
+                    }
+                });
+
+                Button exportCancelButton = exportDialog.findViewById(R.id.export_cancel_button);
+                exportCancelButton.setOnClickListener(new View.OnClickListener()
+
+                {
+                    @Override
+                    public void onClick(View view) {
+                        exportDialog.dismiss();
+                    }
+                });
+
+                exportDialog.show();
 
                 return true;
         }
@@ -241,7 +319,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
         TextView centralTextView = getCreatedView().findViewById(R.id.central_textView);
 
-        if (preferences.isClickAnywhere()){
+        if (preferences.isClickAnywhere()) {
             centralTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

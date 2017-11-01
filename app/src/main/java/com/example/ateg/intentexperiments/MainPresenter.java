@@ -6,12 +6,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Created by ATeg on 10/20/2017.
  */
 
-class MainPresenter extends BasePresenter<MainView>{
+class MainPresenter extends BasePresenter<MainView> {
 
     private IntentWrapperServices intentWrapperServices;
     private PreferencesServices preferencesServices;
@@ -29,7 +30,7 @@ class MainPresenter extends BasePresenter<MainView>{
         new AsyncTask<IntentWrapperServices, Void, Void>() {
             @Override
             protected Void doInBackground(IntentWrapperServices... intentWrapperServices) {
-                for (IntentWrapperServices intentWrapperServices1 : intentWrapperServices){
+                for (IntentWrapperServices intentWrapperServices1 : intentWrapperServices) {
                     intentWrapperServices1.init();
                 }
                 return null;
@@ -39,7 +40,7 @@ class MainPresenter extends BasePresenter<MainView>{
 
     public void resetPreferences() {
         PreferencesUtilites preferencesUtilites = new PreferencesUtilites(
-                PreferencesUtilites.getDefaultPreferences(((Fragment)getView()).getActivity()));
+                PreferencesUtilites.getDefaultPreferences(((Fragment) getView()).getActivity()));
         preferencesUtilites.resetPreferences();
 
         loadPreferences();
@@ -57,13 +58,13 @@ class MainPresenter extends BasePresenter<MainView>{
             protected void onPostExecute(Preferences preferences) {
                 getView().updatePreferences(preferences);
             }
-        }.execute(PreferencesUtilites.getDefaultPreferences(((Fragment)getView()).getActivity()));
+        }.execute(PreferencesUtilites.getDefaultPreferences(((Fragment) getView()).getActivity()));
     }
 
     public void considerAutoClick() {
         Preferences preferences = preferencesServices.load();
 
-        if (preferences.isAutoExamine()){
+        if (preferences.isAutoExamine()) {
             examineIntent();
             getView().examineDone();
         }
@@ -96,5 +97,18 @@ class MainPresenter extends BasePresenter<MainView>{
                 getView().announceExportComplete(logFileWritten);
             }
         }.execute(dest);
+    }
+
+    public void exportDb(ExportSettings exportSettings) {
+
+        File file = exportSettings.getFile();
+
+        intentWrapperServices.export(file, null, exportSettings.isMarkArchived());
+
+        ExportSettings.Destination destination = exportSettings.getDestination();
+asdf
+        if(Objects.equals(ExportSettings.Destination.LOCAL, destination)){
+
+        }
     }
 }

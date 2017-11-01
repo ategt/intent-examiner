@@ -40,4 +40,17 @@
     <string name="save_successful">Save Successful</string>
     <string name="export_successful">Export Successful</string>
     <string name="examine_completed">Scan Completed</string>
+    <string name="export_txt">Text</string>
+    <string name="export_json">JSON</string>
+    <string name="export_xml">XML</string>
+    <string name="export_format">Export Format</string>
+    <string name="mark_archived">Mark Archived On Completion</string>
+    <string name="export_scope">Scope</string>
+    <string name="export_full">Full DB</string>
+    <string name="export_diff">Export New Entries</string>
+    <string name="export_single">Export Current Only</string>
+    <string name="export_local">Local</string>
+    <string name="export_send">Send</string>
+    <string name="export_dialog_title">Export Settings</string>
+    <string name="export_destination">Destination</string>
 </resources>
