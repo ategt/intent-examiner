@@ -16,14 +16,7 @@ import android.widget.Toast;
  */
 
 public class ExamineServices {
-
-    //private Context context;
-
-    public ExamineServices() {
-        //this.context = context;
-        Log.d("njhy", "Exm Const");
-    }
-
+    
     public String examineIntent(Intent intent) {
         //TextView textView = (TextView) view.getRootView().findViewById(R.id.central_textView);
         Log.d("njhy", "Exm examineIntent");

@@ -5,46 +5,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Toolbar
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Toolbar
         android:id="@+id/toolbar"
         style="@style/Base_ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
 
-        <!--<FrameLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="start">-->
-
-            <ImageView
-                android:id="@+id/logo_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:padding="@dimen/logo_padding"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_search_icon"
-                android:visibility="visible"
-                android:contentDescription="@string/logo_description" />
+        <ImageView
+            android:id="@+id/logo_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/logo_description"
+            android:padding="@dimen/logo_padding"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_search_icon"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/title_textView"
             style="@style/CustomTitleTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"/>
-        <!--</FrameLayout>-->
+            android:text="@string/app_name" />
 
     </Toolbar>
 
-    <TextView
-        android:id="@+id/central_textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="5sp"
-        android:gravity="center_vertical|center_horizontal"
-        android:isScrollContainer="true"
-        android:text="@string/opening_greeting" />
+        <TextView
+            android:id="@+id/central_textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5sp"
+            android:gravity="center_vertical|center_horizontal"
+            android:isScrollContainer="true"
+            android:text="@string/opening_greeting" />
+    </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -59,6 +59,7 @@
             android:layout_margin="@dimen/fab_margin"
             android:scaleType="center"
             android:src="@drawable/ic_search_altl" />
+
     </android.support.design.widget.CoordinatorLayout>
 
 </android.support.design.widget.CoordinatorLayout>
