@@ -92,6 +92,7 @@ public class PreferencesDialogTest {
     @Test
     public void settingsAcceptButtonTest() {
         openSettingsDialog();
+        resetPreferences();
 
         Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
                 .check(ViewAssertions.matches(isNotChecked()))
@@ -143,6 +144,24 @@ public class PreferencesDialogTest {
 
     }
 
+    private void resetPreferences() {
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeUp())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_reset_button))
+                .check(matches(isDisplayed()));
+
+        Espresso.onView(withId(R.id.settings_reset_button))
+                .perform(click());
+
+        Espresso.onView(withId(R.id.dialog_scrollView))
+                .perform(ViewActions.swipeDown());
+    }
+
     @Test
     public void settingsCancelButtonDoesNotSaveTest() {
         openSettingsDialog();
@@ -183,6 +202,7 @@ public class PreferencesDialogTest {
     @Test
     public void settingsResetButtonTest() {
         openSettingsDialog();
+        resetPreferences();
 
         Espresso.onView(withId(R.id.settings_auto_examine_checkBox))
                 .check(ViewAssertions.matches(isNotChecked()))

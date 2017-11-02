@@ -111,8 +111,6 @@ class MainPresenter extends BasePresenter<MainView> {
 
         if (exportSettings.getFormat() == ExportSettings.Format.JSON) {
             intentRepository = new IntentJsonRepository(loggingUtilities);
-        } else if (exportSettings.getFormat() == ExportSettings.Format.XML) {
-            intentRepository = new IntentXMLRepository(file);
         } else if (exportSettings.getFormat() == ExportSettings.Format.TEXT) {
             intentRepository = new IntentTextRepository(loggingUtilities);
         }

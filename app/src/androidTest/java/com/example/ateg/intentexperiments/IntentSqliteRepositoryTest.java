@@ -43,7 +43,7 @@ public class IntentSqliteRepositoryTest {
     @Before
     public void setup() {
         context = InstrumentationRegistry.getTargetContext();
-        intentRepository = new IntentRepository(context, "TestDataBase.db", 6);
+        intentRepository = new IntentSQLiteRepository(context, "TestDataBase.db", 6);
     }
 
     @Test

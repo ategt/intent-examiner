@@ -35,6 +35,8 @@ import android.widget.TextView;
 
 import junit.framework.Assert;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -127,8 +129,42 @@ public class SaveOutputTest {
                         + ", LogFile Length: " + logFile.length(),
                 startingLogFileSize < logFile.length());
 
-        Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
-                .check(matches(isDisplayed()));
+        final Object[] ingt = new Object[1];
+
+        Espresso.onView(withText("File Saved"))
+                .check(matches(isDisplayed()))
+                .check(ViewAssertions.matches(new BaseMatcher<View>() {
+                    @Override
+                    public boolean matches(Object item) {
+                        ingt[0] = item;
+
+                        TextView textView = (TextView) item;
+
+                        //textView.getWindowId().
+
+                        //R.id.
+
+                        //InstrumentationRegistry.getTargetContext().getResources().
+
+                        //InstrumentationRegistry.getTargetContext().getResources().get(item);
+                        //textView.getResources().getResourceName(textView)
+
+                        return true;
+                    }
+
+                    @Override
+                    public void describeTo(Description description) {
+
+                    }
+                }));
+
+
+        Espresso.onView(
+
+                allOf(withId(R.id.snackbar_text), withText("File Saved")))
+                .
+
+                        check(matches(isDisplayed()));
 
         String logFileContents = LoggingUtilities.readFile(InstrumentationRegistry.getTargetContext(),
                 logFile);
@@ -136,8 +172,12 @@ public class SaveOutputTest {
         String emptyIntentDisplay = InstrumentationRegistry.getTargetContext().getResources().getString(R.string.intent_empty);
         Assert.assertTrue(logFileContents.contains(emptyIntentDisplay));
 
-        Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_action)))
-                .perform(click());
+        Espresso.onView(
+
+                allOf(withId(android.support.design.R.id.snackbar_action)))
+                .
+
+                        perform(click());
 
         Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
         Intents.intended(intentMatcher);

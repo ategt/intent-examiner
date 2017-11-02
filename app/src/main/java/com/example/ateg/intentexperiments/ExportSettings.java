@@ -57,8 +57,7 @@ public class ExportSettings {
 
     public enum Format {
         TEXT,
-        JSON,
-        XML;
+        JSON;
     }
 
     public enum Scope {

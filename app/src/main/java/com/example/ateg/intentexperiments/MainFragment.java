@@ -158,7 +158,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
                         RadioButton textRadioButton = exportDialog.findViewById(R.id.export_txt_radioButton);
                         RadioButton jsonRadioButton = exportDialog.findViewById(R.id.export_json_radioButton);
-                        RadioButton xmlRadioButton = exportDialog.findViewById(R.id.export_xml_radioButton);
 
                         CheckBox markArchiveCheckBox = exportDialog.findViewById(R.id.export_mark_archive_checkBox);
 
@@ -173,8 +172,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                             exportSettings.setFormat(ExportSettings.Format.TEXT);
                         } else if (jsonRadioButton.isChecked()) {
                             exportSettings.setFormat(ExportSettings.Format.JSON);
-                        } else if (xmlRadioButton.isChecked()) {
-                            exportSettings.setFormat(ExportSettings.Format.XML);
                         }
 
                         exportSettings.setMarkArchived(markArchiveCheckBox.isChecked());
@@ -405,7 +402,9 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     public void examineDone() {
-        Snackbar.make(getView(), R.string.examine_completed, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getCreatedView().findViewById(R.id.examination_button_container)
+                , R.string.examine_completed, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     private Preferences buildPreferences(Dialog dialog) {

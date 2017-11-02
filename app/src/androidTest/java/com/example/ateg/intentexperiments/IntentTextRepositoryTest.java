@@ -3,12 +3,14 @@ package com.example.ateg.intentexperiments;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,9 +28,10 @@ public class IntentTextRepositoryTest {
     private File file;
 
     @Before
-    public void setup() {
-        file = new File(UUID.randomUUID().toString());
-        Context context = new Instrumentation().getTargetContext();
+    public void setup() throws IOException {
+        Context context = InstrumentationRegistry.getTargetContext();
+        file = File.createTempFile("test", ".tmp");
+        // file = new File(UUID.randomUUID().toString());
         LoggingUtilities loggingUtilities = new LoggingUtilities(context, file);
         intentRepository = new IntentTextRepository(loggingUtilities);
     }
@@ -78,7 +81,7 @@ public class IntentTextRepositoryTest {
         assertEquals(content.split(randomStringKey).length, 4);
 
         for (IntentWrapper intentWrapper : list) {
-            assertTrue(content.contains((String)intentWrapper.getExtras().get(randomStringKey)));
+            assertTrue(content.contains((String) intentWrapper.getExtras().get(randomStringKey)));
         }
     }
 }

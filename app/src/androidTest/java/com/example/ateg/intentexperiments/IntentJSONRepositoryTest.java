@@ -3,6 +3,7 @@ package com.example.ateg.intentexperiments;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class IntentJSONRepositoryTest {
     @Before
     public void setup() {
         file = new File(UUID.randomUUID().toString());
-        Context context = new Instrumentation().getTargetContext();
+        Context context = InstrumentationRegistry.getTargetContext();
         LoggingUtilities loggingUtilities = new LoggingUtilities(context, file);
         intentRepository = new IntentJsonRepository(loggingUtilities);
     }
