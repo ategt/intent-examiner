@@ -1,10 +1,15 @@
 package com.example.ateg.intentexperiments;
 
+import android.util.Log;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,12 +18,47 @@ import java.util.List;
 
 public class IntentJsonRepository implements IntentRepository {
 
+    private static final String TAG = "JSON Repo";
     Gson gson;
     LoggingUtilities loggingUtilities;
 
     public IntentJsonRepository(LoggingUtilities loggingUtilities) {
         this.loggingUtilities = loggingUtilities;
-        this.gson = new GsonBuilder().create();
+        this.gson = new GsonBuilder()
+//                .setExclusionStrategies(new ExclusionStrategy() {
+//            @Override
+//            public boolean shouldSkipField(FieldAttributes f) {
+//                String name = f.getName();
+//                Log.d(TAG, name);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean shouldSkipClass(Class<?> clazz) {
+//                String name = clazz.getName();
+//                Log.d(TAG, name);
+//                return false;
+//            }
+//        })
+                .addDeserializationExclusionStrategy(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        String name = f.getName();
+                        Log.d(TAG, "Dfield - " + name);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        String name = clazz.getName();
+                        Log.d(TAG, "dersClass - " + name);
+                        if (name.equalsIgnoreCase("java.lang.ClassLoader")) {
+                            Log.d(TAG, " - Skipping - ");
+                            return true;
+                        }
+                        return false;
+                    }
+                }).create();
     }
 
     @Override
@@ -54,7 +94,9 @@ public class IntentJsonRepository implements IntentRepository {
     @Override
     public List<IntentWrapper> getAll() {
         String json = loggingUtilities.readFile(loggingUtilities.getLogFile());
-        List<IntentWrapper> intentWrapperList = gson.fromJson(json, List.class);
+        IntentWrapper[] intentWrapperArray = gson.fromJson(json, IntentWrapper[].class);
+
+        List<IntentWrapper> intentWrapperList = Arrays.asList(intentWrapperArray);
 
         return intentWrapperList;
     }

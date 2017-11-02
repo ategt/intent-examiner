@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,8 +27,8 @@ public class IntentJSONRepositoryTest {
     private File file;
 
     @Before
-    public void setup() {
-        file = new File(UUID.randomUUID().toString());
+    public void setup() throws IOException {
+        file = File.createTempFile("test_", ".tmp");
         Context context = InstrumentationRegistry.getTargetContext();
         LoggingUtilities loggingUtilities = new LoggingUtilities(context, file);
         intentRepository = new IntentJsonRepository(loggingUtilities);

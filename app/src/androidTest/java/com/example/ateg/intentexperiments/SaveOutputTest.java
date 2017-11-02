@@ -129,42 +129,12 @@ public class SaveOutputTest {
                         + ", LogFile Length: " + logFile.length(),
                 startingLogFileSize < logFile.length());
 
-        final Object[] ingt = new Object[1];
-
         Espresso.onView(withText("File Saved"))
-                .check(matches(isDisplayed()))
-                .check(ViewAssertions.matches(new BaseMatcher<View>() {
-                    @Override
-                    public boolean matches(Object item) {
-                        ingt[0] = item;
-
-                        TextView textView = (TextView) item;
-
-                        //textView.getWindowId().
-
-                        //R.id.
-
-                        //InstrumentationRegistry.getTargetContext().getResources().
-
-                        //InstrumentationRegistry.getTargetContext().getResources().get(item);
-                        //textView.getResources().getResourceName(textView)
-
-                        return true;
-                    }
-
-                    @Override
-                    public void describeTo(Description description) {
-
-                    }
-                }));
-
+                .check(matches(isDisplayed()));
 
         Espresso.onView(
-
                 allOf(withId(R.id.snackbar_text), withText("File Saved")))
-                .
-
-                        check(matches(isDisplayed()));
+                .check(matches(isDisplayed()));
 
         String logFileContents = LoggingUtilities.readFile(InstrumentationRegistry.getTargetContext(),
                 logFile);
@@ -173,11 +143,8 @@ public class SaveOutputTest {
         Assert.assertTrue(logFileContents.contains(emptyIntentDisplay));
 
         Espresso.onView(
-
                 allOf(withId(android.support.design.R.id.snackbar_action)))
-                .
-
-                        perform(click());
+                .perform(click());
 
         Matcher<Intent> intentMatcher = IntentMatchers.anyIntent();
         Intents.intended(intentMatcher);
