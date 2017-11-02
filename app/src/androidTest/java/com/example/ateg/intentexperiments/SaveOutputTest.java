@@ -60,6 +60,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -441,6 +443,15 @@ public class SaveOutputTest {
         Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
 
         Espresso.onView(withId(R.id.fileName_editText)).check(matches(withText("IntentExamination.txt")));
+
+        for (int i = 0; i < 3; i++) {
+            try {
+                Espresso.onView(withId(R.id.clearLine)).check(ViewAssertions.matches(isCompletelyDisplayed()));
+                Espresso.onView(withId(R.id.clearLine)).check(ViewAssertions.matches(isClickable()));
+            } catch (android.support.test.espresso.PerformException|junit.framework.AssertionFailedError ex) {
+                Espresso.onView(withId(R.id.dialog_scrollView)).perform(ViewActions.swipeUp());
+            }
+        }
 
         Espresso.onView(withId(R.id.clearLine)).perform(click());
 
