@@ -1,7 +1,5 @@
 package com.example.ateg.intentexperiments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -25,39 +23,36 @@ import java.io.OutputStreamWriter;
 
 public class LoggingUtilities {
     private static final String TAG = "Logging Utilites";
-    private Context context;
     private File logFile;
     private String directoryType = Environment.DIRECTORY_DOCUMENTS;
 
-    public LoggingUtilities(@NonNull Context context, @NonNull File logFile) {
-        this.context = context;
+    public LoggingUtilities(@NonNull File logFile) {
         this.setLogFile(logFile);
     }
 
-    public LoggingUtilities(@NonNull Context context, @NonNull String logFile, String directoryType) {
-        this.context = context;
+    public LoggingUtilities(@NonNull String logFile, String directoryType) {
 
-        initLogFile(context, logFile, directoryType);
+        initLogFile(logFile, directoryType);
     }
 
-    private void initLogFile(@NonNull Context context, @NonNull String logFile, String directoryType) {
-        File createdLogFile = establishLogFile(context, directoryType);
+    private void initLogFile(@NonNull String logFile, String directoryType) {
+        File createdLogFile = establishLogFile(directoryType);
         this.setLogFile(createdLogFile);
     }
 
-    public static LoggingUtilities defaultLogger(Context context) {
-        return new LoggingUtilities(context, "everythingLog.txt", Environment.DIRECTORY_DOCUMENTS);
+    public static LoggingUtilities defaultLogger() {
+        return new LoggingUtilities("everythingLog.txt", Environment.DIRECTORY_DOCUMENTS);
     }
 
     public File establishLogFile(String fileName) {
-        return establishLogFile(context, getDirectoryType());
+        return establishLogFile(getDirectoryType());
     }
 
-    public static File establishLogFile(Context context, String directoryType) {
+    public static File establishLogFile(String directoryType) {
 
-        File[] files = ContextCompat.getExternalFilesDirs(context, directoryType);
+        File[] files = ContextCompat.getExternalFilesDirs(directoryType);
 
-        Log.i("asfd", "Files Matching request: " + files.length);
+        Log.i(TAG, "Files Matching request: " + files.length);
 
         File storageDir = null;
 
@@ -65,31 +60,31 @@ public class LoggingUtilities {
             storageDir = x;
         }
 
-        generateFolderTree(context, storageDir);
+        generateFolderTree(storageDir);
 
-        String fileName = PreferencesUtilites.getDefaultFileName(context);
+        String fileName = PreferencesUtilites.getDefaultFileName();
 
         return new File(storageDir, fileName);
     }
 
-    public static void generateFolderTree(Context context, File storageDir) {
+    public static void generateFolderTree(File storageDir) {
         if (!storageDir.exists() || !storageDir.isDirectory()) {
             if (!storageDir.mkdirs()) {
-                Toast.makeText(context, "Folder Generation Failed.", Toast.LENGTH_LONG).show();
+                throw new LoggingUtilitiesException("Folder Generation Failed.");
             }
         }
     }
 
     public boolean updateTextFile(String str) {
-        return updateTextFile(context, str, getLogFile());
+        return updateTextFile(str, getLogFile());
     }
 
-    public static boolean updateTextFile(Context context, String str, File inputFile) {
+    public static boolean updateTextFile(String str, File inputFile) {
 
         StringBuilder stringBuilder = new StringBuilder();
 
         if (inputFile.exists()) {
-            String outputString = readFile(context, inputFile);
+            String outputString = readFile(inputFile);
 
             stringBuilder.append(outputString);
             stringBuilder.append(System.getProperty("line.separator"));
@@ -99,27 +94,27 @@ public class LoggingUtilities {
         File txtFile = inputFile;
 
         try {
-            backupCurrentLog(context, txtFile);
+            backupCurrentLog(txtFile);
         } catch (IOException e) {
             Log.e("adf", "IO problem ", e);
-            Toast.makeText(context, "Something went wrong while backing up the logs.", Toast.LENGTH_SHORT).show();
+            throw new LoggingUtilitiesException("Something went wrong while backing up the logs.");
         }
 
-        boolean didWriteSucceed = writeFile(context, stringBuilder, txtFile);
+        boolean didWriteSucceed = writeFile(stringBuilder, txtFile);
 
-        scanFileToFileSystemIndex(context, txtFile);
+        scanFileToFileSystemIndex(txtFile);
 
         return didWriteSucceed;
     }
 
-    private static boolean writeFile(Context context, StringBuilder stringBuilder, File txtFile) {
+    private static boolean writeFile(StringBuilder stringBuilder, File txtFile) {
         File storageDir = null;
         FileOutputStream fileOutputStream = null;
         try {
 
             storageDir = txtFile.getParentFile();
 
-            generateFolderTree(context, storageDir);
+            generateFolderTree(storageDir);
 
             File tempLog = File.createTempFile("log_", ".txt", storageDir);
 
@@ -133,20 +128,19 @@ public class LoggingUtilities {
             return true;
         } catch (IOException e) {
             Log.e("tag", "Problem " + (storageDir.isDirectory() ? "Dir" : "File") + " " + txtFile.getParentFile().toURI(), e);
-            Toast.makeText(context, "Problem text.", Toast.LENGTH_SHORT).show();
+            throw new LoggingUtilitiesException("Problem text.");
         } finally {
             if (fileOutputStream != null)
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
                     Log.e("tag", "Big IO problem.", e);
-                    Toast.makeText(context, "Big Io Problem.", Toast.LENGTH_SHORT).show();
+                    throw new LoggingUtilitiesException("Big Io Problem.");
                 }
         }
-        return false;
     }
 
-    private static void backupCurrentLog(Context context, File txtFile) throws IOException {
+    private static void backupCurrentLog( File txtFile) throws IOException {
         File oldFile = new File(txtFile.getAbsolutePath() + ".old");
         if (oldFile.exists()) {
             File junkFile = File.createTempFile("log_", ".txt.old", txtFile.getParentFile());
@@ -157,11 +151,11 @@ public class LoggingUtilities {
 
         File newOldFile = new File(txtFile.getAbsolutePath() + ".old");
         if (txtFile.renameTo(newOldFile)) {
-            scanFileToFileSystemIndex(context, newOldFile);
+            scanFileToFileSystemIndex( newOldFile);
         }
     }
 
-    private static void scanFileToFileSystemIndex(Context context, File newOldFile) {
+    private static void scanFileToFileSystemIndex( File newOldFile) {
         Uri txtUri = Uri.fromFile(newOldFile);
 
         // ScanFile so it will be appeared on Gallery
