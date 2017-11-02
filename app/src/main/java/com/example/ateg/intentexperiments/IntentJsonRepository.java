@@ -24,22 +24,7 @@ public class IntentJsonRepository implements IntentRepository {
 
     public IntentJsonRepository(LoggingUtilities loggingUtilities) {
         this.loggingUtilities = loggingUtilities;
-        this.gson = new GsonBuilder()
-                .addDeserializationExclusionStrategy(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        String name = clazz.getName();
-                        if (name.equalsIgnoreCase("java.lang.ClassLoader")) {
-                            return true;
-                        }
-                        return false;
-                    }
-                }).create();
+        this.gson = CustomGsonBuilder.get().create();
     }
 
     @Override

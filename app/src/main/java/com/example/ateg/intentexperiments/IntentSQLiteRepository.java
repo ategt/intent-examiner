@@ -79,20 +79,7 @@ public class IntentSQLiteRepository implements IntentRepository {
                                   @DatabaseInfo String name,
                                   @DatabaseInfo int version) {
         databaseHelper = new DatabaseHelper(context, name, null, version);
-        gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                return false;
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> clazz) {
-                if (clazz.isInstance(ClassLoader.class))
-                    return true;
-                else
-                    return false;
-            }
-        }).create();
+        gson = CustomGsonBuilder.get().create();
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {
