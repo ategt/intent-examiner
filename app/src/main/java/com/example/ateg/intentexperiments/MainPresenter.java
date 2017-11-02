@@ -135,7 +135,7 @@ class MainPresenter extends BasePresenter<MainView> {
 
                     intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportSettings.getFile()));
                     //intent.setType("APPLICATION/XML")
-                    context.startActivity(intent);
+                    context.startActivity(Intent.createChooser(intent, "Share File"));
                 }
 
             }
