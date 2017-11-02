@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -115,7 +112,7 @@ class MainPresenter extends BasePresenter<MainView> {
         if (exportSettings.getFormat() == ExportSettings.Format.JSON) {
             intentRepository = new IntentJsonRespository(file, loggingUtilities);
         } else if (exportSettings.getFormat() == ExportSettings.Format.XML) {
-            intentRepository = new IntentXMLRespository(file, loggingUtilities);
+            intentRepository = new IntentXMLRepository(file, loggingUtilities);
         } else if (exportSettings.getFormat() == ExportSettings.Format.TEXT) {
             intentRepository = new IntentTextRespository(file, loggingUtilities);
         }
