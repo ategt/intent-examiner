@@ -11,14 +11,12 @@ import java.util.List;
  * Created by ATeg on 11/1/2017.
  */
 
-public class IntentJsonRespository implements IntentRepository {
+public class IntentJsonRepository implements IntentRepository {
 
-    File file;
     Gson gson;
     LoggingUtilities loggingUtilities;
 
-    public IntentJsonRespository(File file, LoggingUtilities loggingUtilities) {
-        this.file = file;
+    public IntentJsonRepository(LoggingUtilities loggingUtilities) {
         this.loggingUtilities = loggingUtilities;
         this.gson = new GsonBuilder().create();
     }

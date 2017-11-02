@@ -1,19 +1,16 @@
 package com.example.ateg.intentexperiments;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Created by ATeg on 11/1/2017.
  */
 
-public class IntentTextRespository implements IntentRepository {
+public class IntentTextRepository implements IntentRepository {
 
-    File file;
     LoggingUtilities loggingUtilities;
 
-    public IntentTextRespository(File file, LoggingUtilities loggingUtilities) {
-        this.file = file;
+    public IntentTextRepository(LoggingUtilities loggingUtilities) {
         this.loggingUtilities = loggingUtilities;
     }
 
@@ -32,7 +29,8 @@ public class IntentTextRespository implements IntentRepository {
         if (success) {
             return intentWrapperList;
         } else
-            throw new LoggingUtilitiesException("Intent Text Repository Had Problems Creating The File.\n\t" + file.getAbsolutePath());
+            throw new LoggingUtilitiesException("Intent Text Repository Had Problems Creating The File.\n\t"
+                    + loggingUtilities.getLogFile().getAbsolutePath());
     }
 
     @Override
@@ -48,7 +46,8 @@ public class IntentTextRespository implements IntentRepository {
         if (success) {
             return intentWrapper;
         } else
-            throw new LoggingUtilitiesException("Intent Text Repository Had Problems Creating The File.\n\t" + file.getAbsolutePath());
+            throw new LoggingUtilitiesException("Intent Text Repository Had Problems Creating The File.\n\t"
+                    + loggingUtilities.getLogFile().getAbsolutePath());
     }
 
     @Override
