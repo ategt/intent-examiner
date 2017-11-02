@@ -208,7 +208,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                                         public void handleFile(String filePath) {
                                             File file = new File(filePath);
                                             exportSettings.setFile(file);
-                                            mPresenter.exportDb(exportSettings);
+                                            mPresenter.exportDb(getActivity(), exportSettings);
                                         }
                                     },
                                     mFileFilter,
@@ -217,8 +217,8 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                         } else {
                             File file = new File(storageDir, "temp_stream_" + UUID.randomUUID() + ".tmp");
                             exportSettings.setFile(file);
-                            mPresenter.exportDb(exportSettings);
                             file.deleteOnExit();
+                            mPresenter.exportDb(getActivity(), exportSettings);
                         }
                     }
                 });
@@ -352,7 +352,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected MainPresenter createPresenter() {
-        IntentRepository intentRepository = new IntentRepository(getActivity(), getString(R.string.db_name), 1);
+        IntentRepository intentRepository = new IntentSQLiteRepository(getActivity(), getString(R.string.db_name), 1);
         PreferencesServices preferencesServices = new PreferencesServices(getActivity());
         IntentWrapperServices intentWrapperServices = new IntentWrapperServices(getActivity(), intentRepository, preferencesServices);
         return new MainPresenter(this, intentWrapperServices, preferencesServices);

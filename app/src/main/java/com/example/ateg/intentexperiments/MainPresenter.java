@@ -1,7 +1,10 @@
 package com.example.ateg.intentexperiments;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -101,30 +104,34 @@ class MainPresenter extends BasePresenter<MainView> {
         }.execute(dest);
     }
 
-    public void exportDb(ExportSettings exportSettings) {
+    public void exportDb(Context context, ExportSettings exportSettings) {
 
         File file = exportSettings.getFile();
 
-        LoggingUtilities loggingUtilities = new LoggingUtilities(file);
+        LoggingUtilities loggingUtilities = new LoggingUtilities(context, file);
 
         IntentRepository intentRepository = null;
 
         if (exportSettings.getFormat() == ExportSettings.Format.JSON) {
-            intentRepository = new IntentJsonRespository(file,);
-        } else if (exportSettings.getScope() == ExportSettings.Scope.DIFF) {
-            intentWrapperList = sourceIntentRepository.getDifferential();
-        } else if (exportSettings.getScope() == ExportSettings.Scope.SINGLE) {
-            List<IntentWrapper> list = new ArrayList<>();
-            list.add(buildIntentWrapper());
-            intentWrapperList = list;
+            intentRepository = new IntentJsonRespository(file, loggingUtilities);
+        } else if (exportSettings.getFormat() == ExportSettings.Format.XML) {
+            intentRepository = new IntentXMLRespository(file, loggingUtilities);
+        } else if (exportSettings.getFormat() == ExportSettings.Format.TEXT) {
+            intentRepository = new IntentTextRespository(file, loggingUtilities);
         }
 
-        intentWrapperServices.export(file, null, exportSettings);
+        intentWrapperServices.export(intentRepository, null, exportSettings);
 
         ExportSettings.Destination destination = exportSettings.getDestination();
-asdf
-        if(Objects.equals(ExportSettings.Destination.LOCAL, destination)){
 
+        if (Objects.equals(ExportSettings.Destination.LOCAL, destination)) {
+            // Seems like something should happen here, but I can not thing of anything.
+        } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            //intent.setType("APPLICATION/XML")
+            context.startActivity(intent);
         }
     }
 }
