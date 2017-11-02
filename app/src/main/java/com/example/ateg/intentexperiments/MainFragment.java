@@ -1,7 +1,8 @@
 package com.example.ateg.intentexperiments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuInflater;
 import android.view.View;
@@ -30,11 +32,13 @@ import com.example.ateg.intentexperiments.FileSelector.FileSelector;
 import com.example.ateg.intentexperiments.FileSelector.OnHandleFileListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 public class MainFragment extends BaseFragment<MainPresenter> implements MainView {
 
     private static final String TEXT_WINDOW_VALUE = "com.example.ateg.intentexperiments.TEXT_WINDOW_VALUE";
+    private static final String TAG = "Main Fragment";
 
     final String[] mFileFilter = {".txt", "*.*"};
     private Dialog dialog;
@@ -154,68 +158,52 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                     @Override
                     public void onClick(View view) {
 
-                        final ExportSettings exportSettings = new ExportSettings();
+                        ExportSettings tempExportSettings = buildExportSettings(exportDialog);
 
-                        RadioButton textRadioButton = exportDialog.findViewById(R.id.export_txt_radioButton);
-                        RadioButton jsonRadioButton = exportDialog.findViewById(R.id.export_json_radioButton);
+                        if (tempExportSettings.validate()) {
 
-                        CheckBox markArchiveCheckBox = exportDialog.findViewById(R.id.export_mark_archive_checkBox);
+                            final ExportSettings exportSettings = tempExportSettings;
 
-                        RadioButton fullRadioButton = exportDialog.findViewById(R.id.export_full_radioButton);
-                        RadioButton diffRadioButton = exportDialog.findViewById(R.id.export_diff_radioButton);
-                        RadioButton singleRadioButton = exportDialog.findViewById(R.id.export_single_radioButton);
+                            exportDialog.dismiss();
 
-                        RadioButton localRadioButton = exportDialog.findViewById(R.id.export_local_radioButton);
-                        RadioButton sendRadioButton = exportDialog.findViewById(R.id.export_send_radioButton);
+                            File[] files = ContextCompat.getExternalFilesDirs(getActivity(), Environment.DIRECTORY_DOCUMENTS);
 
-                        if (textRadioButton.isChecked()) {
-                            exportSettings.setFormat(ExportSettings.Format.TEXT);
-                        } else if (jsonRadioButton.isChecked()) {
-                            exportSettings.setFormat(ExportSettings.Format.JSON);
-                        }
+                            File storageDir = files[files.length - 1];
 
-                        exportSettings.setMarkArchived(markArchiveCheckBox.isChecked());
+                            if (ExportSettings.Destination.LOCAL == exportSettings.getDestination()) {
 
-                        if (fullRadioButton.isChecked()) {
-                            exportSettings.setScope(ExportSettings.Scope.FULL);
-                        } else if (diffRadioButton.isChecked()) {
-                            exportSettings.setScope(ExportSettings.Scope.DIFF);
-                        } else if (singleRadioButton.isChecked()) {
-                            exportSettings.setScope(ExportSettings.Scope.SINGLE);
-                        }
-
-                        if (localRadioButton.isChecked()) {
-                            exportSettings.setDestination(ExportSettings.Destination.LOCAL);
-                        } else if (sendRadioButton.isChecked()) {
-                            exportSettings.setDestination(ExportSettings.Destination.SEND);
-                        }
-
-                        dialog.dismiss();
-
-                        File[] files = ContextCompat.getExternalFilesDirs(getActivity(), Environment.DIRECTORY_DOCUMENTS);
-
-                        File storageDir = files[files.length - 1];
-
-                        if (ExportSettings.Destination.LOCAL == exportSettings.getDestination()) {
-
-                            new FileSelector(getActivity(),
-                                    FileOperation.SAVE,
-                                    new OnHandleFileListener() {
-                                        @Override
-                                        public void handleFile(String filePath) {
-                                            File file = new File(filePath);
-                                            exportSettings.setFile(file);
-                                            mPresenter.exportDb(getActivity(), exportSettings);
-                                        }
-                                    },
-                                    mFileFilter,
-                                    new File(storageDir, LoggingUtilities.getDefaultFileName(getActivity())))
-                                    .show();
+                                new FileSelector(getActivity(),
+                                        FileOperation.SAVE,
+                                        new OnHandleFileListener() {
+                                            @Override
+                                            public void handleFile(String filePath) {
+                                                File file = new File(filePath);
+                                                exportSettings.setFile(file);
+                                                mPresenter.exportDb(getActivity(), exportSettings);
+                                            }
+                                        },
+                                        mFileFilter,
+                                        new File(storageDir, LoggingUtilities.getDefaultFileName(getActivity())))
+                                        .show();
+                            } else {
+                                File file = new File(storageDir, "temp_stream_" + UUID.randomUUID() + ".tmp");
+                                exportSettings.setFile(file);
+                                file.deleteOnExit();
+                                mPresenter.exportDb(getActivity(), exportSettings);
+                            }
                         } else {
-                            File file = new File(storageDir, "temp_stream_" + UUID.randomUUID() + ".tmp");
-                            exportSettings.setFile(file);
-                            file.deleteOnExit();
-                            mPresenter.exportDb(getActivity(), exportSettings);
+                            new AlertDialog.Builder(getActivity())
+                                    .setMessage("One Or More Required Fields Are Empty.")
+                                    .setTitle("Error")
+                                    //.setIcon(ic_alert)
+                                    .setCancelable(true)
+                                    .setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                                    .show();
                         }
                     }
                 });
@@ -238,6 +226,46 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         return super.onOptionsItemSelected(item);
     }
 
+    @NonNull
+    private ExportSettings buildExportSettings(Dialog exportDialog) {
+        final ExportSettings exportSettings = new ExportSettings();
+
+        RadioButton textRadioButton = exportDialog.findViewById(R.id.export_txt_radioButton);
+        RadioButton jsonRadioButton = exportDialog.findViewById(R.id.export_json_radioButton);
+
+        CheckBox markArchiveCheckBox = exportDialog.findViewById(R.id.export_mark_archive_checkBox);
+
+        RadioButton fullRadioButton = exportDialog.findViewById(R.id.export_full_radioButton);
+        RadioButton diffRadioButton = exportDialog.findViewById(R.id.export_diff_radioButton);
+        RadioButton singleRadioButton = exportDialog.findViewById(R.id.export_single_radioButton);
+
+        RadioButton localRadioButton = exportDialog.findViewById(R.id.export_local_radioButton);
+        RadioButton sendRadioButton = exportDialog.findViewById(R.id.export_send_radioButton);
+
+        if (textRadioButton.isChecked()) {
+            exportSettings.setFormat(ExportSettings.Format.TEXT);
+        } else if (jsonRadioButton.isChecked()) {
+            exportSettings.setFormat(ExportSettings.Format.JSON);
+        }
+
+        exportSettings.setMarkArchived(markArchiveCheckBox.isChecked());
+
+        if (fullRadioButton.isChecked()) {
+            exportSettings.setScope(ExportSettings.Scope.FULL);
+        } else if (diffRadioButton.isChecked()) {
+            exportSettings.setScope(ExportSettings.Scope.DIFF);
+        } else if (singleRadioButton.isChecked()) {
+            exportSettings.setScope(ExportSettings.Scope.SINGLE);
+        }
+
+        if (localRadioButton.isChecked()) {
+            exportSettings.setDestination(ExportSettings.Destination.LOCAL);
+        } else if (sendRadioButton.isChecked()) {
+            exportSettings.setDestination(ExportSettings.Destination.SEND);
+        }
+        return exportSettings;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -250,9 +278,16 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 .setAction("Open", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        File tempFile = copyToTempFile(logFileAs);
-                        Intent intent = intentToOpenFile(tempFile);
-                        startActivity(intent);
+                        File tempFile = null;
+                        try {
+                            tempFile = copyToTempFile(logFileAs);
+                            Intent intent = intentToOpenFile(tempFile);
+                            startActivity(intent);
+                        } catch (IOException e) {
+                            Log.e(TAG, getString(R.string.file_temp_error), e);
+                            Toast.makeText(getActivity(), R.string.file_temp_error, Toast.LENGTH_LONG)
+                                    .show();
+                        }
                     }
                 }).show();
     }
@@ -279,8 +314,8 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     }
 
     @NonNull
-    private File copyToTempFile(File logFile) {
-        File tempFile = new File(getActivity().getCacheDir(), "temp.txt");
+    private File copyToTempFile(File logFile) throws IOException {
+        File tempFile = File.createTempFile("temp",".txt");
 
         new LoggingUtilities(getActivity(), tempFile)
                 .updateTextFile(LoggingUtilities.readFile(getActivity(), logFile));

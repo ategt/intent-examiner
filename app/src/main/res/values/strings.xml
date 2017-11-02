@@ -53,4 +53,6 @@
     <string name="export_send">Send</string>
     <string name="export_dialog_title">Export Settings</string>
     <string name="export_destination">Destination</string>
+    <string name="export_completed">Export Completed</string>
+    <string name="file_temp_error">File Open Failed. See Log For Details.</string>
 </resources>

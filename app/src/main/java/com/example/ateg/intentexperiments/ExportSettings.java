@@ -54,6 +54,10 @@ public class ExportSettings {
         this.file = file;
     }
 
+    public boolean validate() {
+        return format != null && scope != null && destination != null;
+    }
+
 
     public enum Format {
         TEXT,
@@ -65,6 +69,7 @@ public class ExportSettings {
         DIFF,
         SINGLE;
     }
+
     public enum Destination {
         LOCAL,
         SEND;

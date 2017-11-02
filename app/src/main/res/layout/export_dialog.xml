@@ -66,6 +66,7 @@
             android:id="@+id/export_mark_archive_checkBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:padding="@dimen/fab_margin"
             android:text="@string/mark_archived" />
 
@@ -158,6 +159,7 @@
                 android:id="@+id/export_local_radioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:padding="@dimen/fab_margin"
                 android:text="@string/export_local" />
 

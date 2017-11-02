@@ -101,32 +101,44 @@ class MainPresenter extends BasePresenter<MainView> {
         }.execute(dest);
     }
 
-    public void exportDb(Context context, ExportSettings exportSettings) {
+    public void exportDb(final Context context, final ExportSettings exportSettings) {
 
-        File file = exportSettings.getFile();
+        new AsyncTask<Context, Void, Void>() {
+            @Override
+            protected Void doInBackground(Context... contexts) {
+                File file = exportSettings.getFile();
 
-        LoggingUtilities loggingUtilities = new LoggingUtilities(context, file);
+                LoggingUtilities loggingUtilities = new LoggingUtilities(contexts[0], file);
 
-        IntentRepository intentRepository = null;
+                IntentRepository intentRepository = null;
 
-        if (exportSettings.getFormat() == ExportSettings.Format.JSON) {
-            intentRepository = new IntentJsonRepository(loggingUtilities);
-        } else if (exportSettings.getFormat() == ExportSettings.Format.TEXT) {
-            intentRepository = new IntentTextRepository(loggingUtilities);
-        }
+                if (exportSettings.getFormat() == ExportSettings.Format.JSON) {
+                    intentRepository = new IntentJsonRepository(loggingUtilities);
+                } else if (exportSettings.getFormat() == ExportSettings.Format.TEXT) {
+                    intentRepository = new IntentTextRepository(loggingUtilities);
+                }
 
-        intentWrapperServices.export(intentRepository, null, exportSettings);
+                intentWrapperServices.export(intentRepository, null, exportSettings);
 
-        ExportSettings.Destination destination = exportSettings.getDestination();
+                return null;
+            }
 
-        if (Objects.equals(ExportSettings.Destination.LOCAL, destination)) {
-            // Seems like something should happen here, but I can not thing of anything.
-        } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                ExportSettings.Destination destination = exportSettings.getDestination();
 
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            //intent.setType("APPLICATION/XML")
-            context.startActivity(intent);
-        }
+                if (Objects.equals(ExportSettings.Destination.LOCAL, destination)) {
+                    // Seems like something should happen here, but I can not thing of anything.
+                    getView().announceExportComplete(exportSettings.getFile());
+                } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+
+                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportSettings.getFile()));
+                    //intent.setType("APPLICATION/XML")
+                    context.startActivity(intent);
+                }
+
+            }
+        }.execute(context);
     }
 }

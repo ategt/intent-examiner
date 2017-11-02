@@ -25,35 +25,16 @@ public class IntentJsonRepository implements IntentRepository {
     public IntentJsonRepository(LoggingUtilities loggingUtilities) {
         this.loggingUtilities = loggingUtilities;
         this.gson = new GsonBuilder()
-//                .setExclusionStrategies(new ExclusionStrategy() {
-//            @Override
-//            public boolean shouldSkipField(FieldAttributes f) {
-//                String name = f.getName();
-//                Log.d(TAG, name);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean shouldSkipClass(Class<?> clazz) {
-//                String name = clazz.getName();
-//                Log.d(TAG, name);
-//                return false;
-//            }
-//        })
                 .addDeserializationExclusionStrategy(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        String name = f.getName();
-                        Log.d(TAG, "Dfield - " + name);
                         return false;
                     }
 
                     @Override
                     public boolean shouldSkipClass(Class<?> clazz) {
                         String name = clazz.getName();
-                        Log.d(TAG, "dersClass - " + name);
                         if (name.equalsIgnoreCase("java.lang.ClassLoader")) {
-                            Log.d(TAG, " - Skipping - ");
                             return true;
                         }
                         return false;
