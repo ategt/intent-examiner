@@ -133,9 +133,10 @@ class MainPresenter extends BasePresenter<MainView> {
                 } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
                     Intent intent = new Intent(Intent.ACTION_SEND);
 
+                    intent.setType("*/*");
                     intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportSettings.getFile()));
                     //intent.setType("APPLICATION/XML")
-                    context.startActivity(Intent.createChooser(intent, "Share File"));
+                    context.startActivity(intent);
                 }
 
             }

@@ -13,12 +13,12 @@
         android:orientation="vertical">
 
         <RadioGroup
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tooltipText="@string/export_format">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:padding="@dimen/radio_label"
@@ -26,14 +26,14 @@
 
             <RadioButton
                 android:id="@+id/export_txt_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/fab_margin"
                 android:text="@string/export_txt" />
 
             <RadioButton
                 android:id="@+id/export_json_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/fab_margin"
                 android:text="@string/export_json" />
@@ -94,20 +94,20 @@
         </LinearLayout>
 
         <RadioGroup
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tooltipText="@string/export_scope">
 
             <RadioButton
                 android:id="@+id/export_full_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/fab_margin"
                 android:text="@string/export_full" />
 
             <RadioButton
                 android:id="@+id/export_diff_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:padding="@dimen/fab_margin"
@@ -115,7 +115,7 @@
 
             <RadioButton
                 android:id="@+id/export_single_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/fab_margin"
                 android:text="@string/export_single" />
@@ -145,11 +145,11 @@
         </LinearLayout>
 
         <RadioGroup
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:padding="@dimen/radio_label"
@@ -157,7 +157,7 @@
 
             <RadioButton
                 android:id="@+id/export_local_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:padding="@dimen/fab_margin"
@@ -165,7 +165,7 @@
 
             <RadioButton
                 android:id="@+id/export_send_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/fab_margin"
                 android:text="@string/export_send" />
