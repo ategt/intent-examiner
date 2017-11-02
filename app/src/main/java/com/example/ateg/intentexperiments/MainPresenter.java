@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -103,7 +105,21 @@ class MainPresenter extends BasePresenter<MainView> {
 
         File file = exportSettings.getFile();
 
-        intentWrapperServices.export(file, null, exportSettings.isMarkArchived());
+        LoggingUtilities loggingUtilities = new LoggingUtilities(file);
+
+        IntentRepository intentRepository = null;
+
+        if (exportSettings.getFormat() == ExportSettings.Format.JSON) {
+            intentRepository = new IntentJsonRespository(file,);
+        } else if (exportSettings.getScope() == ExportSettings.Scope.DIFF) {
+            intentWrapperList = sourceIntentRepository.getDifferential();
+        } else if (exportSettings.getScope() == ExportSettings.Scope.SINGLE) {
+            List<IntentWrapper> list = new ArrayList<>();
+            list.add(buildIntentWrapper());
+            intentWrapperList = list;
+        }
+
+        intentWrapperServices.export(file, null, exportSettings);
 
         ExportSettings.Destination destination = exportSettings.getDestination();
 asdf

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +45,6 @@ public class IntentWrapperServices {
 
     public IntentWrapper buildIntentWrapper() {
         Intent intent = context.getIntent();
-        Log.d("asdf", "builder");
         return new IntentWrapper(intent);
     }
 
@@ -60,18 +60,40 @@ public class IntentWrapperServices {
         return intentRepository.create(buildIntentWrapper());
     }
 
-    public void export(IntentRepository intentRepository, ExportProgress exportProgress, boolean markArchived) {
-        List<IntentWrapper> intentWrapperList = this.intentRepository.getDifferential();
-        int intentWrapperListSize = intentWrapperList.size();
-        for (IntentWrapper intentWrapper : intentWrapperList) {
-            if (exportProgress != null)
-                exportProgress.updateExportProgress(intentWrapperList.indexOf(intentWrapper), intentWrapperListSize);
-            intentRepository.create(intentWrapper);
+    public void export(IntentRepository destinationIntentRepository, ExportProgress exportProgress, ExportSettings exportSettings) {
+        IntentRepository sourceIntentRepository = this.intentRepository;
+        export(sourceIntentRepository, destinationIntentRepository, exportProgress, exportSettings);
+    }
+
+    public void export(IntentRepository sourceIntentRepository,
+                       IntentRepository destinationIntentRepository,
+                       ExportProgress exportProgress,
+                       ExportSettings exportSettings) {
+
+        List<IntentWrapper> intentWrapperList = null;
+        if (exportSettings.getScope() == ExportSettings.Scope.FULL) {
+            intentWrapperList = sourceIntentRepository.getAll();
+        } else if (exportSettings.getScope() == ExportSettings.Scope.DIFF) {
+            intentWrapperList = sourceIntentRepository.getDifferential();
+        } else if (exportSettings.getScope() == ExportSettings.Scope.SINGLE) {
+            List<IntentWrapper> list = new ArrayList<>();
+            list.add(buildIntentWrapper());
+            intentWrapperList = list;
         }
+
+        destinationIntentRepository.create(intentWrapperList);
+
+        //int intentWrapperListSize = intentWrapperList.size();
+//        for (IntentWrapper intentWrapper : intentWrapperList) {
+//            if (exportProgress != null)
+//                exportProgress.updateExportProgress(intentWrapperList.indexOf(intentWrapper), intentWrapperListSize);
+//            destinationIntentRepository.create(intentWrapper);
+//        }
+
         if (exportProgress != null)
             exportProgress.exportDone();
 
-        if (markArchived)
+        if (exportSettings != null && exportSettings.isMarkArchived())
             archive();
     }
 
