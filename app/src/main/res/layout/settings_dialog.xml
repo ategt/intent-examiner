@@ -14,7 +14,7 @@
 
         <CheckBox
             android:id="@+id/settings_auto_examine_checkBox"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/fab_margin"
             android:text="@string/auto_examine" />
@@ -32,6 +32,16 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/fab_margin"
             android:text="@string/auto_log" />
+
+        <CheckBox
+            android:id="@+id/settings_filter_empty_auto_log_checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fab_margin"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:scaleX=".9"
+            android:scaleY=".9"
+            android:text="@string/filter_auto_log" />
 
         <CheckBox
             android:id="@+id/settings_click_anywhere_examines_checkBox"

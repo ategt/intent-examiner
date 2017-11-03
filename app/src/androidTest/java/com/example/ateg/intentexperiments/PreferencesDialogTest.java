@@ -230,6 +230,7 @@ public class PreferencesDialogTest {
     @Test
     public void settingsSaveAndResetCorrectlyTest() {
         openSettingsDialog();
+        resetPreferences();
 
         Espresso.onView(withId(R.id.dialog_scrollView))
                 .perform(ViewActions.swipeUp())
@@ -256,6 +257,11 @@ public class PreferencesDialogTest {
                 .check(matches(isChecked()));
 
         Espresso.onView(withId(R.id.settings_auto_log_checkBox))
+                .check(ViewAssertions.matches(isNotChecked()))
+                .perform(click())
+                .check(matches(isChecked()));
+
+        Espresso.onView(withId(R.id.settings_filter_empty_auto_log_checkBox))
                 .check(ViewAssertions.matches(isNotChecked()))
                 .perform(click())
                 .check(matches(isChecked()));
@@ -292,6 +298,9 @@ public class PreferencesDialogTest {
         Espresso.onView(withId(R.id.settings_auto_log_checkBox))
                 .check(matches(isChecked()));
 
+        Espresso.onView(withId(R.id.settings_filter_empty_auto_log_checkBox))
+                .check(matches(isChecked()));
+
         Espresso.onView(withId(R.id.settings_click_anywhere_examines_checkBox))
                 .check(matches(isChecked()));
 
@@ -318,6 +327,9 @@ public class PreferencesDialogTest {
                 .check(matches(not(isChecked())));
 
         Espresso.onView(withId(R.id.settings_auto_log_checkBox))
+                .check(matches(not(isChecked())));
+
+        Espresso.onView(withId(R.id.settings_filter_empty_auto_log_checkBox))
                 .check(matches(not(isChecked())));
 
         Espresso.onView(withId(R.id.settings_click_anywhere_examines_checkBox))

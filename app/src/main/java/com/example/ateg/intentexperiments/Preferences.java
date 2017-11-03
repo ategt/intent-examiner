@@ -11,6 +11,7 @@ public class Preferences {
     private boolean showExamineButton = true;
     private boolean autoLog;
     private boolean clickAnywhere;
+    private boolean filterEmpties;
     private String defaultFileName = "IntentExamination.txt";
 
     public boolean isAutoExamine() {
@@ -59,5 +60,13 @@ public class Preferences {
 
     public void setClickAnywhere(boolean clickAnywhere) {
         this.clickAnywhere = clickAnywhere;
+    }
+
+    public boolean isFilterEmpties() {
+        return filterEmpties;
+    }
+
+    public void setFilterEmpties(boolean filterEmpties) {
+        this.filterEmpties = filterEmpties;
     }
 }

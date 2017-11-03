@@ -426,6 +426,10 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 = dialog.findViewById(R.id.settings_auto_log_checkBox);
         autoLogCheckBox.setChecked(preferences.isAutoLog());
 
+        CheckBox filterAutoLogCheckBox
+                = dialog.findViewById(R.id.settings_filter_empty_auto_log_checkBox);
+        filterAutoLogCheckBox.setChecked(preferences.isFilterEmpties());
+
         CheckBox clickAnywhereCheckBox
                 = dialog.findViewById(R.id.settings_click_anywhere_examines_checkBox);
         clickAnywhereCheckBox.setChecked(preferences.isClickAnywhere());
@@ -478,6 +482,10 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         CheckBox autoLogBox
                 = dialog.findViewById(R.id.settings_auto_log_checkBox);
         preferences.setAutoLog(autoLogBox.isChecked());
+
+        CheckBox filterAutoLogBox
+                = dialog.findViewById(R.id.settings_filter_empty_auto_log_checkBox);
+        preferences.setFilterEmpties(filterAutoLogBox.isChecked());
 
         CheckBox clickAnywhereCheckBox
                 = dialog.findViewById(R.id.settings_click_anywhere_examines_checkBox);
