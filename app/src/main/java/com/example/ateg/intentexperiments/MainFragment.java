@@ -315,7 +315,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @NonNull
     private File copyToTempFile(File logFile) throws IOException {
-        File tempFile = File.createTempFile("temp",".txt");
+        File tempFile = File.createTempFile("temp", ".txt");
 
         new LoggingUtilities(getActivity(), tempFile)
                 .updateTextFile(LoggingUtilities.readFile(getActivity(), logFile));
@@ -326,7 +326,25 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     public void showError(Throwable ex) {
+        Log.e(TAG, "Something bad happened.", ex);
 
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.unknown_field_error)
+                .setCancelable(true)
+                .setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        if (ex instanceof UnfamiliarIntentJsonException) {
+            String message = ex.getMessage();
+            alertBuilder = alertBuilder.setMessage(String.format(getString(R.string.unknown_field_error_explanation), message));
+        } else {
+            alertBuilder = alertBuilder.setMessage(R.string.generic_error);
+        }
+        alertBuilder.show();
     }
 
     @Override

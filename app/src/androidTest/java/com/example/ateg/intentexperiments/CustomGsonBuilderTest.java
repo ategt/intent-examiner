@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
@@ -22,9 +23,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.IntSummaryStatistics;
 import java.util.Objects;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -196,6 +200,49 @@ public class CustomGsonBuilderTest {
         clipData = gson.fromJson(outputJson, ClipData.class);
 
         assertNotNull(clipData);
+    }
+
+    @Test
+    public void gsonExceptionHandlingTest() {
+        String testString = "{\"mClipDescription\":{\"mMimeTypes\":[\"*/*\"]},\"mItems\":[{\"mUri\":{\"authority\":{\"decoded\":\"\",\"encoded\":\"\"},\"fragment\":{},\"path\":{\"decoded\":\"/storage/extSdCard/Android/data/com.example.ateg.intentexperiments/files/Documents/temp_stream_21275b72-6031-44b5-9688-5a9ea4d9dad5.tmp\",\"encoded\":\"NOT CACHED\"},\"query\":{},\"scheme\":\"file\",\"uriString\":\"NOT CACHED\",\"host\":\"NOT CACHED\",\"port\":-2}}]}";
+
+        Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                if (clazz.isInstance(ClassLoader.class))
+                    return true;
+                else
+                    return false;
+            }
+        }).registerTypeAdapter(CharSequence.class, new TypeAdapter<CharSequence>() {
+            @Override
+            public void write(JsonWriter out, CharSequence value) throws IOException {
+                out.jsonValue(value == null ? null : value.toString());
+            }
+
+            @Override
+            public CharSequence read(JsonReader in) throws IOException {
+                String string = in.nextString();
+                return string;
+            }
+        }).create();
+
+        try {
+            ClipData clipData = gson.fromJson(testString, ClipData.class);
+            fail("This was supposed to fail.");
+        } catch (RuntimeException ex) {
+            Throwable throwable = ex.getCause();
+            String message = throwable.getMessage();
+
+            if (throwable instanceof java.lang.InstantiationException) {
+                assertTrue("Handle this somehow.", true);
+            }
+        }
     }
 
     @Test

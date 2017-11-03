@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import java.io.File;
 import java.util.Objects;
 
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Created by ATeg on 10/20/2017.
  */
@@ -104,6 +106,8 @@ class MainPresenter extends BasePresenter<MainView> {
     public void exportDb(final Context context, final ExportSettings exportSettings) {
 
         new AsyncTask<Context, Void, Void>() {
+            UnfamiliarIntentJsonException unfamiliarIntentJsonException = null;
+
             @Override
             protected Void doInBackground(Context... contexts) {
                 File file = exportSettings.getFile();
@@ -118,27 +122,41 @@ class MainPresenter extends BasePresenter<MainView> {
                     intentRepository = new IntentTextRepository(loggingUtilities);
                 }
 
-                intentWrapperServices.export(intentRepository, null, exportSettings);
+                try {
+                    intentWrapperServices.export(intentRepository, null, exportSettings);
+                } catch (RuntimeException ex) {
+                    Throwable throwable = ex.getCause();
+
+                    if (throwable instanceof java.lang.InstantiationException) {
+                        String message = throwable.getMessage();
+                        unfamiliarIntentJsonException
+                                = new UnfamiliarIntentJsonException(message, throwable);
+                    } else
+                        throw ex;
+                }
 
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                ExportSettings.Destination destination = exportSettings.getDestination();
+                if (unfamiliarIntentJsonException != null) {
+                    getView().showError(unfamiliarIntentJsonException);
+                } else {
+                    ExportSettings.Destination destination = exportSettings.getDestination();
 
-                if (Objects.equals(ExportSettings.Destination.LOCAL, destination)) {
-                    // Seems like something should happen here, but I can not thing of anything.
-                    getView().announceExportComplete(exportSettings.getFile());
-                } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
-                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    if (Objects.equals(ExportSettings.Destination.LOCAL, destination)) {
+                        // Seems like something should happen here, but I can not thing of anything.
+                        getView().announceExportComplete(exportSettings.getFile());
+                    } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
+                        Intent intent = new Intent(Intent.ACTION_SEND);
 
-                    intent.setType("*/*");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportSettings.getFile()));
-                    //intent.setType("APPLICATION/XML")
-                    context.startActivity(intent);
+                        intent.setType("*/*");
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportSettings.getFile()));
+                        //intent.setType("APPLICATION/XML")
+                        context.startActivity(intent);
+                    }
                 }
-
             }
         }.execute(context);
     }

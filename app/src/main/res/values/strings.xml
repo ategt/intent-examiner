@@ -55,4 +55,7 @@
     <string name="export_destination">Destination</string>
     <string name="export_completed">Export Completed</string>
     <string name="file_temp_error">File Open Failed. See Log For Details.</string>
+    <string name="unknown_field_error_explanation">A Field In The Data Could Not Be Read. This Happens With A Program Like This One. Sending This Message To The Developers Will Help Make The Next Version Better:\n\n  %1$s</string>
+    <string name="unknown_field_error">Error</string>
+    <string name="generic_error">Something Has Gone Wrong. See Log For Details.</string>
 </resources>
