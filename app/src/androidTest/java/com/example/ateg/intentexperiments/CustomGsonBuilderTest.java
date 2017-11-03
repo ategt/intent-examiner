@@ -1,12 +1,8 @@
 package com.example.ateg.intentexperiments;
 
 import android.content.ClipData;
-import android.content.Context;
 import android.net.Uri;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -15,7 +11,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
 
@@ -23,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.IntSummaryStatistics;
 import java.util.Objects;
 
 import static junit.framework.Assert.assertNotNull;
@@ -122,40 +116,23 @@ public class CustomGsonBuilderTest {
                 Uri result = null;
 
                 try {
-                    String path = in.getPath();
-                    Log.d("adf", "Path: " + path);
-                    //String name = in.nextName();
-                    //Log.d("adf", "Name: " + name);
                     String value = in.nextString();
                     result = Uri.parse(value);
                 } catch (JsonSyntaxException | IllegalStateException | MalformedJsonException ex) {
-                    Log.d("adf", "Value lifting failed.");
                 }
 
                 try {
                     if (result == null) {
-                        boolean has = in.hasNext();
-
-                        //JsonToken jsonToken = in.peek();
-                        //jsonToken.
-                        String path = in.getPath();
-
-                        //android.net.Uri uri = Uri.parse("/storage/extSdCard/Android/data/com.example.ateg.intentexperiments/files/Documents/temp_stream_21275b72-6031-44b5-9688-5a9ea4d9dad5.tmp");
-
-                        //in.
-
                         String decodedValue = null;
-
                         in.beginObject();
 
-
-                        while (in.hasNext()) { // && decodedValue == null) {
+                        while (in.hasNext()) {
                             String name = in.nextName();
 
                             if (Objects.equals(name, "path")) {
                                 in.beginObject();
 
-                                while (in.hasNext()) { // && decodedValue == null) {
+                                while (in.hasNext()) {
                                     String lookForDecode = in.nextName();
                                     if (Objects.equals(lookForDecode, "decoded")) {
                                         decodedValue = in.nextString();
@@ -168,23 +145,14 @@ public class CustomGsonBuilderTest {
                             } else {
                                 in.skipValue();
                             }
-                            //String string = in.nextString();
                         }
 
-                        //String name = in.nextName();
                         in.endObject();
-
-                        //android.net.Uri uri = null;
-                        //uri.
 
                         result = decodedValue == null ? null : Uri.parse(decodedValue);
                     }
                 } catch (MalformedJsonException ex) {
-                    Log.d("adf", "Parsing failed.");
-                    String path = in.getPath();
-                    Log.d("adf", "Path: " + path);
                 }
-                //return null;
                 return result;
             }
         }).create();
@@ -194,8 +162,6 @@ public class CustomGsonBuilderTest {
         assertNotNull(clipData);
 
         String outputJson = gson.toJson(clipData);
-
-        //assertEquals(testString, outputJson);
 
         clipData = gson.fromJson(outputJson, ClipData.class);
 
@@ -241,6 +207,8 @@ public class CustomGsonBuilderTest {
 
             if (throwable instanceof java.lang.InstantiationException) {
                 assertTrue("Handle this somehow.", true);
+            } else{
+                fail("Also, should not happen.");
             }
         }
     }
