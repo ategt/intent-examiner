@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
@@ -113,6 +114,12 @@ public class CustomGsonBuilderTest {
             @Override
             public Uri read(JsonReader in) throws IOException {
 
+                try {
+                    in.nextNull();
+                    return null;
+                } catch (java.lang.IllegalStateException | com.google.gson.JsonSyntaxException ex) {
+                }
+
                 Uri result = null;
 
                 try {
@@ -124,6 +131,7 @@ public class CustomGsonBuilderTest {
                 try {
                     if (result == null) {
                         String decodedValue = null;
+
                         in.beginObject();
 
                         while (in.hasNext()) {
@@ -166,6 +174,16 @@ public class CustomGsonBuilderTest {
         clipData = gson.fromJson(outputJson, ClipData.class);
 
         assertNotNull(clipData);
+
+        String dataJson = "null";
+        Uri data = gson.fromJson(dataJson, Uri.class);
+
+        assertNull(data);
+
+        dataJson = null;
+        data = gson.fromJson(dataJson, Uri.class);
+
+        assertNull(data);
     }
 
     @Test
@@ -207,7 +225,7 @@ public class CustomGsonBuilderTest {
 
             if (throwable instanceof java.lang.InstantiationException) {
                 assertTrue("Handle this somehow.", true);
-            } else{
+            } else {
                 fail("Also, should not happen.");
             }
         }
@@ -244,10 +262,56 @@ public class CustomGsonBuilderTest {
 
         String outputJson = gson.toJson(clipData);
 
-        assertEquals(testString, outputJson);
-
         clipData = gson.fromJson(outputJson, ClipData.class);
 
         assertNotNull(clipData);
+
+        testString = gson.toJson(clipData);
+
+        assertEquals(testString, outputJson);
+    }
+
+    @Test
+    public void customGsonBuilderNullTest() {
+        String testString = "null";
+
+        Gson gson = CustomGsonBuilder.get().create();
+
+        ClipData clipData = gson.fromJson(testString, ClipData.class);
+
+        assertNull(clipData);
+    }
+
+    @Test
+    public void customGsonBuilderNullLiteralTest() {
+        String testString = null;
+
+        Gson gson = CustomGsonBuilder.get().create();
+
+        ClipData clipData = gson.fromJson(testString, ClipData.class);
+
+        assertNull(clipData);
+    }
+
+    @Test
+    public void customGsonBuilderNullUriTest() {
+        String testString = "null";
+
+        Gson gson = CustomGsonBuilder.get().create();
+
+        Uri uri = gson.fromJson(testString, Uri.class);
+
+        assertNull(uri);
+    }
+
+    @Test
+    public void customGsonBuilderNullUriLiteralTest() {
+        String testString = null;
+
+        Gson gson = CustomGsonBuilder.get().create();
+
+        Uri uri = gson.fromJson(testString, Uri.class);
+
+        assertNull(uri);
     }
 }
