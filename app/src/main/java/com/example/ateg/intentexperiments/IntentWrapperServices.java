@@ -3,6 +3,7 @@ package com.example.ateg.intentexperiments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.io.File;
@@ -31,11 +32,19 @@ public class IntentWrapperServices {
     public void init() {
         Preferences preferences = preferencesServices.load();
         if (preferences.isAutoLog()) {
-            log();
+            conditionalLog(preferences);
         }
 
         if (preferences.isAutoSave() && !Objects.equals(defaultIntentRepository, intentRepository)) {
             save();
+        }
+    }
+
+    private void conditionalLog(Preferences preferences) {
+        if (preferences.isFilterEmpties()) {
+            smartLog();
+        } else {
+            log();
         }
     }
 
@@ -53,7 +62,24 @@ public class IntentWrapperServices {
     }
 
     public IntentWrapper log() {
-        return defaultIntentRepository.create(buildIntentWrapper());
+        return log(buildIntentWrapper());
+    }
+
+    public IntentWrapper smartLog() {
+        IntentWrapper intentWrapper = buildIntentWrapper();
+
+        Bundle bundle = intentWrapper.getExtras();
+        if (bundle != null) {
+            if (bundle.size() > 0) {
+                return log();
+            }
+        }
+
+        return null;
+    }
+
+    private IntentWrapper log(IntentWrapper intentWrapper) {
+        return defaultIntentRepository.create(intentWrapper);
     }
 
     public IntentWrapper save(IntentRepository intentRepository) {

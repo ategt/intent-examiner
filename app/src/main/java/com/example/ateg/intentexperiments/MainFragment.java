@@ -377,7 +377,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 }
             });
         }
-
     }
 
     @Override

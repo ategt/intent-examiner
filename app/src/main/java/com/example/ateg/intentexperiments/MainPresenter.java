@@ -48,7 +48,6 @@ class MainPresenter extends BasePresenter<MainView> {
         preferencesUtilites.resetPreferences();
 
         loadPreferences();
-
     }
 
     public void loadPreferences() {
@@ -146,14 +145,11 @@ class MainPresenter extends BasePresenter<MainView> {
                     ExportSettings.Destination destination = exportSettings.getDestination();
 
                     if (Objects.equals(ExportSettings.Destination.LOCAL, destination)) {
-                        // Seems like something should happen here, but I can not thing of anything.
                         getView().announceExportComplete(exportSettings.getFile());
                     } else if (Objects.equals(ExportSettings.Destination.SEND, destination)) {
                         Intent intent = new Intent(Intent.ACTION_SEND);
-
                         intent.setType("*/*");
                         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportSettings.getFile()));
-                        //intent.setType("APPLICATION/XML")
                         context.startActivity(intent);
                     }
                 }

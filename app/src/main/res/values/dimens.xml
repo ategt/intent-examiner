@@ -3,4 +3,5 @@
     <dimen name="logo_padding">12dp</dimen>
     <dimen name="min_dialog_width">300dp</dimen>
     <dimen name="radio_label">5dp</dimen>
+    <dimen name="sub_box">5dp</dimen>
 </resources>
