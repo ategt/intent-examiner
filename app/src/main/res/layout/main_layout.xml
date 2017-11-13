@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view_coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -45,9 +46,10 @@
                 android:id="@+id/central_textView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5sp"
                 android:layout_gravity="center"
+                android:layout_marginStart="5sp"
                 android:gravity="center_vertical|center_horizontal"
+                android:textAlignment="center"
                 android:isScrollContainer="true"
                 android:text="@string/opening_greeting" />
         </ScrollView>
@@ -56,10 +58,11 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/examination_button_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:gravity="bottom|end">
+        android:gravity="bottom|end"
+        tools:layout_editor_absoluteY="496dp">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/action_button"
