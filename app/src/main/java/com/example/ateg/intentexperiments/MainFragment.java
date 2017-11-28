@@ -41,6 +41,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     private static final String TAG = "Main Fragment";
 
     final String[] mFileFilter = {".txt", "*.*"};
+    private SnackBarManager snackBarManager;
     private Dialog dialog;
 
     @Override
@@ -274,7 +275,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
     }
 
     private void fileSaveCompleteSnackBar(View textViewAs, final File logFileAs) {
-        Snackbar.make(textViewAs, "File Saved", Snackbar.LENGTH_INDEFINITE)
+        Snackbar snackbar = Snackbar.make(textViewAs, "File Saved", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Open", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -289,7 +290,9 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                                     .show();
                         }
                     }
-                }).show();
+                });
+
+        enqeue(snackbar);
     }
 
     private File saveTextViewContentToFile(TextView textView, File destinationFile) {
@@ -381,6 +384,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     protected void init() {
+        snackBarManager = new SnackBarManager(getCreatedView());
     }
 
     @Override
@@ -458,9 +462,17 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
 
     @Override
     public void examineDone() {
-        Snackbar.make(getCreatedView().findViewById(R.id.examination_button_container)
-                , R.string.examine_completed, Snackbar.LENGTH_LONG)
-                .show();
+        Snackbar snackbar = Snackbar.make(getCreatedView().findViewById(R.id.examination_button_container)
+                , R.string.examine_completed, Snackbar.LENGTH_LONG);
+        enqeue(snackbar);
+    }
+
+    private void enqeue(Snackbar snackbar) {
+        if (snackBarManager != null) {
+            snackBarManager.addQueue(snackbar);
+        } else {
+            snackbar.show();
+        }
     }
 
     private Preferences buildPreferences(Dialog dialog) {
