@@ -59,6 +59,6 @@
     <string name="unknown_field_error">Error</string>
     <string name="generic_error">Something Has Gone Wrong. See Log For Details.</string>
     <string name="filter_auto_log">Skip Logging Empty Intents</string>
-    <string name="auto_log_successful">Intent Successfully AutoLogged</string>
+    <string name="auto_log_successful">Intent Logged To Database</string>
     <string name="auto_save_successful">Intent Automatically Saved</string>
 </resources>
