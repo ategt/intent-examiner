@@ -31,13 +31,26 @@ class MainPresenter extends BasePresenter<MainView> {
     }
 
     private void init() {
-        new AsyncTask<IntentWrapperServices, Void, Void>() {
+        new AsyncTask<IntentWrapperServices, Integer, Void>() {
             @Override
             protected Void doInBackground(IntentWrapperServices... intentWrapperServices) {
                 for (IntentWrapperServices intentWrapperServices1 : intentWrapperServices) {
-                    intentWrapperServices1.init();
+                    intentWrapperServices1.init(new ProgressUpdateListener() {
+                        @Override
+                        public void onProgress(int updateStringId) {
+                            publishProgress(updateStringId);
+                        }
+                    });
                 }
                 return null;
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                super.onProgressUpdate(values);
+                for (Integer value : values) {
+                    getView().showUpdate(value);
+                }
             }
         }.execute(intentWrapperServices);
     }

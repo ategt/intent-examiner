@@ -29,22 +29,28 @@ public class IntentWrapperServices {
         this.context = context;
     }
 
-    public void init() {
+    public void init(ProgressUpdateListener progressUpdater) {
         Preferences preferences = preferencesServices.load();
         if (preferences.isAutoLog()) {
-            conditionalLog(preferences);
+            IntentWrapper intentWrapper = conditionalLog(preferences);
+            if (intentWrapper != null && progressUpdater != null){
+                progressUpdater.onProgress(R.string.auto_log_successful);
+            }
         }
 
         if (preferences.isAutoSave() && !Objects.equals(defaultIntentRepository, intentRepository)) {
-            save();
+            IntentWrapper intentWrapper = save();
+            if (intentWrapper != null && progressUpdater != null){
+                progressUpdater.onProgress(R.string.auto_save_successful);
+            }
         }
     }
 
-    private void conditionalLog(Preferences preferences) {
+    private IntentWrapper conditionalLog(Preferences preferences) {
         if (preferences.isFilterEmpties()) {
-            smartLog();
+            return smartLog();
         } else {
-            log();
+            return log();
         }
     }
 

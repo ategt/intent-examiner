@@ -14,4 +14,6 @@ public interface MainView extends LEView {
     void announceExportComplete(File logFileWritten);
 
     void examineDone();
+
+    void showUpdate(int updateMessageStringId);
 }

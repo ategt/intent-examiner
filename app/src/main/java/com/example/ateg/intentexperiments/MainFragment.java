@@ -467,6 +467,13 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
         enqeue(snackbar);
     }
 
+    @Override
+    public void showUpdate(int updateMessageStringId) {
+        Snackbar snackbar = Snackbar.make(getCreatedView().findViewById(R.id.examination_button_container)
+                , updateMessageStringId, Snackbar.LENGTH_LONG);
+        enqeue(snackbar);
+    }
+
     private void enqeue(Snackbar snackbar) {
         if (snackBarManager != null) {
             snackBarManager.addQueue(snackbar);
