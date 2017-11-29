@@ -33,16 +33,20 @@ public class IntentWrapperServices {
         Preferences preferences = preferencesServices.load();
         if (preferences.isAutoLog()) {
             IntentWrapper intentWrapper = conditionalLog(preferences);
-            if (intentWrapper != null && progressUpdater != null){
-                progressUpdater.onProgress(R.string.auto_log_successful);
-            }
+            if (intentWrapper != null)
+                updateProgress(progressUpdater, R.string.auto_log_successful);
         }
 
         if (preferences.isAutoSave() && !Objects.equals(defaultIntentRepository, intentRepository)) {
             IntentWrapper intentWrapper = save();
-            if (intentWrapper != null && progressUpdater != null){
-                progressUpdater.onProgress(R.string.auto_save_successful);
-            }
+            if (intentWrapper != null)
+                updateProgress(progressUpdater, R.string.auto_save_successful);
+        }
+    }
+
+    private void updateProgress(ProgressUpdateListener progressUpdater, int auto_log_successful) {
+        if (progressUpdater != null) {
+            progressUpdater.onProgress(auto_log_successful);
         }
     }
 
