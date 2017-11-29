@@ -70,15 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/fab_margin"
-            android:text="@string/default_file_name" />
-
-        <Button
-            android:id="@+id/settings_default_file_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:padding="@dimen/fab_margin"
-            android:text="@string/change_default_directory" />
+            android:text="@string/default_file_name"
+            android:hint="@string/default_file_name_hint" />
 
         <LinearLayout
             android:layout_width="match_parent"

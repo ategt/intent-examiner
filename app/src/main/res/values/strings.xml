@@ -61,4 +61,5 @@
     <string name="filter_auto_log">Skip Logging Empty Intents</string>
     <string name="auto_log_successful">Intent Logged To Database</string>
     <string name="auto_save_successful">Intent Automatically Saved</string>
+    <string name="default_file_name_hint">Default File Name</string>
 </resources>
