@@ -82,7 +82,6 @@ class MainPresenter extends BasePresenter<MainView> {
 
         if (preferences.isAutoExamine()) {
             examineIntent();
-            getView().examineDone();
         }
     }
 
