@@ -119,13 +119,6 @@ public class IntentWrapperServices {
 
         destinationIntentRepository.create(intentWrapperList);
 
-        //int intentWrapperListSize = intentWrapperList.size();
-//        for (IntentWrapper intentWrapper : intentWrapperList) {
-//            if (exportProgress != null)
-//                exportProgress.updateExportProgress(intentWrapperList.indexOf(intentWrapper), intentWrapperListSize);
-//            destinationIntentRepository.create(intentWrapper);
-//        }
-
         if (exportProgress != null)
             exportProgress.exportDone();
 
@@ -146,8 +139,6 @@ public class IntentWrapperServices {
 
         LoggingUtilities loggingUtilities = new LoggingUtilities(context, destinationFile);
         loggingUtilities.updateTextFile(stringBuilder.toString());
-        //return loggingUtilities.getLogFile();
-        //}
 
         if (exportProgress != null)
             exportProgress.exportDone();

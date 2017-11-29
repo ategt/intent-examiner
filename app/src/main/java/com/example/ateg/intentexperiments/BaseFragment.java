@@ -22,12 +22,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int layoutId = layout();
-        Log.d(TAG, "Loading Fragment Layout. -" + layoutId + "- " +
-                getResources().getResourceEntryName(layoutId) + ":" +
-                getResources().getResourceName(layoutId) + " - " +
-                getResources().getResourceTypeName(layoutId));
         v = inflater.inflate(layoutId, container, false);
-        Log.d(TAG, "Done loading " + layoutId);
         mPresenter = createPresenter();
         setUi(v);
         init();

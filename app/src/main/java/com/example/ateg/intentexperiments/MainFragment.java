@@ -92,7 +92,7 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new PreferencesUtilites(PreferencesUtilites.getDefaultPreferences(getActivity()))
+                        new PreferencesUtilities(PreferencesUtilities.getDefaultPreferences(getActivity()))
                                 .savePreferences(buildPreferences(dialog));
                         dialog.dismiss();
                     }
@@ -196,7 +196,6 @@ public class MainFragment extends BaseFragment<MainPresenter> implements MainVie
                             new AlertDialog.Builder(getActivity())
                                     .setMessage("One Or More Required Fields Are Empty.")
                                     .setTitle("Error")
-                                    //.setIcon(ic_alert)
                                     .setCancelable(true)
                                     .setNeutralButton("Okay", new DialogInterface.OnClickListener() {
                                         @Override

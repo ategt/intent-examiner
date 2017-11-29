@@ -24,10 +24,7 @@ public class SnackBarManager {
     }
 
     public void addQueue(Snackbar snackbar) {
-        //this.createdView.setLayoutParams(snackbar);
-        //snackbar.set
         snackbar.setCallback(mCallback);
-        //snackbar.set
         boolean first = mSnackbarList.size() == 0;
         mSnackbarList.add(snackbar);
         if (first)

@@ -1,6 +1,5 @@
 package com.example.ateg.intentexperiments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -57,7 +56,7 @@ public class LoggingUtilities {
 
         File[] files = ContextCompat.getExternalFilesDirs(context, directoryType);
 
-        Log.i("asfd", "Files Matching request: " + files.length);
+        Log.i(TAG, "Files Matching request: " + files.length);
 
         File storageDir = null;
 
@@ -67,7 +66,7 @@ public class LoggingUtilities {
 
         generateFolderTree(context, storageDir);
 
-        String fileName = PreferencesUtilites.getDefaultFileName(context);
+        String fileName = PreferencesUtilities.getDefaultFileName(context);
 
         return new File(storageDir, fileName);
     }
@@ -101,7 +100,7 @@ public class LoggingUtilities {
         try {
             backupCurrentLog(context, txtFile);
         } catch (IOException e) {
-            Log.e("adf", "IO problem ", e);
+            Log.e(TAG, "IO problem ", e);
             Toast.makeText(context, "Something went wrong while backing up the logs.", Toast.LENGTH_SHORT).show();
         }
 
@@ -132,14 +131,14 @@ public class LoggingUtilities {
             tempLog.renameTo(txtFile);
             return true;
         } catch (IOException e) {
-            Log.e("tag", "Problem " + (storageDir.isDirectory() ? "Dir" : "File") + " " + txtFile.getParentFile().toURI(), e);
+            Log.e(TAG, "Problem " + (storageDir.isDirectory() ? "Dir" : "File") + " " + txtFile.getParentFile().toURI(), e);
             Toast.makeText(context, "Problem text.", Toast.LENGTH_SHORT).show();
         } finally {
             if (fileOutputStream != null)
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
-                    Log.e("tag", "Big IO problem.", e);
+                    Log.e(TAG, "Big IO problem.", e);
                     Toast.makeText(context, "Big Io Problem.", Toast.LENGTH_SHORT).show();
                 }
         }
@@ -199,10 +198,10 @@ public class LoggingUtilities {
             return sb.toString();
 
         } catch (FileNotFoundException e) {
-            Log.e("tag", "Problem", e);
+            Log.e(TAG, "Problem", e);
             Toast.makeText(context, "File not found.", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Log.e("tag", "Problem", e);
+            Log.e(TAG, "Problem", e);
             Toast.makeText(context, "Problem text.", Toast.LENGTH_SHORT).show();
         } finally {
             try {
@@ -232,6 +231,6 @@ public class LoggingUtilities {
     }
 
     public static String getDefaultFileName(Context context) {
-        return PreferencesUtilites.getDefaultFileName(context);
+        return PreferencesUtilities.getDefaultFileName(context);
     }
 }

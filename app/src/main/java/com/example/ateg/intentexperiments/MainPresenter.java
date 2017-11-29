@@ -56,9 +56,9 @@ class MainPresenter extends BasePresenter<MainView> {
     }
 
     public void resetPreferences() {
-        PreferencesUtilites preferencesUtilites = new PreferencesUtilites(
-                PreferencesUtilites.getDefaultPreferences(((Fragment) getView()).getActivity()));
-        preferencesUtilites.resetPreferences();
+        PreferencesUtilities preferencesUtilities = new PreferencesUtilities(
+                PreferencesUtilities.getDefaultPreferences(((Fragment) getView()).getActivity()));
+        preferencesUtilities.resetPreferences();
 
         loadPreferences();
     }
@@ -67,14 +67,14 @@ class MainPresenter extends BasePresenter<MainView> {
         new AsyncTask<SharedPreferences, Void, Preferences>() {
             @Override
             protected Preferences doInBackground(SharedPreferences... sharedPreferences) {
-                return new PreferencesUtilites(sharedPreferences[0]).getPreferences();
+                return new PreferencesUtilities(sharedPreferences[0]).getPreferences();
             }
 
             @Override
             protected void onPostExecute(Preferences preferences) {
                 getView().updatePreferences(preferences);
             }
-        }.execute(PreferencesUtilites.getDefaultPreferences(((Fragment) getView()).getActivity()));
+        }.execute(PreferencesUtilities.getDefaultPreferences(((Fragment) getView()).getActivity()));
     }
 
     public void considerAutoClick() {

@@ -8,13 +8,13 @@ import android.content.Context;
 
 public class PreferencesServices {
 
-    private PreferencesUtilites preferencesUtilites;
+    private PreferencesUtilities preferencesUtilites;
 
     public PreferencesServices(Context context) {
         preferencesUtilites =
-                new PreferencesUtilites(
+                new PreferencesUtilities(
                         context.getSharedPreferences(
-                                PreferencesUtilites.PREFERENCES_KEY,
+                                PreferencesUtilities.PREFERENCES_KEY,
                                 Context.MODE_PRIVATE));
 
     }
