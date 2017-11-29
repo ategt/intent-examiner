@@ -55,14 +55,6 @@
         <item name="android:background">?colorPrimary</item>
         <item name="android:theme">@style/Base_ToolbarTheme</item>
         <item name="titleTextAppearance">@style/CustomTitleTextAppearance</item>
-        <!--<item name="subtitleTextAppearance">@style/CustomSubTitleTextAppearance</item>-->
-
-        <!--<item name="android:logo">@mipmap/ic_search_icon</item>-->
-        <!--<item name="android:logo">@drawable/file</item>-->
-        <!--<item name="android:navigationIcon">@mipmap/ic_search_icon</item>-->
-        <!--<item name="android:closeIcon">@drawable/file</item>-->
-        <!--<item name="android:navigationMode"></item>-->
-        <!--<item name="android:title">@string/app_name</item>-->
         <item name="android:popupTheme">@style/AppTheme.PopupOverlay</item>
     </style>
 
@@ -71,20 +63,11 @@
         <item name="android:textColorPrimary">@color/colorLight</item>
         <!-- Used to color back button and three dots -->
         <item name="android:textColorSecondary">@color/yellow_500_primary</item>
-        <!--<item name="android:logo">@drawable/file</item>-->
     </style>
 
     <style name="CustomTitleTextAppearance" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <!--<item name="android:fontFamily">@string/ff_roboto_condensed</item>-->
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorLight</item>
         <item name="android:textStyle">normal</item>
     </style>
-
-    <!--<style name="CustomSubTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">-->
-        <!--<item name="android:fontFamily">@string/ff_roboto_condensed</item>-->
-        <!--<item name="android:textSize">14sp</item>-->
-        <!--<item name="android:textColor">@color/pink_500_primary</item>-->
-        <!--<item name="android:textStyle">italic</item>-->
-    <!--</style>-->
 </resources>
