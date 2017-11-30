@@ -131,6 +131,7 @@ public class SaveOutputTest {
                         + ", LogFile Length: " + logFile.length(),
                 startingLogFileSize < logFile.length());
 
+
         Espresso.onView(withText("File Saved"))
                 .check(matches(isDisplayed()));
 
@@ -153,7 +154,7 @@ public class SaveOutputTest {
     }
 
     @Test
-    public void examineSaveTextTest() {
+    public void examineSaveTextTest() throws InterruptedException {
         Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
         intending(IntentMatchers.hasAction(Intent.ACTION_VIEW)).respondWith(activityResult);
 
@@ -181,6 +182,16 @@ public class SaveOutputTest {
 
         Assert.assertTrue(logFile.exists());
         Assert.assertTrue(startingLogFileSize < logFile.length());
+
+        for (int i = 0; i < 20; i++) {
+            try {
+                Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
+                        .check(matches(isDisplayed()));
+                break;
+            } catch (android.support.test.espresso.NoMatchingViewException|junit.framework.AssertionFailedError ex) {
+                Thread.sleep(1000);
+            }
+        }
 
         Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
                 .check(matches(isDisplayed()));
@@ -448,7 +459,7 @@ public class SaveOutputTest {
             try {
                 Espresso.onView(withId(R.id.clearLine)).check(ViewAssertions.matches(isCompletelyDisplayed()));
                 Espresso.onView(withId(R.id.clearLine)).check(ViewAssertions.matches(isClickable()));
-            } catch (android.support.test.espresso.PerformException|junit.framework.AssertionFailedError ex) {
+            } catch (android.support.test.espresso.PerformException | junit.framework.AssertionFailedError ex) {
                 Espresso.onView(withId(R.id.dialog_scrollView)).perform(ViewActions.swipeUp());
             }
         }
