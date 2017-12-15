@@ -105,7 +105,7 @@ public class SaveOutputTest {
     }
 
     @Test
-    public void examineSaveEmptyIntentTest() {
+    public void examineSaveEmptyIntentTest() throws InterruptedException {
         Intent intent = new Intent();
         Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 
@@ -131,6 +131,15 @@ public class SaveOutputTest {
                         + ", LogFile Length: " + logFile.length(),
                 startingLogFileSize < logFile.length());
 
+        for (int i = 0; i < 20; i++) {
+            try {
+                Espresso.onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("File Saved")))
+                        .check(matches(isDisplayed()));
+                break;
+            } catch (android.support.test.espresso.NoMatchingViewException|junit.framework.AssertionFailedError ex) {
+                Thread.sleep(1000);
+            }
+        }
 
         Espresso.onView(withText("File Saved"))
                 .check(matches(isDisplayed()));
