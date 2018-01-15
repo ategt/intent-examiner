@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
@@ -43,6 +44,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +71,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * Created by ATeg on 6/14/2017.
@@ -228,6 +232,12 @@ public class SaveOutputTest {
 
     @Test
     public void examineSaveAsEmptyIntentTest() {
+        final SharedPreferences sharedPreferences = Mockito.mock(SharedPreferences.class);
+        final Context context = Mockito.mock(Context.class);
+        Mockito.when(context.getSharedPreferences(anyString(), anyInt())).thenReturn(sharedPreferences);
+
+        Mockito.when(sharedPreferences.getString(anyString(), anyString())).thenReturn("TestingNonsense.txt");
+
         Intent intent = new Intent();
         Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 
@@ -240,18 +250,18 @@ public class SaveOutputTest {
                 "StartingIntentExamination.txt",
                 Environment.DIRECTORY_DOCUMENTS);
 
-        File templogFile = loggingUtilities.getLogFile();
-        File testLogFile = new File(templogFile.getParentFile(), newFileName);
-        File originalLogFile = new File(templogFile.getParentFile(), "IntentExamination.txt");
+        File tempLogFile = loggingUtilities.getLogFile();
+        File testLogFile = new File(tempLogFile.getParentFile(), newFileName);
+        File originalLogFile = new File(tempLogFile.getParentFile(), "IntentExamination.txt");
 
         filesToBeDeleted.add(testLogFile);
-        filesToBeDeleted.add(templogFile);
+        //filesToBeDeleted.add(tempLogFile);
 
         long startingOriginalLogFileSize = originalLogFile.length();
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
 
         Assert.assertFalse(testLogFile.exists());
-        Assert.assertFalse(templogFile.exists());
+        Assert.assertFalse(tempLogFile.exists());
 
         long startingLogFileSize = -1L;
 
@@ -287,7 +297,7 @@ public class SaveOutputTest {
         Assert.assertEquals(startingOriginalLogFileModifiedDate, originalLogFile.lastModified());
         Assert.assertEquals(startingOriginalLogFileSize, originalLogFile.length());
 
-        Assert.assertFalse(templogFile.exists());
+        Assert.assertFalse(tempLogFile.exists());
 
         Assert.assertTrue(testLogFile.length() > 0);
 
@@ -344,9 +354,9 @@ public class SaveOutputTest {
                 "StartingIntentExamination.txt",
                 Environment.DIRECTORY_DOCUMENTS);
 
-        File templogFile = loggingUtilities.getLogFile();
-        File testLogFile = new File(templogFile.getParentFile(), newFileName);
-        File originalLogFile = new File(templogFile.getParentFile(), "IntentExamination.txt");
+        File tempLogFile = loggingUtilities.getLogFile();
+        File testLogFile = new File(tempLogFile.getParentFile(), newFileName);
+        File originalLogFile = new File(tempLogFile.getParentFile(), "IntentExamination.txt");
 
         filesToBeDeleted.add(testLogFile);
 
@@ -354,7 +364,7 @@ public class SaveOutputTest {
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
 
         Assert.assertFalse(testLogFile.exists());
-        Assert.assertFalse(templogFile.exists());
+        Assert.assertFalse(tempLogFile.exists());
 
         long startingLogFileSize = -1L;
 
@@ -402,7 +412,7 @@ public class SaveOutputTest {
         Assert.assertEquals(startingOriginalLogFileModifiedDate, originalLogFile.lastModified());
         Assert.assertEquals(startingOriginalLogFileSize, originalLogFile.length());
 
-        Assert.assertFalse(templogFile.exists());
+        Assert.assertFalse(tempLogFile.exists());
 
         Assert.assertTrue(testLogFile.length() > 0);
 

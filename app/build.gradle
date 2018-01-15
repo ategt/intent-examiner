@@ -49,4 +49,5 @@ dependencies {
     //compile 'com.tapadoo.android:alerter:2.0.1'
     compile 'javax.inject:javax.inject:1'
     testCompile 'org.robolectric:robolectric:3.5.1'
+    androidTestCompile 'org.mockito:mockito-android:2.8.47'
 }
