@@ -6,7 +6,7 @@ I wrote this to better understand how Android's Intent system works.  It started
 
 I just cloned the repo, opened it as a project in Android Studio, and hit run.
 
-## Future Features
+### Possible Future Features
 
-	* History Viewing *
-	* Link Highlighting *
+	- History Viewing
+	- Link Highlighting
