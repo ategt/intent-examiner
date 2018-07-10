@@ -8,5 +8,5 @@ I just cloned the repo, opened it as a project in Android Studio, and hit run.
 
 ### Possible Future Features
 
-	- History Viewing
-	- Link Highlighting
+	* History Viewing
+	* Link Highlighting
