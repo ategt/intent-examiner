@@ -235,6 +235,14 @@ public class SaveOutputTest {
 
         String newFileName = "TestIntentExamination.txt";
 
+        PreferencesServices preferencesServices = new PreferencesServices(InstrumentationRegistry.getTargetContext());
+
+        Preferences preferences = preferencesServices.load();
+
+        preferences.setDefaultFileName("TheDefaultFileNameThatHasBeenOverriddenInATest.txt");
+
+        preferencesServices.save(preferences);
+
         LoggingUtilities loggingUtilities = new LoggingUtilities(
                 InstrumentationRegistry.getTargetContext(),
                 "StartingIntentExamination.txt",
@@ -250,8 +258,8 @@ public class SaveOutputTest {
         long startingOriginalLogFileSize = originalLogFile.length();
         long startingOriginalLogFileModifiedDate = originalLogFile.lastModified();
 
-        Assert.assertFalse(testLogFile.exists());
-        Assert.assertFalse(templogFile.exists());
+        Assert.assertFalse(testLogFile.getAbsolutePath(), testLogFile.exists());
+        Assert.assertFalse(templogFile.getAbsolutePath(), templogFile.exists());
 
         long startingLogFileSize = -1L;
 
@@ -259,7 +267,13 @@ public class SaveOutputTest {
 
         Espresso.onView(withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
 
-        Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        try {
+            Espresso.onView(withId(R.id.save_to_file_as)).perform(click());
+        } catch (android.support.test.espresso.NoMatchingViewException ex) {
+            Espresso.openActionBarOverflowOrOptionsMenu(getTargetContext());
+            Espresso.onView(withText(getTargetContext().getString(R.string.save_to_file_as)))
+                    .perform(click());
+        }
 
         Espresso.onView(withId(R.id.fileName_editText)).perform(clearText());
         Espresso.onView(withId(R.id.fileName_editText)).perform(ViewActions.typeText(newFileName));
