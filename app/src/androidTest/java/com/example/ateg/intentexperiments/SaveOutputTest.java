@@ -85,6 +85,9 @@ public class SaveOutputTest {
 
     @Before
     public void before() {
+        PreferencesServices preferencesServices = new PreferencesServices(InstrumentationRegistry.getTargetContext());
+        preferencesServices.reset();
+
         Intents.init();
         filesToBeDeleted = new ArrayList<>();
 
@@ -238,9 +241,7 @@ public class SaveOutputTest {
         PreferencesServices preferencesServices = new PreferencesServices(InstrumentationRegistry.getTargetContext());
 
         Preferences preferences = preferencesServices.load();
-
         preferences.setDefaultFileName("TheDefaultFileNameThatHasBeenOverriddenInATest.txt");
-
         preferencesServices.save(preferences);
 
         LoggingUtilities loggingUtilities = new LoggingUtilities(
@@ -337,6 +338,12 @@ public class SaveOutputTest {
         Integer randomInteger = new Integer(random.nextInt());
         boolean randomBool = random.nextBoolean();
         Boolean randomBoolean = new Boolean(random.nextBoolean());
+
+        PreferencesServices preferencesServices = new PreferencesServices(InstrumentationRegistry.getTargetContext());
+
+        Preferences preferences = preferencesServices.load();
+        preferences.setDefaultFileName("TheDefaultFileNameThatHasBeenOverriddenInATest.txt");
+        preferencesServices.save(preferences);
 
         Intent intent = new Intent();
         intent.putExtra("com.example.ateg.intentexperiments.RANDOM_STRING", randomString);
