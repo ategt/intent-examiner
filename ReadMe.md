@@ -4,7 +4,7 @@ I wrote this to better understand how Android's Intent system works.  It started
 
 ## Installation
 
-I just cloned the repo, opened it as a project in Android Studio, and hit run.
+When I tried to run this from the repository, I just cloned the repo, opened it as a project in Android Studio, and hit run.
 
 ### Possible Future Features
 
